@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.0.9
+ * @version 1.0.10
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -13,7 +13,7 @@
 /*
  * initialize module
  */
-var VERSION = '1.0.9';
+var VERSION = '1.0.10';
 // import
 try {
     var cluster = require('cluster');
@@ -58,17 +58,16 @@ function bootstrap(my) {
     /**
      * index
      * 
-     * @deprecated use nginx
-     * @function
      * @param {Object} req - client request
      * @param {Object} res - response to client
      * @param {next} next - continue routes
      */
-    // app.get('/',function(req,res) {
-    //
-    // res.sendfile(my.dir + 'index.min.html');
-    // return;
-    // });
+    app.get('/',function(req,res) {
+
+        res.sendfile(my.dir + 'index.min.html');
+        return;
+    });
+
     /**
      * http request (no client ajax due browser securty limitation)
      * 
