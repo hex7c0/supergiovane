@@ -33,7 +33,8 @@ supergiovane(options);
 #### options
 
  - `env` - **String** Selected environment *(default "production")*
- - `port` - **Integer** Which port accept connection of web console *(default "3000")*
+ - `host` - **String** Which host accept connection from web *(default "127.0.0.1")*
+ - `port` - **Integer** Which port accept connection from web *(default "3000")*
  - `dir` - **String** Absolute path of web files directory *(default "/public")*
  - `logger` - **Object** Configuration for [`logger-request`](https://github.com/hex7c0/logger-request) *(default "standard")*
  - `timeout` - **Object** Configuration for [`timeout-request`](https://github.com/hex7c0/timeout-request) *(default "standard")*
