@@ -37,7 +37,7 @@ supergiovane(options);
  - `dir` - **String** Absolute path of web files directory *(default "/public")*
  - `logger` - **Object** Configuration for [`logger-request`](https://github.com/hex7c0/logger-request) *(default "standard")*
  - `timeout` - **Object** Configuration for [`timeout-request`](https://github.com/hex7c0/timeout-request) *(default "standard")*
- - `sitemap` - **Object** Configuration for [`express-sitemap`](https://github.com/hex7c0/express-sitemap) *(default "standard")*
+ - `sitemap` - **Object** Configuration for [`express-sitemap`](https://github.com/hex7c0/express-sitemap) for robots.txt *(default "standard")*
  - `compression` - **Object** Configuration for `compression` *(default "standard")*
 
 #### Examples

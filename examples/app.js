@@ -25,5 +25,12 @@ try {
  */
 supergiovane({
     env: 'development',
-    port: 3000
+    port: 3000,
+    sitemap: {
+        route: {
+            'ALL': {
+                disallow: true,
+            }
+        }
+    }
 });

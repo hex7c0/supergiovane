@@ -53,6 +53,7 @@ function bootstrap(my) {
     app.use(logger(my.logger));
     app.use(timeout(my.timeout));
     app.use(compression(my.compression));
+    sitemap(my.sitemap).TXTtoFile();
 
     /**
      * index
