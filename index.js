@@ -19,7 +19,7 @@ try {
     var cluster = require('cluster');
     var cpu = require('os').cpus().length;
     var compression = require('compression');
-    var app = require('express')();
+    var express = require('express');
     var sitemap = require('express-sitemap');
     var http = require('http');
     var logger = require('logger-request');
@@ -33,92 +33,63 @@ try {
  * functions
  */
 /**
- * option setting
+ * starting point
  * 
- * @exports supergiovane
- * @function supergiovane
- * @param {Object} options - various options. Check README.md
- * @return {Function}
+ * @param {Object} my - user cfg
+ * @return {Object}
  */
-module.exports = function supergiovane(options) {
+function bootstrap(my) {
 
-    var options = options || Object.create(null);
-    var my = {
-        env: String(env || 'production'),
-        port: Number(options.port) || 3000,
-        dir: String(options.dir || __dirname + '/public/'),
-        logger: logger || Object.create(null),
-        timeout: timeout || Object.create(null),
-        compression: compression || Object.create(null)
-    };
+    // setting
+    var app = express();
+    app.set('env',my.env);
+    my.env == 'production' ? app.enable('view cache') : app
+            .disable('view cache');
+    app.enable('case sensitive routing');
+    app.enable('strict routing');
+    app.enable('trust proxy');
+    app.disable('x-powered-by');
+    app.disable('etag');
+    app.use(logger(my.logger));
+    app.use(timeout(my.timeout));
+    app.use(compression(my.compression));
 
-    if (cluster.isMaster) { // father
+    /**
+     * index
+     * 
+     * @function
+     * @param {Object} req - client request
+     * @param {Object} res - response to client
+     * @param {next} next - continue routes
+     */
+    app.get('/',function(req,res) {
 
-        for (var i = 0; i < cpu; i++) {
-            cluster.fork();
-        }
-        /**
-         * work if child die
-         * 
-         * @function
-         * @param {Object} worker - worker child
-         * @param {Integer} code - error code
-         * @param {String} signal - error signal
-         * @return
-         */
-        CLUSTER.on('exit',function(worker,code,signal) {
+        res.sendfile(my.dir + 'index.min.html');
+        return;
+    });
 
-            console.warn(worker.process.pid + ' died by ' + signal);
-            return;
-        });
-    } else { // child
+    /**
+     * http request (no client ajax due browser securty limitation)
+     * 
+     * @function
+     * @param {Object} req - client request
+     * @param {Object} res - response to client
+     * @param {next} next - continue routes
+     */
+    app.get('/:pkg/',function(req,res) {
 
-        // setting
-        app.set('env',my.env);
-        my.env == 'production' ? app.enable('view cache') : app
-                .disable('view cache');
-        app.enable('case sensitive routing');
-        app.enable('strict routing');
-        app.enable('trust proxy');
-        app.disable('x-powered-by');
-        app.disable('etag');
-        app.use(logger(my.logger));
-        app.use(timeout(my.timeout));
-        app.use(compression(my.compression));
-
-        /**
-         * index
-         * 
-         * @function
-         * @param {Object} req - client request
-         * @param {Object} res - response to client
-         * @param {next} next - continue routes
-         */
-        app.get('/',function(req,res) {
-
-            res.sendfile(my.dir + 'index.min.html');
-            return;
-        });
-
-        /**
-         * http request (no client ajax due browser securty limitation)
-         * 
-         * @function
-         * @param {Object} req - client request
-         * @param {Object} res - response to client
-         * @param {next} next - continue routes
-         */
-        app.get('/:pkg/',function(req,res) {
-
+        var p = req.params.pkg;
+        if (typeof p === 'string') {
             var out = http.request({
                 host: 'registry.npmjs.org',
                 port: 80,
-                path: '/' + req.params.pkg,
+                path: '/' + p,
                 method: 'GET',
+                // agent: false
                 headers: {
                     'User-Agent': 'supergiovane-' + VERSION,
-                },
-                agent: false
+                    'hi_guys': 'JSOP_will_be_great_feature'
+                }
             },function(inp) {
 
                 var body = '';
@@ -146,59 +117,109 @@ module.exports = function supergiovane(options) {
                 return;
             });
             out.end();
-            return;
-        });
-
-        /**
-         * catch all errors returned from page
-         * 
-         * @function
-         * @param {Object} err - error raised
-         * @param {Object} req - client request
-         * @param {Object} res - response to client
-         * @param {next} next - continue routes
-         */
-        app.use(function(err,req,res,next) {
-
-            var code = 0;
-            switch (err.message.toLowerCase()){
-                case 'not found':
-                    next();
-                break;
-                case 'unauthorized':
-                    code = 401;
-                break;
-                case 'forbidden':
-                    code = 403;
-                break;
-                case 'bad gateway':
-                    code = 502;
-                break;
-                default:
-                    code = 500;
-                break;
-            }
-            res.status(code).end();
-            return;
-        });
-
-        /**
-         * catch error 404 or if nobody cannot parse the request
-         * 
-         * @function
-         * @param {Object} req - client request
-         * @param {Object} res - response to client
-         * @param {next} next - continue routes
-         */
-        app.use(function(req,res,next) {
-
-            var code = 404;
-            res.status(code).end();
-            return;
-        });
-
-        console.log(process.pid + ' | listening on port: ' + my.port);
-        http.createServer(app).listen(my.port);
+        } else {
+            res.status(404).end();
+        }
         return;
+    });
+
+    /**
+     * catch all errors returned from page
+     * 
+     * @function
+     * @param {Object} err - error raised
+     * @param {Object} req - client request
+     * @param {Object} res - response to client
+     * @param {next} next - continue routes
+     */
+    app.use(function(err,req,res,next) {
+
+        var code = 0;
+        switch (err.message.toLowerCase()){
+            case 'not found':
+                next();
+            break;
+            case 'unauthorized':
+                code = 401;
+            break;
+            case 'forbidden':
+                code = 403;
+            break;
+            case 'bad gateway':
+                code = 502;
+            break;
+            default:
+                code = 500;
+            break;
+        }
+        res.status(code).end();
+        return;
+    });
+
+    /**
+     * catch error 404 or if nobody cannot parse the request
+     * 
+     * @function
+     * @param {Object} req - client request
+     * @param {Object} res - response to client
+     * @param {next} next - continue routes
+     */
+    app.use(function(req,res,next) {
+
+        var code = 404;
+        res.status(code).end();
+        return;
+    });
+
+    console.log(process.pid + ' | listening on port: ' + my.port);
+    http.createServer(app).listen(my.port);
+    return app;
+}
+
+/**
+ * option setting
+ * 
+ * @exports supergiovane
+ * @function supergiovane
+ * @param {Object} options - various options. Check README.md
+ * @return {Object}
+ */
+module.exports = function supergiovane(options) {
+
+    var options = options || Object.create(null);
+    var my = {
+        env: String(options.env || 'production'),
+        port: Number(options.port) || 3000,
+        dir: String(options.dir || __dirname + '/public/'),
+        logger: options.logger || Object.create(null),
+        timeout: options.timeout || Object.create(null),
+        compression: options.compression || Object.create(null),
+        sitemap: options.sitemap || Object.create(null)
+    };
+
+    if (my.env = 'development') { // no cluster
+        return bootstrap(my);
+    }
+    if (cluster.isMaster) { // father
+
+        for (var i = 0; i < cpu; i++) {
+            cluster.fork();
+        }
+        /**
+         * work if child die
+         * 
+         * @function
+         * @param {Object} worker - worker child
+         * @param {Integer} code - error code
+         * @param {String} signal - error signal
+         */
+        cluster.on('exit',function(worker,code,signal) {
+
+            console.warn(worker.process.pid + ' died by ' + signal);
+            return;
+        });
+    } else { // child
+
+        return bootstrap(my);
     }
 };

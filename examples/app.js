@@ -14,7 +14,7 @@
  */
 // import
 try {
-    var super = require('../index.min.js'); // use require('supergiovane') instead
+    var supergiovane = require('../index.min.js'); // use require('supergiovane') instead
 } catch (MODULE_NOT_FOUND) {
     console.error(MODULE_NOT_FOUND);
     process.exit(1);
@@ -23,4 +23,7 @@ try {
 /*
  * use
  */
-super();
+supergiovane({
+    env: 'development',
+    port: 3000
+});
