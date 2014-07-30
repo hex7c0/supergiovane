@@ -16,7 +16,8 @@ module.exports = function(grunt) {
                 + ' * (c) <%= pkg.author.name %> <%= pkg.homepage %>\n'
                 + ' * Licensed under <%= pkg.license %>\n' + ' */\n',
 
-        clean: ['index.min.js','min/**/*.js','public/monitode*.*'],
+        clean: ['index.min.js','min/**/*.js','public/js/script.min.js',
+                'public/css/style.min.css','public/index.min.html'],
 
         uglify: {
             options: {
@@ -34,7 +35,7 @@ module.exports = function(grunt) {
                     dest: 'min'
                 },{
                     'index.min.js': 'index.js',
-                    'public/script.min.js': 'public/script.js'
+                    'public/js/script.min.js': 'public/js/script.js'
                 }]
             }
         },
@@ -45,7 +46,7 @@ module.exports = function(grunt) {
                     banner: '<%= banner %>'
                 },
                 files: {
-                    'public/style.min.css': 'public/style.css'
+                    'public/css/style.min.css': 'public/css/style.css'
                 }
             }
         },
