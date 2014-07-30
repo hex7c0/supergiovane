@@ -19,7 +19,7 @@ function search($http,$scope,$timeout) {
 
         $http({
             method: 'GET',
-            url: '/' + ss,
+            url: '/' + ss + '/',
             cache: true
         }).success(function(data,status,headers,config) {
 
@@ -33,12 +33,15 @@ function search($http,$scope,$timeout) {
                     url: v.dist.tarball
                 });
             }
+            $('.modal').modal('hide');
             return;
         }).error(function(data,status,headers,config) {
 
-            $('.alert').fadeIn();
+            $('.alert').fadeIn(function() {
+
+                $('.modal').modal('hide');
+            });
         });
-        $('.modal').modal('hide');
     } else {
         $('#search').tooltip('show');
     }

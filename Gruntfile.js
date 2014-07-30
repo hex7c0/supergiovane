@@ -35,7 +35,6 @@ module.exports = function(grunt) {
                     dest: 'min'
                 },{
                     'index.min.js': 'index.js',
-                    'public/js/script.min.js': 'public/js/script.js'
                 }]
             }
         },

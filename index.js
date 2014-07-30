@@ -198,7 +198,7 @@ module.exports = function supergiovane(options) {
         sitemap: options.sitemap || Object.create(null)
     };
 
-    if (my.env = 'development') { // no cluster
+    if (my.env == 'development') { // no cluster
         return bootstrap(my);
     }
     if (cluster.isMaster) { // father
