@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.0.11
+ * @version 1.1.0
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -52,10 +52,13 @@ function bootstrap(my) {
     app.enable('trust proxy');
     app.disable('x-powered-by');
     app.disable('etag');
-    app.use(logger(my.logger));
-    app.use(timeout(my.timeout));
+    if (my.logger) {
+        app.use(logger(my.logger));
+    }
+    if (my.timeout) {
+        app.use(timeout(my.timeout));
+    }
     app.use(lusca({
-        csrf: false,
         xframe: 'SAMEORIGIN',
         xssProtection: true
     }));
@@ -63,7 +66,9 @@ function bootstrap(my) {
         level: 9,
         threshold: 256
     }));
-    sitemap(my.sitemap).toFile();
+    if (my.sitemap) {
+        sitemap(my.sitemap).toFile();
+    }
 
     /**
      * index
@@ -88,8 +93,8 @@ function bootstrap(my) {
      */
     app.get('/:pkg/',function(req,res) {
 
-        var r = req.headers['referer'] || req.headers['referrer'];
         var p = req.params.pkg;
+        var r = req.headers['referer'] || req.headers['referrer'];
         if (typeof p === 'string' && my.referer.test(r)) {
             var out = http.request({
                 host: 'registry.npmjs.org',
@@ -207,9 +212,12 @@ module.exports = function supergiovane(options) {
         port: Number(options.port) || 3000,
         referer: new RegExp(String(options.referer || 'http://127.0.0.1'),'i'),
         dir: String(options.dir || __dirname + '/public/'),
-        logger: options.logger || Object.create(null),
-        timeout: options.timeout || Object.create(null),
-        sitemap: options.sitemap || Object.create(null)
+        logger: options.logger == false ? false : options.logger
+                || Object.create(null),
+        timeout: options.timeout == false ? false : options.timeout
+                || Object.create(null),
+        sitemap: options.sitemap == false ? false : options.sitemap
+                || Object.create(null)
     };
 
     if (my.env == 'development') { // no cluster
