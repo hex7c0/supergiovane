@@ -15,7 +15,9 @@ function search($http,$scope,$timeout) {
     var ss = $scope.search;
     if (ss && angular.isString(ss)) {
         $('.modal').modal('show');
-
+        $scope.versions = [];
+        $scope.npm = {};
+        $('.jumbotron').fadeOut();
         $http({
             method: 'GET',
             url: '/' + ss + '/',
@@ -53,7 +55,6 @@ function search($http,$scope,$timeout) {
                         console.error(e);
                     }
 
-                    $scope.versions = [];
                     for ( var i in data.versions) {
                         var v = data.versions[i];
                         var u, t;
@@ -82,11 +83,8 @@ function search($http,$scope,$timeout) {
                     return;
                 }).error(function(data,status,headers,config) {
 
-            $('.alert').fadeIn(function() {
+            $('.alert').fadeIn(400,function() {
 
-                // clean
-                $scope.npm = {};
-                $scope.versions = [];
                 $('.modal').modal('hide');
                 return;
             });
