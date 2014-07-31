@@ -57,9 +57,16 @@
             <div class="jumbotron">
                 <h3 ng-show="npm.desc">{{npm.desc}}</h3>
                 <div class="list-group">
-                    <span class="list-group-item" ng-show="npm.author">author: {{npm.author}}</span>
-                    <span class="list-group-item" ng-show="npm.npm">npm: <a href="{{npm.npm}}">link</a></span>
-                    <span class="list-group-item" ng-show="npm.issue">issue: <a href="{{npm.issue}}">link</a></span>
+                    <span class="list-group-item" ng-show="npm.author">
+                        author: {{npm.author}}
+                        <span ng-show="npm.web">, <a href="{{npm.web}}">website</a></span>
+                        <span ng-show="npm.email">, <a href="mailto:{{npm.email}}">email</a></span>
+                    </span>
+                    <span class="list-group-item" ng-show="npm.npm">
+                        npm: <a href="{{npm.npm}}">link</a>
+                        <span ng-show="npm.issue">, <a ng-show="npm.issue" href="{{npm.issue}}">issue</a></span>
+                        <span ng-show="npm.stat">, <a ng-show="npm.stat" href="{{npm.stat}}">stat</a></span>
+                    </span>
                     <span class="list-group-item" ng-show="npm.license">license: {{npm.license}}</span>
                 </div>
             </div>
@@ -71,7 +78,6 @@
                     <p class="btn-group">
                         <a class="btn btn-default" ng-show="element.page" href="{{element.page}}" role="button">homepage</a>
                         <a class="btn btn-default" ng-show="element.repo" href="{{element.repo}}" role="button">repo</a>
-                        <a class="btn btn-default" ng-show="element.stat" href="{{element.stat}}" role="button">stat</a>
                         <a class="btn btn-default" ng-show="element.url" href="{{element.url}}" role="button">download</a>
                     </p>
                 </li>

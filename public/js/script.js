@@ -22,26 +22,45 @@ function search($http,$scope,$timeout) {
             cache: true
         }).success(function(data,status,headers,config) {
 
-            $scope.npm = {
-                desc: data.description,
-                author: data.author.name,
-                npm: 'https://www.npmjs.org/' + ss,
-                issue: data.bugs.url,
-                license: data.license
-            };
+            $('.jumbotron').show(0);
+            try {
+                var a;
+                if (data.author && data.author.name) {
+                    a = data.author;
+                }
+                $scope.npm = {
+                    desc: data.description,
+                    author: a.name,
+                    web: a.url,
+                    email: a.email,
+                    npm: 'https://www.npmjs.org/' + ss,
+                    stat: 'http://npm-stat.com/charts.html?package=' + ss,
+                    issue: data.bugs.url,
+                    license: data.license
+                };
+            } catch (e) {
+                console.error(e);
+            }
+
             $scope.versions = [];
             for ( var i in data.versions) {
                 var v = data.versions[i];
-                $scope.versions.push({
-                    title: i,
-                    time: new Date(data.time[i]).toUTCString(),
-                    page: v.homepage,
-                    repo: v.repository.url,
-                    stat: 'http://npm-stat.com/charts.html?package=' + ss,
-                    url: v.dist.tarball
-                });
+                var u;
+                if (v.repository && v.repository.url) {
+                    u = v.repository.url;
+                }
+                try {
+                    $scope.versions.push({
+                        title: i,
+                        time: new Date(data.time[i]).toUTCString(),
+                        page: v.homepage,
+                        repo: u,
+                        url: v.dist.tarball
+                    });
+                } catch (e) {
+                    console.error(e);
+                }
             }
-            $('.jumbotron').show(0);
             $('.modal').modal('hide');
             $('html,body').animate({
                 scrollTop: $('#show').position().top

@@ -23,5 +23,5 @@ font-size: 18px;margin-bottom:5px;}
   background-color:#fff;margin:auto;padding:5px;
   box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.75);text-align:center;left:0;right:0
 }
-.jumbotron{border:1px solid #ddd;display:none;padding: 40px;}
+.jumbotron{border:1px solid #ddd;display:none;padding: 20px 40px 40px 40px;!important;}
 .list-group{margin-bottom:0;}
