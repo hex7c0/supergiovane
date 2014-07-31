@@ -1,3 +1,12 @@
+1.1.1 / 2014-07-31
+==================
+
+  * Using `lusca`@1.0.1
+  * Check http "referer"
+  * Add web "referer" (options)
+  * Disable middleware (options)
+  * Remove "compression" (options)
+
 1.0.10 / 2014-07-30
 ==================
 

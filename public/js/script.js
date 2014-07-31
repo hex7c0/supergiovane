@@ -10,12 +10,9 @@
  */
 function search($http,$scope,$timeout) {
 
-    $('.alert').fadeOut(function() {
-
-        $('#search').tooltip('hide');
-        return;
-    });
-    var ss = String($scope.search);
+    $('#search').tooltip('hide');
+    $('.alert').fadeOut();
+    var ss = $scope.search;
     if (ss && angular.isString(ss)) {
         $('.modal').modal('show');
 
@@ -33,7 +30,7 @@ function search($http,$scope,$timeout) {
                     time: new Date(data.time[i]).toUTCString(),
                     author: data.author.name,
                     page: v.homepage,
-                    repo: v.repository,
+                    repo: v.repository.url,
                     stat: 'http://npm-stat.com/charts.html?package=' + ss,
                     url: v.dist.tarball
                 });
