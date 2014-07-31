@@ -17,6 +17,7 @@ try {
     var supergiovane = require('../index.min.js'); // use require('supergiovane')
     var request = require('supertest');
     var assert = require('assert');
+    var fs = require('fs');
 } catch (MODULE_NOT_FOUND) {
     console.error(MODULE_NOT_FOUND);
     process.exit(1);
@@ -36,7 +37,7 @@ describe('http',function() {
         done();
     });
 
-    describe('200 - should return 200 status code',function() {
+    describe('correct - should return 200 status code',function() {
 
         it('index',function(done) {
 
@@ -45,23 +46,24 @@ describe('http',function() {
 
         it('package',function(done) {
 
-            request(app).get('/supergiovane/').expect(200).end(
-                    function(err,res) {
+            request(app).get('/supergiovane/')
+                    .set('Referer','http://127.0.0.1').expect(200).end(
+                            function(err,res) {
 
-                        if (err)
-                            throw err;
-                        assert.deepEqual(res.statusCode,200);
-                        var j = JSON.parse(res.text);
-                        assert.deepEqual(j.name,'supergiovane');
-                        assert.deepEqual(j.versions['0.0.1'].main,
-                                'index.min.js');
-                        assert.deepEqual(j.license,'GPLv3');
-                        done();
-                    });
+                                if (err)
+                                    throw err;
+                                assert.deepEqual(res.statusCode,200);
+                                var j = JSON.parse(res.text);
+                                assert.deepEqual(j.name,'supergiovane');
+                                assert.deepEqual(j.versions['0.0.1'].main,
+                                        'index.min.js');
+                                assert.deepEqual(j.license,'GPLv3');
+                                done();
+                            });
         });
     });
 
-    describe('error - should return error',function() {
+    describe('error - should return 404 status code',function() {
 
         it('static',function(done) {
 
@@ -73,10 +75,25 @@ describe('http',function() {
             request(app).get('/supergiovane').expect(404,done);
         });
 
+        it('package withou refer',function(done) {
+
+            request(app).get('/supergiovane/').expect(404,done);
+        });
+
         it('package wrong',function(done) {
 
             request(app).get('/supergiovane_qwertyuiop/').expect(404,done);
         });
+    });
 
+    describe('remove file',function() {
+
+        it('logger',function(done) {
+
+            fs.unlink('route.log',function() {
+
+                done();
+            });
+        });
     });
 });

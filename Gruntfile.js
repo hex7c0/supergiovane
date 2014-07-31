@@ -21,8 +21,8 @@ module.exports = function(grunt) {
 
         uglify: {
             options: {
-                preserveComments: 'false',
                 banner: '<%= banner %>',
+                footer: '\n'
             },
             target: {
                 files: [{
@@ -34,15 +34,27 @@ module.exports = function(grunt) {
                     src: 'module/*.js',
                     dest: 'min'
                 },{
-                    'index.min.js': 'index.js',
+                    'index.min.js': 'index.js'
                 }]
+            },
+            script: {
+                options: {
+                    mangle: false,
+                    wrap: 'cl',
+                    banner: '<%= banner %>',
+                    footer: '\n'
+                },
+                files: {
+                    'public/js/script.min.js': 'public/js/script.js'
+                }
             }
         },
 
         cssmin: {
             css: {
                 options: {
-                    banner: '<%= banner %>'
+                    banner: '<%= banner %>',
+                    footer: '\n'
                 },
                 files: {
                     'public/css/style.min.css': 'public/css/style.css'
@@ -67,7 +79,7 @@ module.exports = function(grunt) {
                 failOnError: false
             },
             docs: {
-                command: "jsdoc ./lib/*.js ./module/*.js -c .jsdoc.json"
+                command: 'jsdoc ./lib/*.js ./module/*.js -c .jsdoc.json'
             }
         }
     });
