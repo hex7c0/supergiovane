@@ -15,7 +15,7 @@ function search($http,$scope,$timeout) {
         $('#search').tooltip('hide');
         return;
     });
-    var ss = $scope.search;
+    var ss = String($scope.search);
     if (ss && angular.isString(ss)) {
         $('.modal').modal('show');
 
