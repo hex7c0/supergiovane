@@ -1,5 +1,4 @@
 "use strict";
-var app = angular.module('supergiovane',[]);
 
 /**
  * search module (funcking ajax)
@@ -11,11 +10,14 @@ var app = angular.module('supergiovane',[]);
  */
 function search($http,$scope,$timeout) {
 
-    $('.alert').fadeOut();
+    $('.alert').fadeOut(function() {
+
+        $('#search').tooltip('hide');
+        return;
+    });
     var ss = $scope.search;
     if (ss && angular.isString(ss)) {
         $('.modal').modal('show');
-        $('#search').tooltip('hide');
 
         $http({
             method: 'GET',
@@ -29,7 +31,10 @@ function search($http,$scope,$timeout) {
                 $scope.versions.push({
                     title: i,
                     time: new Date(data.time[i]).toUTCString(),
+                    author: data.author.name,
                     page: v.homepage,
+                    repo: v.repository,
+                    stat: 'http://npm-stat.com/charts.html?package=' + ss,
                     url: v.dist.tarball
                 });
             }
@@ -40,6 +45,7 @@ function search($http,$scope,$timeout) {
             $('.alert').fadeIn(function() {
 
                 $('.modal').modal('hide');
+                return;
             });
         });
     } else {
@@ -83,4 +89,7 @@ function controller($scope,$http,$timeout) {
     };
     return;
 }
+
+// load
+var app = angular.module('supergiovane',[]);
 app.controller('main',controller);

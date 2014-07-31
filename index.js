@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.0.10
+ * @version 1.0.11
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -13,16 +13,18 @@
 /*
  * initialize module
  */
-var VERSION = '1.0.10';
+var VERSION = '1.0.11';
+var ERROR = 'matusa';
 // import
 try {
     var cluster = require('cluster');
-    var cpu = require('os').cpus().length;
     var compression = require('compression');
     var express = require('express');
     var sitemap = require('express-sitemap');
     var http = require('http');
     var logger = require('logger-request');
+    var lusca = require('lusca');
+    var cpu = require('os').cpus().length;
     var timeout = require('timeout-request');
 } catch (MODULE_NOT_FOUND) {
     console.error(MODULE_NOT_FOUND);
@@ -52,8 +54,16 @@ function bootstrap(my) {
     app.disable('etag');
     app.use(logger(my.logger));
     app.use(timeout(my.timeout));
-    app.use(compression(my.compression));
-    sitemap(my.sitemap).TXTtoFile();
+    app.use(lusca({
+        csrf: false,
+        xframe: 'SAMEORIGIN',
+        xssProtection: true
+    }));
+    app.use(compression({
+        level: 9,
+        threshold: 256
+    }));
+    sitemap(my.sitemap).toFile();
 
     /**
      * index
@@ -78,8 +88,9 @@ function bootstrap(my) {
      */
     app.get('/:pkg/',function(req,res) {
 
+        var r = req.headers['referer'] || req.headers['referrer'];
         var p = req.params.pkg;
-        if (typeof p === 'string') {
+        if (typeof p === 'string' && my.referer.test(r)) {
             var out = http.request({
                 host: 'registry.npmjs.org',
                 port: 80,
@@ -88,37 +99,40 @@ function bootstrap(my) {
                 // agent: false
                 headers: {
                     'User-Agent': 'supergiovane@' + VERSION,
-                    'hi_guys': 'JSOP_will_be_great_feature'
+                    'hi_guys': 'JSOP_will_be_a_great_feature'
                 }
             },function(inp) {
 
-                var body = '';
+                // var body='';
+                var body = new Buffer(0);
                 if (inp.statusCode == 200 || inp.statusCode == 304) {
-                    inp.setEncoding('utf8');
+                    // inp.setEncoding('utf8');
                     inp.on('data',function(chunk) {
 
+                        // buffer
                         body += chunk;
                         return;
                     });
                     inp.on('end',function() {
 
+                        body = body.toString();
                         // remove too big
                         body.readme = null;
                         res.end(body);
                     });
                 } else {
-                    res.status(404).end();
+                    res.status(404).end(ERROR);
                 }
                 return;
             });
             req.on('error',function(e) {
 
-                res.status(404).end();
+                res.status(404).end(ERROR);
                 return;
             });
             out.end();
         } else {
-            res.status(404).end();
+            res.status(404).end(ERROR);
         }
         return;
     });
@@ -152,7 +166,7 @@ function bootstrap(my) {
                 code = 500;
             break;
         }
-        res.status(code).end();
+        res.status(code).end(ERROR);
         return;
     });
 
@@ -167,7 +181,7 @@ function bootstrap(my) {
     app.use(function(req,res,next) {
 
         var code = 404;
-        res.status(code).end();
+        res.status(code).end(ERROR);
         return;
     });
 
@@ -191,10 +205,10 @@ module.exports = function supergiovane(options) {
         env: String(options.env || 'production'),
         host: String(options.host || '127.0.0.1'),
         port: Number(options.port) || 3000,
+        referer: new RegExp(String(options.referer || 'http://127.0.0.1'),'i'),
         dir: String(options.dir || __dirname + '/public/'),
         logger: options.logger || Object.create(null),
         timeout: options.timeout || Object.create(null),
-        compression: options.compression || Object.create(null),
         sitemap: options.sitemap || Object.create(null)
     };
 
@@ -223,4 +237,5 @@ module.exports = function supergiovane(options) {
 
         return bootstrap(my);
     }
+    return;
 };
