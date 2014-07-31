@@ -1,7 +1,7 @@
 /*
- * supergiovane v1.1.1
+ * supergiovane v1.1.10
  * (c) hex7c0 http://supergiovane.tk
  * Licensed under GPLv3
  */
 
-@charset "UTF-8";body{padding:60px 0;background-color:#eee}#head{margin-bottom:80px}.search{max-width:50%;margin:0 auto;font-weight:400}.search-heading{margin:10px 0}#search{height:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-size:18px;margin-bottom:5px}.search #search:focus{z-index:2}.search>button,.search>input{opacity:.9}#search-logo{height:120px;max-height:15%;border-radius:50%;z-index:-1;display:block;margin:auto}#show{list-style:none}.footer{position:absolute;bottom:0;width:80%;background-color:#fff;margin:auto;padding:5px;box-shadow:0 0 5px 0 rgba(50,50,50,.75);text-align:center;left:0;right:0}html{position:relative;min-height:100%}
+@charset "UTF-8";body{padding:80px 0;background-color:#eee}html{position:relative;min-height:100%}ul{list-style:none;padding:0}h3{font-style:italic}#head{margin-bottom:80px}#show{text-align:center}.search{max-width:50%;margin:0 auto;font-weight:400}.search-heading{margin:10px 0}#search{height:auto;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-size:18px;margin-bottom:5px}.search #search:focus{z-index:2}.search>button,.search>input{opacity:.9}#search-logo{height:120px;max-height:15%;border-radius:50%;z-index:-1;display:block;margin:auto}.footer{position:absolute;bottom:0;width:80%;background-color:#fff;margin:auto;padding:5px;box-shadow:0 0 5px 0 rgba(50,50,50,.75);text-align:center;left:0;right:0}.jumbotron{border:1px solid #ddd;display:none;padding:40px}.list-group{margin-bottom:0}

@@ -22,20 +22,30 @@ function search($http,$scope,$timeout) {
             cache: true
         }).success(function(data,status,headers,config) {
 
+            $scope.npm = {
+                desc: data.description,
+                author: data.author.name,
+                npm: 'https://www.npmjs.org/' + ss,
+                issue: data.bugs.url,
+                license: data.license
+            };
             $scope.versions = [];
             for ( var i in data.versions) {
                 var v = data.versions[i];
                 $scope.versions.push({
                     title: i,
                     time: new Date(data.time[i]).toUTCString(),
-                    author: data.author.name,
                     page: v.homepage,
                     repo: v.repository.url,
                     stat: 'http://npm-stat.com/charts.html?package=' + ss,
                     url: v.dist.tarball
                 });
             }
+            $('.jumbotron').show(0);
             $('.modal').modal('hide');
+            $('html,body').animate({
+                scrollTop: $('#show').position().top
+            },1200);
             return;
         }).error(function(data,status,headers,config) {
 

@@ -53,30 +53,40 @@
             <div class="alert alert-danger" role="alert" style="display:none;">
                 <strong>:(</strong> module not found or something blow up
             </div>
+
+            <div class="jumbotron">
+                <h3 ng-show="npm.desc">{{npm.desc}}</h3>
+                <div class="list-group">
+                    <span class="list-group-item" ng-show="npm.author">author: {{npm.author}}</span>
+                    <span class="list-group-item" ng-show="npm.npm">npm: <a href="{{npm.npm}}">link</a></span>
+                    <span class="list-group-item" ng-show="npm.issue">issue: <a href="{{npm.issue}}">link</a></span>
+                    <span class="list-group-item" ng-show="npm.license">license: {{npm.license}}</span>
+                </div>
+            </div>
+
             <ul id="show" class="row row-offcanvas row-offcanvas-right">
                 <li ng-repeat="element in versions" class="col-6 col-sm-6 col-lg-4">
-                  <h2>version {{element.title}}</h2>
-                  <p>release date {{element.time}}</p>
-                  <p>author {{element.author}}</p>
-                  <p class="btn-group">
-                      <a class="btn btn-default" ng-show="element.page" href="{{element.page}}" role="button">homepage</a>
-                      <a class="btn btn-default" ng-show="element.repo" href="{{element.repo}}" role="button">repo</a>
-                      <a class="btn btn-default" ng-show="element.stat" href="{{element.stat}}" role="button">stat</a>
-                      <a class="btn btn-default" ng-show="element.url" href="{{element.url}}" role="button">download</a>
-                  </p>
+                    <h2 ng-show="element.title">version {{element.title}}</h2>
+                    <p ng-show="element.time">release date: {{element.time}}</p>
+                    <p class="btn-group">
+                        <a class="btn btn-default" ng-show="element.page" href="{{element.page}}" role="button">homepage</a>
+                        <a class="btn btn-default" ng-show="element.repo" href="{{element.repo}}" role="button">repo</a>
+                        <a class="btn btn-default" ng-show="element.stat" href="{{element.stat}}" role="button">stat</a>
+                        <a class="btn btn-default" ng-show="element.url" href="{{element.url}}" role="button">download</a>
+                    </p>
                 </li>
             </ul>
         </div>
 
         <script type="text/javascript" src="js/script.min.js"></script>
 
-        <footer>
-            <div class="footer">
-                <div class="container">
+        <div class="footer">
+            <div class="container">
+                <footer>
                     <p class="text-muted"><h5>2014 © <a href="https://github.com/hex7c0">hex7c0</a>. npm is © npm, Inc. <a href="http://supergiovane.tk">supergiovane</a> is not affiliated with <a href="https://www.npmjs.org">npm</a> or with <a href="http://elioelestorietese.it/">EELST</a>.</h5></p>
-                </div>
+                </footer>
             </div>
-        </footer>
+        </div>
 
     </body>
 
