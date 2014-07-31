@@ -24,7 +24,7 @@ try {
     var http = require('http');
     var logger = require('logger-request');
     var lusca = require('lusca');
-    var cpu = require('os').cpus().length;
+    var cpu = require('os').cpus().length * 2;
     var timeout = require('timeout-request');
 } catch (MODULE_NOT_FOUND) {
     console.error(MODULE_NOT_FOUND);
