@@ -84,6 +84,9 @@ function search($http,$scope,$timeout) {
 
             $('.alert').fadeIn(function() {
 
+                // clean
+                $scope.npm = {};
+                $scope.versions = [];
                 $('.modal').modal('hide');
                 return;
             });
@@ -103,6 +106,9 @@ function search($http,$scope,$timeout) {
  * @param {Object} timeout - angular timeout object
  */
 function controller($scope,$http,$timeout) {
+
+    $scope.npm = {};
+    $scope.versions = [];
 
     /*
      * binding
