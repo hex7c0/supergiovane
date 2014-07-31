@@ -13,7 +13,7 @@
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="css/style.min.css" >
-        <link rel="icon" href="./favicon.ico">
+        <link rel="icon" href="favicon.ico">
     </head>
 
     <body ng-app="supergiovane" ng-controller="main">
@@ -24,7 +24,7 @@
                     <img src="img/sp.jpg" id="search-logo" class="media" alt="supergiovane">
                 </a>
                 <h2 class="search-heading">insert npm module</h2>
-                <input id="search" type="search" ng-model="search" class="form-control" placeholder="package" accesskey="p" required autofocus autocomplete ata-toggle="tooltip" data-placement="left" title="missing module">
+                <input id="search" type="search" ng-model="search" class="form-control" placeholder="try monitode" accesskey="p" required autofocus autocomplete ata-toggle="tooltip" data-placement="left" title="missing">
                 <button id="sub" ng-click="button('search',$event)" class="btn btn-lg btn-primary btn-block">search</button>
             </div>
         </div>
@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="container">
             <div class="alert alert-danger" role="alert" style="display:none;">
                 <strong>:(</strong> module not found or something blow up
@@ -57,21 +57,27 @@
                 <li ng-repeat="element in versions" class="col-6 col-sm-6 col-lg-4">
                   <h2>version {{element.title}}</h2>
                   <p>release date {{element.time}}</p>
+                  <p>author {{element.author}}</p>
                   <p class="btn-group">
-                      <a class="btn btn-default" href="{{element.page}}" role="button">homepage</a>
-                      <a class="btn btn-default" href="{{element.url}}" role="button">download</a>
+                      <a class="btn btn-default" ng-show="element.page" href="{{element.page}}" role="button">homepage</a>
+                      <a class="btn btn-default" ng-show="element.repo" href="{{element.repo}}" role="button">repo</a>
+                      <a class="btn btn-default" ng-show="element.sta" href="{{element.stat}}" role="button">stat</a>
+                      <a class="btn btn-default" ng-show="element.url" href="{{element.url}}" role="button">download</a>
                   </p>
                 </li>
             </ul>
         </div>
-            
-        <div class="footer">
-            <div class="container">
-                <p class="text-muted"><h5>© 2014 <a href="https://github.com/hex7c0">hex7c0</a>. npm is © npm, Inc. <a href="http://supergiovane.tk">supergiovane</a> is not affiliated with npm in any way or with EELST.</h5></p>
+
+        <script type="text/javascript" src="js/script.min.js"></script>
+
+        <footer>
+            <div class="footer">
+                <div class="container">
+                    <p class="text-muted"><h5>2014 © <a href="https://github.com/hex7c0">hex7c0</a>. npm is © npm, Inc. <a href="http://supergiovane.tk">supergiovane</a> is not affiliated with <a href="http://npmjs.org">npm</a> or with <a href="http://elioelestorietese.it/">EELST</a>.</h5></p>
+                </div>
             </div>
-        </div>
-        
-        <script type="text/javascript" src="js/script.js"></script>
+        </footer>
+
     </body>
 
 </html>
