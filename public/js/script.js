@@ -20,53 +20,67 @@ function search($http,$scope,$timeout) {
             method: 'GET',
             url: '/' + ss + '/',
             cache: true
-        }).success(function(data,status,headers,config) {
+        }).success(
+                function(data,status,headers,config) {
 
-            $('.jumbotron').show(0);
-            try {
-                var a;
-                if (data.author && data.author.name) {
-                    a = data.author;
-                }
-                $scope.npm = {
-                    desc: data.description,
-                    author: a.name,
-                    web: a.url,
-                    email: a.email,
-                    npm: 'https://www.npmjs.org/' + ss,
-                    stat: 'http://npm-stat.com/charts.html?package=' + ss,
-                    issue: data.bugs.url,
-                    license: data.license
-                };
-            } catch (e) {
-                console.error(e);
-            }
+                    $('.jumbotron').show(0);
+                    try {
+                        var a;
+                        if (data.author && data.author.name) {
+                            a = {
+                                name: data.author.name,
+                                url: data.author.url,
+                                email: data.author.email,
+                                stat: 'http://npm-stat.com/charts.html?author='
+                                        + data.author.name,
+                            };
+                        }
+                        var n = {
+                            link: 'https://www.npmjs.org/' + ss,
+                            stat: 'http://npm-stat.com/charts.html?package='
+                                    + ss,
+                        };
+                        if (data.bugs && data.bugs.url) {
+                            n.issue = data.bugs.url;
+                        }
+                        $scope.npm = {
+                            desc: data.description,
+                            author: a,
+                            npm: n,
+                            license: data.license
+                        };
+                    } catch (e) {
+                        console.error(e);
+                    }
 
-            $scope.versions = [];
-            for ( var i in data.versions) {
-                var v = data.versions[i];
-                var u;
-                if (v.repository && v.repository.url) {
-                    u = v.repository.url;
-                }
-                try {
-                    $scope.versions.push({
-                        title: i,
-                        time: new Date(data.time[i]).toUTCString(),
-                        page: v.homepage,
-                        repo: u,
-                        url: v.dist.tarball
-                    });
-                } catch (e) {
-                    console.error(e);
-                }
-            }
-            $('.modal').modal('hide');
-            $('html,body').animate({
-                scrollTop: $('#show').position().top
-            },1200);
-            return;
-        }).error(function(data,status,headers,config) {
+                    $scope.versions = [];
+                    for ( var i in data.versions) {
+                        var v = data.versions[i];
+                        var u, t;
+                        if (v.repository && v.repository.url) {
+                            u = v.repository.url;
+                        }
+                        if (v.dist && v.dist.tarball) {
+                            t = v.dist.tarball;
+                        }
+                        try {
+                            $scope.versions.push({
+                                title: i,
+                                time: new Date(data.time[i]).toUTCString(),
+                                page: v.homepage,
+                                repo: u,
+                                url: t
+                            });
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    }
+                    $('.modal').modal('hide');
+                    $('html,body').animate({
+                        scrollTop: $('#show').position().top
+                    },1200);
+                    return;
+                }).error(function(data,status,headers,config) {
 
             $('.alert').fadeIn(function() {
 
