@@ -19,15 +19,22 @@
 
     <body ng-app="supergiovane" ng-controller="main">
     
-        <div id="head" class="container">
-            <div class="search">
-                <a href="https://it.wikipedia.org/wiki/Luca_Mangoni" target="_blank">
-                    <img src="img/sp.jpg" id="search-logo" class="media" alt="supergiovane" />
-                </a>
-                <h2 class="search-heading">insert npm module</h2>
-                <input id="search" type="search" ng-model="search" class="form-control" placeholder="try monitode" accesskey="p" required autofocus autocomplete data-toggle="tooltip" data-placement="left" title="package">
-                <button id="sub" ng-click="button('search',$event)" class="btn btn-lg btn-primary btn-block">search</button>
-            </div>
+        <div id="header" class="container">
+            <header>
+                <div class="search">
+                    <a href="https://it.wikipedia.org/wiki/Luca_Mangoni" target="_blank">
+                        <img src="img/sp.jpg" id="search-logo" class="media" alt="supergiovane" />
+                    </a>
+                    <h2 class="search-heading">insert npm module</h2>
+                    <div class="input-group">
+                        <input id="search" type="search" ng-model="search" class="form-control search-input" placeholder="try monitode" accesskey="p" required autofocus autocomplete data-toggle="tooltip" data-placement="left" title="package">
+                        <span class="input-group-btn">
+                            <button id="cls" ng-click="button('clear',$event)" class="btn btn-default search-input" type="button">clear</button>
+                        </span>
+                    </div>
+                    <button id="sub" ng-click="button('search',$event)" class="btn btn-lg btn-primary btn-block">search</button>
+                </div>
+            </header>
         </div>
 
         <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="processing" aria-hidden="true">
@@ -86,7 +93,7 @@
         <div class="footer">
             <div class="container">
                 <footer>
-                    <p class="text-muted"><h5>2014 © <a href="https://github.com/hex7c0">hex7c0</a>. npm is © npm, Inc. <a href="http://supergiovane.tk">supergiovane</a> is not affiliated with <a href="https://www.npmjs.org">npm</a> or with <a href="http://elioelestorietese.it/">EELST</a>.</h5></p>
+                    <p class="text-muted"><h5>2014 © <a href="https://github.com/hex7c0">hex7c0</a>. npm is © npm, Inc. <a href="http://supergiovane.tk/">supergiovane</a> is not affiliated with <a href="https://www.npmjs.org">npm</a> or with <a href="http://elioelestorietese.it/">EELST</a>. Go <a onclick="return up();" href="#">up</a></h5></p>
                 </footer>
             </div>
         </div>

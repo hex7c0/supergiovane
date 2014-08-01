@@ -40,7 +40,7 @@ module.exports = function(grunt) {
             script: {
                 options: {
                     mangle: false,
-                    wrap: 'cl',
+                    // wrap: 'cl',
                     banner: '<%= banner %>',
                     footer: '\n'
                 },

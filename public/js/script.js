@@ -1,6 +1,24 @@
 "use strict";
 
 /**
+ * up function
+ * 
+ * @function up
+ * @return {Boolen}
+ */
+function up() {
+
+    $('html,body').animate({
+        scrollTop: $('.search').position().top
+    },1200,'swing',function() {
+
+        $('#search').focus();
+        return;
+    });
+    return false;
+}
+
+/**
  * search module (funcking ajax)
  * 
  * @function search
@@ -134,6 +152,15 @@ function controller($scope,$http,$timeout) {
         switch (item){
             case 'search':
                 search($http,$scope,$timeout);
+            break;
+            case 'clear':
+                $scope.versions = [];
+                $('.jumbotron').fadeOut(400,function() {
+
+                    $('.alert').fadeOut();
+                    $scope.npm = Object.create(null);
+                    return;
+                });
             break;
         }
     };
