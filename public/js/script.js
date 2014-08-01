@@ -157,6 +157,7 @@ function controller($scope,$http,$timeout) {
                 $scope.versions = [];
                 $('.jumbotron').fadeOut(400,function() {
 
+                    $('#search').val('');
                     $('.alert').fadeOut();
                     $scope.npm = Object.create(null);
                     return;
