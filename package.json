@@ -1,5 +1,5 @@
 {
-  "version": "1.1.20",
+  "version": "1.1.21",
   "name": "supergiovane",
   "description": "website for get story about npm module",
   "keywords": [
@@ -25,7 +25,7 @@
   },
   "directories":{
     "doc":"./doc",
-    "lib":"./lib"
+    "lib":"./min/lib"
   },
   "main": "index.min.js",
   "dependencies": {
