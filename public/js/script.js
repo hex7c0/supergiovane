@@ -16,8 +16,7 @@ function search($http,$scope,$timeout) {
     if (ss && angular.isString(ss)) {
         $('.modal').modal('show');
         $scope.versions = [];
-        $scope.npm = {};
-        $('.jumbotron').fadeOut();
+        $scope.npm = Object.create(null);
         $http({
             method: 'GET',
             url: '/' + ss + '/',
@@ -25,7 +24,7 @@ function search($http,$scope,$timeout) {
         }).success(
                 function(data,status,headers,config) {
 
-                    $('.jumbotron').show(0);
+                    $('.jumbotron').show();
                     try {
                         var a;
                         if (data.author && data.author.name) {
@@ -56,15 +55,15 @@ function search($http,$scope,$timeout) {
                     }
 
                     for ( var i in data.versions) {
-                        var v = data.versions[i];
-                        var u, t;
-                        if (v.repository && v.repository.url) {
-                            u = v.repository.url;
-                        }
-                        if (v.dist && v.dist.tarball) {
-                            t = v.dist.tarball;
-                        }
                         try {
+                            var v = data.versions[i];
+                            var u, t;
+                            if (v.repository && v.repository.url) {
+                                u = v.repository.url;
+                            }
+                            if (v.dist && v.dist.tarball) {
+                                t = v.dist.tarball;
+                            }
                             $scope.versions.push({
                                 title: i,
                                 time: new Date(data.time[i]).toUTCString(),
@@ -83,9 +82,16 @@ function search($http,$scope,$timeout) {
                     return;
                 }).error(function(data,status,headers,config) {
 
-            $('.alert').fadeIn(400,function() {
+            $('.jumbotron').fadeOut(400,function() {
 
-                $('.modal').modal('hide');
+                $('.alert').fadeIn(400,function() {
+
+                    $('.modal').modal('hide');
+                    $('html,body').animate({
+                        scrollTop: $('.alert').position().top
+                    },1200);
+                    return;
+                });
                 return;
             });
         });
