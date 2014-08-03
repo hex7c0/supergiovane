@@ -24,9 +24,8 @@ function up() {
  * @function search
  * @param {Object} http - angular http object
  * @param {Object} scope - angular scope object
- * @param {Object} timeout - angular timeout object
  */
-function search($http,$scope,$timeout) {
+function search($http,$scope) {
 
     $('#search').tooltip('hide');
     $('.alert').fadeOut();
@@ -72,6 +71,7 @@ function search($http,$scope,$timeout) {
                         console.error(e);
                     }
 
+                    var c = 0;
                     for ( var i in data.versions) {
                         try {
                             var v = data.versions[i];
@@ -89,10 +89,13 @@ function search($http,$scope,$timeout) {
                                 repo: u,
                                 url: t
                             });
+                            c++;
                         } catch (e) {
                             console.error(e);
                         }
                     }
+                    $scope.npm.versions = c;
+
                     $('.modal').modal('hide');
                     $('html,body').animate({
                         scrollTop: $('#show').position().top
@@ -127,13 +130,19 @@ function search($http,$scope,$timeout) {
  * @param {Object} scope - angular scope object
  * @param {Object} timeout - angular timeout object
  */
-function controller($scope,$http,$timeout) {
+function controller($scope,$http,$location) {
 
-    $scope.npm = {};
+    $scope.npm = Object.create(null);
     $scope.versions = [];
 
+    var path;
+    if (path = $location.path()) {
+        $scope.search = path.replace(/\//g,'');
+        search($http,$scope);
+    }
+
     /*
-     * binding
+     * key binding
      */
     $('.alert').click(function() {
 
@@ -151,7 +160,7 @@ function controller($scope,$http,$timeout) {
 
         switch (item){
             case 'search':
-                search($http,$scope,$timeout);
+                search($http,$scope);
             break;
             case 'clear':
                 $scope.versions = [];

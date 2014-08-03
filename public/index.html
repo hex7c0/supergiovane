@@ -33,7 +33,7 @@
                     <a href="https://it.wikipedia.org/wiki/Luca_Mangoni" target="_blank">
                         <img src="img/sp.jpg" id="search-logo" class="media" alt="supergiovane" />
                     </a>
-                    <h2 class="search-heading">insert npm module</h2>
+                    <h2 class="search-heading">insert <span style="color:#cc3d33;">npm</span> module</h2>
                     <div class="input-group">
                         <input id="search" type="search" ng-model="search" class="form-control search-input" placeholder="try monitode" accesskey="p" required autofocus autocomplete data-toggle="tooltip" data-placement="left" title="package">
                         <span class="input-group-btn">
@@ -80,6 +80,7 @@
                         npm: <a href="{{npm.npm.link}}">module</a><span ng-show="npm.npm.issue">, <a ng-show="npm.npm.issue" href="{{npm.npm.issue}}">issue</a></span><span ng-show="npm.npm.stat">, <a ng-show="npm.npm.stat" href="{{npm.npm.stat}}">stat</a></span>
                     </span>
                     <span class="list-group-item" ng-show="npm.license">license: {{npm.license}}</span>
+                    <span class="list-group-item" ng-show="npm.versions">found: {{npm.versions}} <a href="http://supergiovane.tk/#/{{search}}">versions</a></span>
                 </div>
             </div>
 
