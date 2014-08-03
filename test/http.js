@@ -83,7 +83,7 @@ describe('http',function() {
 
         it('package without refer',function(done) {
 
-            request(app).get('/supergiovane/').expect(404,done);
+            request(app).get('/supergiovane/').expect(301,done);
         });
 
         it('package different refer',function(done) {
