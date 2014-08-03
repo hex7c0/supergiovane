@@ -66,7 +66,10 @@ module.exports = function(grunt) {
             html: {
                 options: {
                     removeComments: true,
-                    collapseWhitespace: true
+                    collapseWhitespace: true,
+                    minifyJS: true,
+                    minifyCSS: true,
+                    footer: '\n'
                 },
                 files: {
                     'public/index.min.html': 'public/index.html'
