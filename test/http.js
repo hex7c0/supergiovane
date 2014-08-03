@@ -88,13 +88,13 @@ describe('http',function() {
 
         it('package different refer',function(done) {
 
-            request(app).get('/supergiovane/').set('Referer','mah').expect(404,
+            request(app).get('/supergiovane/').set('Referer','mah').expect(301,
                     done);
         });
 
         it('package wrong',function(done) {
 
-            request(app).get('/supergiovane_qwertyuiop/').expect(404,done);
+            request(app).get('/supergiovane_qwertyuiop/').expect(301,done);
         });
     });
 

@@ -74,7 +74,7 @@ describe('options',function() {
 
         it('package different refer',function(done) {
 
-            request(app).get('/supergiovane/').set('Referer','mah').expect(404,
+            request(app).get('/supergiovane/').set('Referer','mah').expect(301,
                     done);
         });
     });
