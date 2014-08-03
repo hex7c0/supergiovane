@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.1.29
+ * @version 1.1.32
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -13,7 +13,7 @@
 /*
  * initialize module
  */
-var VERSION = '1.1.29';
+var VERSION = '1.1.32';
 var ERROR = 'matusa';
 // import
 try {
@@ -137,7 +137,7 @@ function bootstrap(my) {
             });
             out.end();
         } else {
-            res.status(404).end(ERROR);
+            res.redirect(301,my.referer.source);
         }
         return;
     });
