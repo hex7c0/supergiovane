@@ -170,7 +170,7 @@ function controller($scope,$http,$location) {
                 $scope.versions = [];
                 $('.jumbotron').fadeOut(400,function() {
 
-                    $scope.search = '';
+                    $('#search').val('');
                     $('.alert').fadeOut();
                     $scope.npm = Object.create(null);
                     return;
