@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.1.32
+ * @version 1.2.0
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -13,7 +13,7 @@
 /*
  * initialize module
  */
-var VERSION = '1.1.32';
+var VERSION = '1.2.0';
 var ERROR = 'matusa';
 // import
 try {
@@ -24,6 +24,7 @@ try {
     var http = require('http');
     var logger = require('logger-request');
     var lusca = require('lusca');
+    var vhost = require('top-vhost');
     var cpu = require('os').cpus().length * 2;
     var timeout = require('timeout-request');
 } catch (MODULE_NOT_FOUND) {
@@ -57,6 +58,9 @@ function bootstrap(my) {
     }
     if (my.timeout) {
         app.use(timeout(my.timeout));
+    }
+    if (my.vhost) {
+        app.use(vhost(my.vhost));
     }
     app.use(lusca({
         xframe: 'SAMEORIGIN',
@@ -217,7 +221,8 @@ module.exports = function supergiovane(options) {
         timeout: options.timeout == false ? false : options.timeout
                 || Object.create(null),
         sitemap: options.sitemap == false ? false : options.sitemap
-                || Object.create(null)
+                || Object.create(null),
+        vhost: options.vhost == false ? false : options.vhost || false
     };
 
     if (my.env == 'development') { // no cluster
