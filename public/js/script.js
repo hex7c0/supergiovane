@@ -33,7 +33,11 @@ function search($http,$scope) {
     if (ss && angular.isString(ss)) {
         $('.modal').modal('show');
         $scope.versions = [];
-        $scope.npm = Object.create(null);
+        $('.jumbotron').fadeOut(400,function() {
+
+            $scope.npm = Object.create(null);
+            return;
+        });
         $http({
             method: 'GET',
             url: '/' + ss + '/',
@@ -166,7 +170,7 @@ function controller($scope,$http,$location) {
                 $scope.versions = [];
                 $('.jumbotron').fadeOut(400,function() {
 
-                    $('#search').val('');
+                    $scope.search = '';
                     $('.alert').fadeOut();
                     $scope.npm = Object.create(null);
                     return;
