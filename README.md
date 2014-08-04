@@ -19,6 +19,10 @@ or
 ```
 git clone git://github.com/hex7c0/supergiovane.git
 ```
+or
+```
+http://supergiovane.tk/#/supergiovane
+```
 
 ## API
 
@@ -40,6 +44,7 @@ supergiovane(options);
  - `logger` - **Object | false** Configuration for [`logger-request`](https://github.com/hex7c0/logger-request) or disable *(default "standard")*
  - `timeout` - **Object | false** Configuration for [`timeout-request`](https://github.com/hex7c0/timeout-request) or disable *(default "standard")*
  - `sitemap` - **Object | false** Configuration for [`express-sitemap`](https://github.com/hex7c0/express-sitemap) or disable *(default "standard")*
+ - `vhost` - **Object | false** Configuration for [`top-vhost`](https://github.com/hex7c0/top-vhost) or disable *(default "standard")*
 
 #### Examples
 
