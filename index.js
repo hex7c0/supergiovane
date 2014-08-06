@@ -24,6 +24,7 @@ try {
     var lusca = require('lusca');
     var vhost = require('top-vhost');
     var timeout = require('timeout-request');
+    var resolve = require('path').resolve;
     var cpu = require('os').cpus().length * 2;
 } catch (MODULE_NOT_FOUND) {
     console.error(MODULE_NOT_FOUND);
@@ -78,6 +79,7 @@ function bootstrap(my) {
     // cfg
     http.globalAgent.maxSockets = Math.pow(cpu,2);
     http.timeout = 60000;
+    var index = resolve(my.dir + 'index.min.html');
     // routing
     /**
      * index
@@ -88,7 +90,7 @@ function bootstrap(my) {
      */
     app.get('/',function(req,res) {
 
-        res.sendfile(my.dir + 'index.min.html');
+        res.sendFile(index);
         return;
     });
 
