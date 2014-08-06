@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.2.0
+ * @version 1.2.1
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -13,8 +13,6 @@
 /*
  * initialize module
  */
-var VERSION = '1.2.0';
-var ERROR = 'matusa';
 // import
 try {
     var cluster = require('cluster');
@@ -25,12 +23,15 @@ try {
     var logger = require('logger-request');
     var lusca = require('lusca');
     var vhost = require('top-vhost');
-    var cpu = require('os').cpus().length * 2;
     var timeout = require('timeout-request');
+    var cpu = require('os').cpus().length * 2;
 } catch (MODULE_NOT_FOUND) {
     console.error(MODULE_NOT_FOUND);
     process.exit(1);
 }
+// load
+var VERSION = '1.2.1';
+var ERROR = 'matusa';
 
 /*
  * functions
@@ -53,6 +54,7 @@ function bootstrap(my) {
     app.enable('trust proxy');
     app.disable('x-powered-by');
     app.disable('etag');
+    // middleware
     if (my.logger) {
         app.use(logger(my.logger));
     }
@@ -73,7 +75,10 @@ function bootstrap(my) {
     if (my.sitemap) {
         sitemap(my.sitemap).toFile();
     }
-
+    // cfg
+    http.globalAgent.maxSockets = Math.pow(cpu,2);
+    http.timeout = 60000;
+    // routing
     /**
      * index
      * 
@@ -107,8 +112,7 @@ function bootstrap(my) {
                 method: 'GET',
                 // agent: false
                 headers: {
-                    'User-Agent': 'supergiovane@' + VERSION,
-                    'hi_guys': 'JSOP_will_be_a_great_feature'
+                    'User-Agent': 'supergiovane@' + VERSION
                 }
             },function(inp) {
 
@@ -134,7 +138,7 @@ function bootstrap(my) {
                 }
                 return;
             });
-            req.on('error',function(e) {
+            out.on('error',function(e) {
 
                 res.status(404).end(ERROR);
                 return;
