@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.2.1
+ * @version 1.2.3
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -17,6 +17,8 @@
 try {
     var cluster = require('cluster');
     var compression = require('compression');
+    var cookie = require('cookie-parser');
+    var csurf = require('csurf');
     var express = require('express');
     var sitemap = require('express-sitemap');
     var http = require('http');
@@ -31,7 +33,7 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = '1.2.1';
+var VERSION = '1.2.3';
 var ERROR = 'matusa';
 
 /*
@@ -56,6 +58,7 @@ function bootstrap(my) {
     app.disable('x-powered-by');
     app.disable('etag');
     // middleware
+    app.use(cookie());
     if (my.logger) {
         app.use(logger(my.logger));
     }
@@ -65,6 +68,12 @@ function bootstrap(my) {
     if (my.vhost) {
         app.use(vhost(my.vhost));
     }
+    app.use(csurf({
+        cookie: {
+            key: 'token',
+            httpOnly: true
+        }
+    }));
     app.use(lusca({
         xframe: 'SAMEORIGIN',
         xssProtection: true
@@ -93,7 +102,6 @@ function bootstrap(my) {
         res.sendFile(index);
         return;
     });
-
     /**
      * http request (no client ajax due browser securty limitation)
      * 
@@ -151,7 +159,6 @@ function bootstrap(my) {
         }
         return;
     });
-
     /**
      * catch all errors returned from page
      * 
@@ -184,7 +191,6 @@ function bootstrap(my) {
         res.status(code).end(ERROR);
         return;
     });
-
     /**
      * catch error 404 or if nobody cannot parse the request
      * 
