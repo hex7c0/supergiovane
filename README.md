@@ -42,6 +42,7 @@ supergiovane(options);
  - `timeout` - **Object | false** Configuration for [`timeout-request`](https://github.com/hex7c0/timeout-request) or disable *(default "standard")*
  - `sitemap` - **Object | false** Configuration for [`express-sitemap`](https://github.com/hex7c0/express-sitemap) or disable *(default "standard")*
  - `vhost` - **Object | false** Configuration for [`top-vhost`](https://github.com/hex7c0/top-vhost) or disable *(default "standard")*
+ - `cache` - **Number | false** Flag for store last "Number" results in cache *(default "5")*
 
 ## Examples
 
