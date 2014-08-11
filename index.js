@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.2.3
+ * @version 1.2.4
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -33,7 +33,7 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = '1.2.3';
+var VERSION = '1.2.4';
 var ERROR = 'matusa';
 
 /*
@@ -88,6 +88,7 @@ function bootstrap(my) {
     // cfg
     http.globalAgent.maxSockets = Math.pow(cpu,2);
     http.timeout = 60000;
+    var STORY = Object.create(null);
     var index = resolve(my.dir + 'index.min.html');
     // routing
     /**
@@ -115,6 +116,11 @@ function bootstrap(my) {
         var p = req.params.pkg;
         var r = req.headers['referer'] || req.headers['referrer'];
         if (typeof p === 'string' && my.referer.test(r)) {
+            if (my.cache && STORY[p]) {
+                res.send(STORY[p].body);
+                STORY[p].time = new Date().getTime();
+                return;
+            }
             var out = http.request({
                 host: 'registry.npmjs.org',
                 port: 80,
@@ -138,10 +144,29 @@ function bootstrap(my) {
                     });
                     inp.on('end',function() {
 
-                        body = body.toString();
+                        body = JSON.parse(body);
                         // remove too big
                         body.readme = null;
-                        res.end(body);
+                        res.send(body);
+                        // clean cache
+                        if (my.cache) {
+                            var c = 0, old = new Date().getTime(), last;
+                            for ( var pr in STORY) {
+                                c++;
+                                if (STORY[pr].time < old) {
+                                    last = pr;
+                                    old = STORY[last].time;
+                                }
+                            }
+                            if (c >= my.cache) {
+                                delete STORY[last];
+                            }
+                            STORY[p] = {
+                                body: body,
+                                time: new Date().getTime()
+                            };
+                        }
+                        return;
                     });
                 } else {
                     res.status(404).end(ERROR);
@@ -234,7 +259,8 @@ module.exports = function supergiovane(options) {
                 || Object.create(null),
         sitemap: options.sitemap == false ? false : options.sitemap
                 || Object.create(null),
-        vhost: options.vhost == false ? false : options.vhost || false
+        vhost: options.vhost == false ? false : options.vhost || false,
+        cache: options.vhost == false ? false : Number(options.cache || 5)
     };
 
     if (my.env == 'development') { // no cluster

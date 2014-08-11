@@ -50,6 +50,7 @@ describe('http',function() {
             request(app).get('/').expect(200,done);
         });
 
+        var cache;
         it('package',function(done) {
 
             request(app).get('/supergiovane/')
@@ -59,11 +60,25 @@ describe('http',function() {
                                 if (err)
                                     throw err;
                                 assert.deepEqual(res.statusCode,200);
-                                var j = JSON.parse(res.text);
-                                assert.deepEqual(j.name,'supergiovane');
-                                assert.deepEqual(j.versions['0.0.1'].main,
+                                cache = JSON.parse(res.text);
+                                assert.deepEqual(cache.name,'supergiovane');
+                                assert.deepEqual(cache.versions['0.0.1'].main,
                                         'index.min.js');
-                                assert.deepEqual(j.license,'GPLv3');
+                                assert.deepEqual(cache.license,'GPLv3');
+                                done();
+                            });
+        });
+
+        it('cached',function(done) {
+
+            request(app).get('/supergiovane/')
+                    .set('Referer','http://127.0.0.1').expect(200).end(
+                            function(err,res) {
+
+                                if (err)
+                                    throw err;
+                                var j = JSON.parse(res.text);
+                                assert.deepEqual(cache,j);
                                 done();
                             });
         });
