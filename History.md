@@ -3,6 +3,8 @@
 
   * Add "cache" (options)
   * Send html header
+  * Update `express`@4.8.3
+  * Update `compression`@1.0.11
 
 1.2.3 / 2014-08-08
 ==================
