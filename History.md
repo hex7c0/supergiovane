@@ -1,3 +1,10 @@
+1.2.5 / 2014-08-12
+==================
+
+  * Remove "disable ETag" for express
+  * Using `server-signature`@1.0.0
+  * Add "signature" (options)
+
 1.2.4 / 2014-08-11
 ==================
 
