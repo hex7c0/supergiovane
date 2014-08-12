@@ -14,7 +14,9 @@
  */
 // import
 try {
-    var supergiovane = require('../index.min.js'); // use require('supergiovane') instead
+    var supergiovane = require('../index.min.js'); // use
+    // require('supergiovane')
+    // instead
 } catch (MODULE_NOT_FOUND) {
     console.error(MODULE_NOT_FOUND);
     process.exit(1);
@@ -32,5 +34,8 @@ supergiovane({
                 disallow: true,
             }
         }
+    },
+    signature: {
+        token: 'Minor'
     }
 });
