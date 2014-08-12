@@ -41,7 +41,8 @@ supergiovane(options);
  - `logger` - **Object | false** Configuration for [`logger-request`](https://github.com/hex7c0/logger-request) or disable *(default "standard")*
  - `timeout` - **Object | false** Configuration for [`timeout-request`](https://github.com/hex7c0/timeout-request) or disable *(default "standard")*
  - `sitemap` - **Object | false** Configuration for [`express-sitemap`](https://github.com/hex7c0/express-sitemap) or disable *(default "standard")*
- - `vhost` - **Object | false** Configuration for [`top-vhost`](https://github.com/hex7c0/top-vhost) or disable *(default "standard")*
+ - `vhost` - **Object | false** Configuration for [`top-vhost`](https://github.com/hex7c0/top-vhost) or disable *(default "disabled")*
+ - `signature` - **Object | false** Configuration for [`server-signature`](https://github.com/hex7c0/server-signature) or disable *(default "disabled")*
  - `cache` - **Number | false** Flag for store last "Number" results in cache *(default "5")*
 
 ## Examples

@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.2.4
+ * @version 1.2.5
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -20,12 +20,8 @@ try {
     var cookie = require('cookie-parser');
     var csurf = require('csurf');
     var express = require('express');
-    var sitemap = require('express-sitemap');
     var http = require('http');
-    var logger = require('logger-request');
     var lusca = require('lusca');
-    var vhost = require('top-vhost');
-    var timeout = require('timeout-request');
     var resolve = require('path').resolve;
     var cpu = require('os').cpus().length * 2;
 } catch (MODULE_NOT_FOUND) {
@@ -33,7 +29,7 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = '1.2.4';
+var VERSION = '1.2.5';
 var ERROR = 'matusa';
 
 /*
@@ -42,6 +38,7 @@ var ERROR = 'matusa';
 /**
  * starting point
  * 
+ * @function bootstrap
  * @param {Object} my - user cfg
  * @return {Object}
  */
@@ -49,24 +46,26 @@ function bootstrap(my) {
 
     // setting
     var app = express();
-    app.set('env',my.env);
+    app.set('env', my.env);
     my.env == 'production' ? app.enable('view cache') : app
             .disable('view cache');
     app.enable('case sensitive routing');
     app.enable('strict routing');
     app.enable('trust proxy');
     app.disable('x-powered-by');
-    app.disable('etag');
     // middleware
     app.use(cookie());
     if (my.logger) {
+        var logger = require('logger-request');
         app.use(logger(my.logger));
     }
-    if (my.timeout) {
-        app.use(timeout(my.timeout));
-    }
     if (my.vhost) {
+        var vhost = require('top-vhost');
         app.use(vhost(my.vhost));
+    }
+    if (my.timeout) {
+        var timeout = require('timeout-request');
+        app.use(timeout(my.timeout));
     }
     app.use(csurf({
         cookie: {
@@ -82,11 +81,16 @@ function bootstrap(my) {
         level: 9,
         threshold: 256
     }));
+    if (my.signature) {
+        var signature = require('server-signature');
+        app.use(signature(my.signature));
+    }
     if (my.sitemap) {
+        var sitemap = require('express-sitemap');
         sitemap(my.sitemap).toFile();
     }
     // cfg
-    http.globalAgent.maxSockets = Math.pow(cpu,2);
+    http.globalAgent.maxSockets = Math.pow(cpu, 2);
     http.timeout = 60000;
     var STORY = Object.create(null);
     var index = resolve(my.dir + 'index.min.html');
@@ -98,20 +102,20 @@ function bootstrap(my) {
      * @param {Object} res - response to client
      * @param {next} next - continue routes
      */
-    app.get('/',function(req,res) {
+    app.get('/', function(req, res) {
 
         res.sendFile(index);
         return;
     });
     /**
-     * http request (no client ajax due browser securty limitation)
+     * http request (no client ajax due browser security limitation)
      * 
      * @function
      * @param {Object} req - client request
      * @param {Object} res - response to client
      * @param {next} next - continue routes
      */
-    app.get('/:pkg/',function(req,res) {
+    app.get('/:pkg/', function(req, res) {
 
         var p = req.params.pkg;
         var r = req.headers['referer'] || req.headers['referrer'];
@@ -130,19 +134,19 @@ function bootstrap(my) {
                 headers: {
                     'User-Agent': 'supergiovane@' + VERSION
                 }
-            },function(inp) {
+            }, function(inp) {
 
                 // var body='';
                 var body = new Buffer(0);
                 if (inp.statusCode == 200 || inp.statusCode == 304) {
                     // inp.setEncoding('utf8');
-                    inp.on('data',function(chunk) {
+                    inp.on('data', function(chunk) {
 
                         // buffer
                         body += chunk;
                         return;
                     });
-                    inp.on('end',function() {
+                    inp.on('end', function() {
 
                         body = JSON.parse(body);
                         // remove too big
@@ -173,14 +177,14 @@ function bootstrap(my) {
                 }
                 return;
             });
-            out.on('error',function(e) {
+            out.on('error', function(e) {
 
                 res.status(404).end(ERROR);
                 return;
             });
             out.end();
         } else {
-            res.redirect(301,my.referer.source);
+            res.redirect(301, my.referer.source);
         }
         return;
     });
@@ -193,25 +197,25 @@ function bootstrap(my) {
      * @param {Object} res - response to client
      * @param {next} next - continue routes
      */
-    app.use(function(err,req,res,next) {
+    app.use(function(err, req, res, next) {
 
         var code = 0;
-        switch (err.message.toLowerCase()){
+        switch (err.message.toLowerCase()) {
             case 'not found':
                 next();
-            break;
+                break;
             case 'unauthorized':
                 code = 401;
-            break;
+                break;
             case 'forbidden':
                 code = 403;
-            break;
+                break;
             case 'bad gateway':
                 code = 502;
-            break;
+                break;
             default:
                 code = 500;
-            break;
+                break;
         }
         res.status(code).end(ERROR);
         return;
@@ -224,7 +228,7 @@ function bootstrap(my) {
      * @param {Object} res - response to client
      * @param {next} next - continue routes
      */
-    app.use(function(req,res,next) {
+    app.use(function(req, res, next) {
 
         var code = 404;
         res.status(code).end(ERROR);
@@ -232,7 +236,7 @@ function bootstrap(my) {
     });
 
     console.log(process.pid + ' | listening on: ' + my.host + ':' + my.port);
-    http.createServer(app).listen(my.port,my.host);
+    http.createServer(app).listen(my.port, my.host);
     return app;
 }
 
@@ -251,7 +255,7 @@ module.exports = function supergiovane(options) {
         env: String(options.env || 'production'),
         host: String(options.host || '127.0.0.1'),
         port: Number(options.port) || 3000,
-        referer: new RegExp(String(options.referer || 'http://127.0.0.1'),'i'),
+        referer: new RegExp(String(options.referer || 'http://127.0.0.1'), 'i'),
         dir: String(options.dir || __dirname + '/public/'),
         logger: options.logger == false ? false : options.logger
                 || Object.create(null),
@@ -260,6 +264,8 @@ module.exports = function supergiovane(options) {
         sitemap: options.sitemap == false ? false : options.sitemap
                 || Object.create(null),
         vhost: options.vhost == false ? false : options.vhost || false,
+        signature: options.signature == false ? false
+                : options.signature || false,
         cache: options.vhost == false ? false : Number(options.cache || 5)
     };
 
@@ -279,7 +285,7 @@ module.exports = function supergiovane(options) {
          * @param {Integer} code - error code
          * @param {String} signal - error signal
          */
-        cluster.on('exit',function(worker,code,signal) {
+        cluster.on('exit', function(worker, code, signal) {
 
             console.warn(worker.process.pid + ' died by ' + signal);
             return;
