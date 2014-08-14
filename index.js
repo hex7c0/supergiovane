@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.2.5
+ * @version 1.2.6
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -29,7 +29,7 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = '1.2.5';
+var VERSION = '1.2.6';
 var ERROR = 'matusa';
 
 /*
