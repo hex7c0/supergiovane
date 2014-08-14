@@ -14,7 +14,8 @@
  */
 // import
 try {
-    var supergiovane = require('../index.min.js'); // use require('supergiovane')
+    var supergiovane = require('../index.min.js'); // use
+    // require('supergiovane')
     var request = require('supertest');
     var assert = require('assert');
     var fs = require('fs');
@@ -26,7 +27,7 @@ try {
 /*
  * test module
  */
-describe('options',function() {
+describe('options', function() {
 
     var app;
     var r = __dirname + '/r.txt';
@@ -39,49 +40,53 @@ describe('options',function() {
             dir: __dirname + '/',
             referer: 'boh',
             logger: false,
-            sitemap: false
+            sitemap: false,
+            signature: {
+                token: 'Full'
+            }
         });
         done();
     });
 
-    describe('correct - should return 200 status code',function() {
+    describe('correct - should return 200 status code', function() {
 
-        it('custom index',function(done) {
+        it('custom index', function(done) {
 
-            request(app).get('/').expect(200,done);
+            request(app).get('/').expect(200, done);
         });
 
-        it('package',function(done) {
+        it('package', function(done) {
 
-            request(app).get('/supergiovane/').set('Referer','boh').expect(200)
-                    .end(
-                            function(err,res) {
+            request(app).get('/supergiovane/').expect('Server',
+                    /Nodejs\/0.[0-9]{1,2}.[0-9]{1,2} \(/).set('Referer', 'boh')
+                    .expect(200).end(
+                            function(err, res) {
 
                                 if (err)
                                     throw err;
-                                assert.deepEqual(res.statusCode,200);
+                                assert.deepEqual(res.statusCode, 200);
                                 var j = JSON.parse(res.text);
-                                assert.deepEqual(j.name,'supergiovane');
+                                assert.deepEqual(j.name, 'supergiovane');
                                 assert.deepEqual(j.versions['0.0.1'].main,
                                         'index.min.js');
-                                assert.deepEqual(j.license,'GPLv3');
+                                assert.deepEqual(j.license, 'GPLv3');
                                 done();
                             });
         });
     });
 
-    describe('error - should return 404 status code',function() {
+    describe('error - should return 404 status code', function() {
 
-        it('package different refer',function(done) {
+        it('package different refer', function(done) {
 
-            request(app).get('/supergiovane/').set('Referer','mah').expect(301,
-                    done);
+            request(app).get('/supergiovane/').set('Referer', 'mah').expect(
+                    301, done);
         });
     });
 
-    describe('exists files',function() {
+    describe('exists files', function() {
 
-        it('logger',function(done) {
+        it('logger', function(done) {
 
             if (!fs.existsSync('route.log')) {
                 done();
@@ -89,7 +94,7 @@ describe('options',function() {
             return;
         });
 
-        it('robots',function(done) {
+        it('robots', function(done) {
 
             if (!fs.existsSync(r)) {
                 done();
@@ -97,7 +102,7 @@ describe('options',function() {
             return;
         });
 
-        it('sitemap',function(done) {
+        it('sitemap', function(done) {
 
             if (!fs.existsSync(s)) {
                 done();
