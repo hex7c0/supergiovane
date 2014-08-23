@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.2.9
+ * @version 1.2.10
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -29,7 +29,7 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = '1.2.9';
+var VERSION = '1.2.10';
 var ERROR = 'matusa';
 
 /*
@@ -90,7 +90,7 @@ function bootstrap(my) {
         sitemap(my.sitemap).toFile();
     }
     // cfg
-    http.globalAgent.maxSockets = Math.pow(cpu, 2);
+    http.globalAgent.maxSockets = Math.pow(my.fork, 2);
     http.timeout = 60000;
     var STORY = Object.create(null);
     var index = resolve(my.dir + 'index.min.html');
@@ -117,7 +117,7 @@ function bootstrap(my) {
      */
     app.get('/:pkg/', function(req, res) {
 
-        var p = req.params.pkg;
+        var p = decodeURIComponent(req.params.pkg);
         var r = req.headers['referer'] || req.headers['referrer'];
         if (typeof p === 'string' && my.referer.test(r)) {
             if (my.cache && STORY[p]) {
@@ -136,10 +136,8 @@ function bootstrap(my) {
                 }
             }, function(inp) {
 
-                // var body='';
                 var body = new Buffer(0);
-                if (inp.statusCode == 200 || inp.statusCode == 304) {
-                    // inp.setEncoding('utf8');
+                if (inp.statusCode === 200 || inp.statusCode === 304) {
                     inp.on('data', function(chunk) {
 
                         // buffer
@@ -266,7 +264,9 @@ module.exports = function supergiovane(options) {
         vhost: options.vhost == false ? false : options.vhost || false,
         signature: options.signature == false ? false
                 : options.signature || false,
-        cache: options.vhost == false ? false : Number(options.cache || 5)
+        cache: options.vhost == false ? false : Number(options.cache || 5),
+        fork: Number(options.fork || cpu),
+        max: Number(options.max || 0)
     };
 
     if (my.env == 'development') { // no cluster
@@ -274,7 +274,7 @@ module.exports = function supergiovane(options) {
     }
     if (cluster.isMaster) { // father
 
-        for (var i = 0; i < cpu; i++) {
+        for (var i = 0; i < my.fork; i++) {
             cluster.fork();
         }
         /**
@@ -287,7 +287,10 @@ module.exports = function supergiovane(options) {
          */
         cluster.on('exit', function(worker, code, signal) {
 
-            console.warn(worker.process.pid + ' died by ' + signal);
+            console.error(worker.process.pid + ' died by ' + signal);
+            if (my.max === NaN || my.max-- > 0) {
+                cluster.fork();
+            }
             return;
         });
     } else { // child
