@@ -45,7 +45,8 @@ supergiovane(options);
  - `signature` - **Object | false** Configuration for [`server-signature`](https://github.com/hex7c0/server-signature) or disable *(default "disabled")*
  - `cache` - **Number | false** Flag for store last "Number" results in cache *(default "5")*
  - `fork` - **Number** Number of forks (see cluster module), for single thread use "development" `env` *(default "cpus")*
- - `max` - **Number | String** Restart max crashed forks (use String for unlimited restart) *(default "0")*
+ - `max` - **Number | String** Restart max number of crashed forks (use String for unlimited restart) *(default "no restart")*
+ - `debug` - **String | false** Write debug information to file or disable *(default "debug.log")*
 
 ## Examples
 
