@@ -43,7 +43,8 @@ describe('options', function() {
             sitemap: false,
             signature: {
                 token: 'Full'
-            }
+            },
+            debug: false
         });
         done();
     });
@@ -84,7 +85,7 @@ describe('options', function() {
         });
     });
 
-    describe('exists files', function() {
+    describe('exist files', function() {
 
         it('logger', function(done) {
 
@@ -105,6 +106,14 @@ describe('options', function() {
         it('sitemap', function(done) {
 
             if (!fs.existsSync(s)) {
+                done();
+            }
+            return;
+        });
+
+        it('debug', function(done) {
+
+            if (!fs.existsSync('debug.log')) {
                 done();
             }
             return;
