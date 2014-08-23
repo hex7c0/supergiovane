@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.2.10
+ * @version 1.3.0
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -22,6 +22,7 @@ try {
     var express = require('express');
     var http = require('http');
     var lusca = require('lusca');
+    var logger = require('logger-request');
     var resolve = require('path').resolve;
     var cpu = require('os').cpus().length * 2;
 } catch (MODULE_NOT_FOUND) {
@@ -29,8 +30,12 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = '1.2.10';
+var VERSION = '1.3.0';
 var ERROR = 'matusa';
+var DEBUG = function() {
+
+    return;
+};
 
 /*
  * functions
@@ -56,7 +61,6 @@ function bootstrap(my) {
     // middleware
     app.use(cookie());
     if (my.logger) {
-        var logger = require('logger-request');
         app.use(logger(my.logger));
     }
     if (my.vhost) {
@@ -121,7 +125,7 @@ function bootstrap(my) {
         var r = req.headers['referer'] || req.headers['referrer'];
         if (typeof p === 'string' && my.referer.test(r)) {
             if (my.cache && STORY[p]) {
-                res.send(STORY[p].body);
+                res.status(302).send(STORY[p].body);
                 STORY[p].time = new Date().getTime();
                 return;
             }
@@ -140,18 +144,15 @@ function bootstrap(my) {
                 if (inp.statusCode === 200 || inp.statusCode === 304) {
                     inp.on('data', function(chunk) {
 
-                        // buffer
-                        body += chunk;
+                        body += chunk; // buffer
                         return;
                     });
                     inp.on('end', function() {
 
                         body = JSON.parse(body);
-                        // remove too big
-                        body.readme = null;
+                        body.readme = null; // remove too big
                         res.send(body);
-                        // clean cache
-                        if (my.cache) {
+                        if (my.cache) { // clean cache
                             var c = 0, old = new Date().getTime(), last;
                             for ( var pr in STORY) {
                                 c++;
@@ -198,6 +199,10 @@ function bootstrap(my) {
     app.use(function(err, req, res, next) {
 
         var code = 0;
+        DEBUG('error', {
+            pid: process.pid,
+            error: err
+        });
         switch (err.message.toLowerCase()) {
             case 'not found':
                 next();
@@ -207,9 +212,6 @@ function bootstrap(my) {
                 break;
             case 'forbidden':
                 code = 403;
-                break;
-            case 'bad gateway':
-                code = 502;
                 break;
             default:
                 code = 500;
@@ -234,6 +236,11 @@ function bootstrap(my) {
     });
 
     console.log(process.pid + ' | listening on: ' + my.host + ':' + my.port);
+    DEBUG('start', {
+        pid: process.pid,
+        host: my.host,
+        port: my.port
+    });
     http.createServer(app).listen(my.port, my.host);
     return app;
 }
@@ -266,9 +273,22 @@ module.exports = function supergiovane(options) {
                 : options.signature || false,
         cache: options.vhost == false ? false : Number(options.cache || 5),
         fork: Number(options.fork || cpu),
-        max: Number(options.max || 0)
+        max: Number(options.max || 0),
+        debug: options.debug == false ? false : options.debug || 'debug.log'
     };
+    if (my.debug) {
+        DEBUG = logger({
+            filename: my.debug,
+            standalone: true,
+            winston: {
+                logger: 'supergiovane',
+                level: 'debug'
+            }
+        });
+    }
+    DEBUG('options', my);
 
+    // cluster
     if (my.env == 'development') { // no cluster
         return bootstrap(my);
     }
@@ -288,6 +308,11 @@ module.exports = function supergiovane(options) {
         cluster.on('exit', function(worker, code, signal) {
 
             console.error(worker.process.pid + ' died by ' + signal);
+            DEBUG('restart', {
+                max: my.max,
+                code: code,
+                signal: signal
+            });
             if (my.max === NaN || my.max-- > 0) {
                 cluster.fork();
             }
