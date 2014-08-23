@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.3.0
+ * @version 1.3.1
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -30,7 +30,7 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = '1.3.0';
+var VERSION = '1.3.1';
 var ERROR = 'matusa';
 var DEBUG = function() {
 
@@ -125,7 +125,7 @@ function bootstrap(my) {
         var r = req.headers['referer'] || req.headers['referrer'];
         if (typeof p === 'string' && my.referer.test(r)) {
             if (my.cache && STORY[p]) {
-                res.status(302).send(STORY[p].body);
+                res.status(202).send(STORY[p].body);
                 STORY[p].time = new Date().getTime();
                 return;
             }
@@ -281,19 +281,19 @@ module.exports = function supergiovane(options) {
             filename: my.debug,
             standalone: true,
             winston: {
-                logger: 'supergiovane',
+                logger: '_spDebug',
                 level: 'debug'
             }
         });
     }
-    DEBUG('options', my);
 
     // cluster
     if (my.env == 'development') { // no cluster
+        DEBUG('options', my);
         return bootstrap(my);
     }
     if (cluster.isMaster) { // father
-
+        DEBUG('options', my);
         for (var i = 0; i < my.fork; i++) {
             cluster.fork();
         }
@@ -319,7 +319,6 @@ module.exports = function supergiovane(options) {
             return;
         });
     } else { // child
-
         return bootstrap(my);
     }
     return;

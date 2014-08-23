@@ -71,7 +71,7 @@ describe('http', function() {
         it('cached', function(done) {
 
             request(app).get('/supergiovane/').set('Referer',
-                    'http://127.0.0.1').expect(302).end(function(err, res) {
+                    'http://127.0.0.1').expect(202).end(function(err, res) {
 
                 if (err)
                     throw err;
