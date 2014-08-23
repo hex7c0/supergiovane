@@ -1,3 +1,20 @@
+v1.2.10 / 2014-08-23
+==================
+
+  * Performance tips
+  * Add "fork" (options)
+  * Add "max" (options)
+  * _Deps_:
+    * Update `csurf`@1.4.1
+    * Update `express`@4.8.5
+    * Update `express-sitemap`@1.3.4
+    * Update `logger-request`@3.0.3
+    * Update `server-signature`@1.0.1
+    * Update `timeout-request`@1.1.3
+    * Update `top-vhost`@1.7.3
+  * _Web_:
+    * Update `angular`@1.3.0-beta.19
+
 v1.2.9 / 2014-08-17
 ==================
 

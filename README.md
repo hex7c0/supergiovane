@@ -33,7 +33,7 @@ supergiovane(options);
 
 #### options
 
- - `env` - **String** Selected environment *(default "production")*
+ - `env` - **development | production** Selected environment *(default "production")*
  - `host` - **String** Which host accept connection from web *(default "127.0.0.1")*
  - `port` - **Integer** Which port accept connection from web *(default "3000")*
  - `referer` - **String** Which referer send data *(default "http://127.0.0.1")*
@@ -44,6 +44,8 @@ supergiovane(options);
  - `vhost` - **Object | false** Configuration for [`top-vhost`](https://github.com/hex7c0/top-vhost) or disable *(default "disabled")*
  - `signature` - **Object | false** Configuration for [`server-signature`](https://github.com/hex7c0/server-signature) or disable *(default "disabled")*
  - `cache` - **Number | false** Flag for store last "Number" results in cache *(default "5")*
+ - `fork` - **Number** Number of forks (see cluster module), for single thread use "development" `env` *(default "cpus")*
+ - `max` - **Number | String** Restart max crashed forks (use String for unlimited restart) *(default "0")*
 
 ## Examples
 
