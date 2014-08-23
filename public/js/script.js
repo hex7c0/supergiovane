@@ -10,7 +10,7 @@ function up() {
 
     $('html,body').animate({
         scrollTop: $('.search').position().top
-    },1200,'swing',function() {
+    }, 1200, 'swing', function() {
 
         $('#search').focus();
         return;
@@ -25,7 +25,7 @@ function up() {
  * @param {Object} http - angular http object
  * @param {Object} scope - angular scope object
  */
-function search($http,$scope) {
+function search($http, $scope) {
 
     $('#search').tooltip('hide');
     $('.alert').fadeOut();
@@ -33,7 +33,7 @@ function search($http,$scope) {
     if (ss && angular.isString(ss)) {
         $('.modal').modal('show');
         $scope.versions = [];
-        $('.jumbotron').fadeOut(400,function() {
+        $('.jumbotron').fadeOut(400, function() {
 
             $scope.npm = Object.create(null);
             return;
@@ -43,7 +43,7 @@ function search($http,$scope) {
             url: '/' + ss + '/',
             cache: true
         }).success(
-                function(data,status,headers,config) {
+                function(data, status, headers, config) {
 
                     $('.jumbotron').show();
                     try {
@@ -103,18 +103,18 @@ function search($http,$scope) {
                     $('.modal').modal('hide');
                     $('html,body').animate({
                         scrollTop: $('#show').position().top
-                    },1200);
+                    }, 1200);
                     return;
-                }).error(function(data,status,headers,config) {
+                }).error(function(data, status, headers, config) {
 
-            $('.jumbotron').fadeOut(400,function() {
+            $('.jumbotron').fadeOut(400, function() {
 
-                $('.alert').fadeIn(400,function() {
+                $('.alert').fadeIn(400, function() {
 
                     $('.modal').modal('hide');
                     $('html,body').animate({
                         scrollTop: $('.alert').position().top
-                    },1200);
+                    }, 1200);
                     return;
                 });
                 return;
@@ -134,15 +134,15 @@ function search($http,$scope) {
  * @param {Object} scope - angular scope object
  * @param {Object} timeout - angular timeout object
  */
-function controller($scope,$http,$location) {
+function controller($scope, $http, $location) {
 
     $scope.npm = Object.create(null);
     $scope.versions = [];
 
     var path;
     if (path = $location.path()) {
-        $scope.search = path.replace(/\//g,'');
-        search($http,$scope);
+        $scope.search = path.replace(/\//g, '');
+        search($http, $scope);
     }
 
     /*
@@ -155,32 +155,32 @@ function controller($scope,$http,$location) {
     });
     $(document).keypress(function(e) {
 
-        if (e.which == 13) {
+        if (e.which === 13) {
             $("#sub").click();
         }
         return;
     });
-    $scope.button = function(item,event) {
+    $scope.button = function(item, event) {
 
-        switch (item){
+        switch (item) {
             case 'search':
-                search($http,$scope);
-            break;
+                search($http, $scope);
+                break;
             case 'clear':
                 $scope.versions = [];
-                $('.jumbotron').fadeOut(400,function() {
+                $('.jumbotron').fadeOut(400, function() {
 
                     $('#search').val('');
                     $('.alert').fadeOut();
                     $scope.npm = Object.create(null);
                     return;
                 });
-            break;
+                break;
         }
     };
     return;
 }
 
 // load
-var app = angular.module('supergiovane',[]);
-app.controller('main',controller);
+var app = angular.module('supergiovane', []);
+app.controller('main', controller);
