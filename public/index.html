@@ -96,10 +96,10 @@
                     <p ng-show="element.time">release date: {{element.time}}</p>
                     <p ng-show="element.node">node engine: {{element.node}}</p>
                     <p ng-show="element.npmv">npm version: {{element.npmv}}</p>
-                    <p ng-show="element.dep" class="justify">dependencies: 
+                    <p ng-show="element.dep">dependencies: 
                         <span ng-show="element.dep" ng-bind-html="element.dep | linky:'_blank'"></span>
                     </p>
-                    <p ng-show="element.depv" class="justify">devDependencies: 
+                    <p ng-show="element.depv">devDependencies: 
                         <span ng-show="element.depv" ng-bind-html="element.depv | linky:'_blank'"></span>
                     </p>
                     <p class="btn-group">

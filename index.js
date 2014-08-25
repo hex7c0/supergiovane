@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.3.1
+ * @version 1.4.1
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -55,7 +55,7 @@ function bootstrap(my) {
     app.set('env', my.env);
     my.env == 'production' ? app.enable('view cache') : app.disable('view cache');
     app.enable('case sensitive routing');
-    app.enable('strict routing');
+    // app.enable('strict routing');
     app.enable('trust proxy');
     app.disable('x-powered-by');
     // middleware
