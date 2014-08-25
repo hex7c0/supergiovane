@@ -34,7 +34,7 @@ describe('http', function() {
     before(function(done) {
 
         app = supergiovane({
-            env: 'development',
+            env: 'test',
             sitemap: {
                 robots: r,
                 sitemap: s
@@ -54,8 +54,8 @@ describe('http', function() {
         var cache;
         it('package', function(done) {
 
-            request(app).get('/supergiovane/').set('Referer',
-                    'http://127.0.0.1').expect(200).end(function(err, res) {
+            request(app).get('/supergiovane/').set('Referer', 'http://127.0.0.1').expect(
+                    200).end(function(err, res) {
 
                 if (err)
                     throw err;
@@ -70,8 +70,8 @@ describe('http', function() {
 
         it('cached', function(done) {
 
-            request(app).get('/supergiovane/').set('Referer',
-                    'http://127.0.0.1').expect(202).end(function(err, res) {
+            request(app).get('/supergiovane/').set('Referer', 'http://127.0.0.1').expect(
+                    202).end(function(err, res) {
 
                 if (err)
                     throw err;
@@ -79,19 +79,6 @@ describe('http', function() {
                 assert.deepEqual(cache, j);
                 done();
             });
-        });
-    });
-
-    describe('error - should return 404 status code', function() {
-
-        it('static', function(done) {
-
-            request(app).get('/js/script.min.js').expect(404, done);
-        });
-
-        it('package misconfigured', function(done) {
-
-            request(app).get('/supergiovane').expect(404, done);
         });
 
         it('package without refer', function(done) {
@@ -101,13 +88,28 @@ describe('http', function() {
 
         it('package different refer', function(done) {
 
-            request(app).get('/supergiovane/').set('Referer', 'mah').expect(
-                    301, done);
+            request(app).get('/supergiovane/').set('Referer', 'mah').expect(301, done);
+        });
+    });
+
+    describe('error - should return 404 status code', function() {
+
+        it('static', function(done) {
+
+            request(app).get('/js/script.min.js').set('Referer', 'http://127.0.0.1')
+                    .expect(404, done);
+        });
+
+        it('package misconfigured', function(done) {
+
+            request(app).get('/supergiovane').set('Referer', 'http://127.0.0.1').expect(
+                    404, done);
         });
 
         it('package wrong', function(done) {
 
-            request(app).get('/supergiovane_qwertyuiop/').expect(301, done);
+            request(app).get('/supergiovane_qwertyuiop/').set('Referer',
+                    'http://127.0.0.1').expect(404, done);
         });
     });
 

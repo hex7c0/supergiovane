@@ -36,7 +36,7 @@ describe('options', function() {
 
         app = supergiovane({
             port: 3001,
-            env: 'development',
+            env: 'test',
             dir: __dirname + '/',
             referer: 'boh',
             logger: false,
@@ -59,29 +59,26 @@ describe('options', function() {
         it('package', function(done) {
 
             request(app).get('/supergiovane/').expect('Server',
-                    /Nodejs\/0.[0-9]{1,2}.[0-9]{1,2} \(/).set('Referer', 'boh')
-                    .expect(200).end(
-                            function(err, res) {
+                    /Nodejs\/0.[0-9]{1,2}.[0-9]{1,2} \(/).set('Referer', 'boh').expect(
+                    200).end(function(err, res) {
 
-                                if (err)
-                                    throw err;
-                                assert.deepEqual(res.statusCode, 200);
-                                var j = JSON.parse(res.text);
-                                assert.deepEqual(j.name, 'supergiovane');
-                                assert.deepEqual(j.versions['0.0.1'].main,
-                                        'index.min.js');
-                                assert.deepEqual(j.license, 'GPLv3');
-                                done();
-                            });
+                if (err)
+                    throw err;
+                assert.deepEqual(res.statusCode, 200);
+                var j = JSON.parse(res.text);
+                assert.deepEqual(j.name, 'supergiovane');
+                assert.deepEqual(j.versions['0.0.1'].main, 'index.min.js');
+                assert.deepEqual(j.license, 'GPLv3');
+                done();
+            });
         });
     });
 
-    describe('error - should return 404 status code', function() {
+    describe('error - should return 301 status code', function() {
 
         it('package different refer', function(done) {
 
-            request(app).get('/supergiovane/').set('Referer', 'mah').expect(
-                    301, done);
+            request(app).get('/supergiovane/').set('Referer', 'mah').expect(301, done);
         });
     });
 
