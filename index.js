@@ -158,7 +158,7 @@ function bootstrap(my) {
      * @param {Object} res - response to client
      * @param {next} next - continue routes
      */
-    app.get('/:pkg/:extra?/', function(req, res) {
+    app.get('/:pkg/:extra?', function(req, res) {
 
         var version = '/';
         var r = req.headers['referer'] || req.headers['referrer'];
@@ -168,7 +168,7 @@ function bootstrap(my) {
         var hash = p + e + s;
 
         // checkpoint
-        if (!my.referer.test(r) && e !== 'badge') {
+        if (!my.referer.test(r) && e !== 'badge.svg') {
             return res.redirect(301, my.referer.source);
         }
         if (my.cache && STORY[hash]) {
@@ -178,7 +178,7 @@ function bootstrap(my) {
             return;
         }
         if (e) {
-            if (e === 'badge') {
+            if (e === 'badge.svg') {
                 // pass
             } else if (semver.valid(e)) {
                 version += e;
@@ -208,7 +208,7 @@ function bootstrap(my) {
                 body.readme = null; // remove too big
 
                 // badge
-                if (e === 'badge') {
+                if (e === 'badge.svg') {
                     var c = 0;
                     for ( var i in body.versions) {
                         c++;

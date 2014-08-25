@@ -52,7 +52,7 @@ describe(
                                 function(done) {
 
                                     request(app)
-                                            .get('/supergiovane/badge/')
+                                            .get('/supergiovane/badge.svg')
                                             .expect(200)
                                             .expect('Content-Type',
                                                     'image/svg+xml; charset=utf-8')
@@ -76,7 +76,7 @@ describe(
                                 function(done) {
 
                                     request(app)
-                                            .get('/supergiovane/1.0.0/')
+                                            .get('/supergiovane/1.0.0')
                                             .set('Referer', 'http://127.0.0.1')
                                             .expect(200)
                                             .expect('Content-Type',
@@ -103,7 +103,7 @@ describe(
 
                 it('should return badge', function(done) {
 
-                    request(app).get('/supergiovane/badge/').expect(202).expect(
+                    request(app).get('/supergiovane/badge.svg').expect(202).expect(
                             'Content-Type', 'image/svg+xml; charset=utf-8').end(
                             function(err, res) {
 
@@ -117,7 +117,7 @@ describe(
 
                 it('should return specific version', function(done) {
 
-                    request(app).get('/supergiovane/1.0.0/').set('Referer',
+                    request(app).get('/supergiovane/1.0.0').set('Referer',
                             'http://127.0.0.1').expect(202).expect('Content-Type',
                             'application/json; charset=utf-8').end(function(err, res) {
 

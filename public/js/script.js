@@ -193,7 +193,6 @@ function controller($scope, $http, $location) {
 
             $('.jumbotron').fadeOut(400, function() {
 
-                $('#search').val('');
                 $('.alert').fadeOut();
                 $scope.npm = Object.create(null);
                 $scope.versions = [];
@@ -227,6 +226,8 @@ function controller($scope, $http, $location) {
                 break;
             case 'clear':
                 $scope.clean();
+                $('#search').val('');
+                $('#search').focus();
                 break;
         }
     };

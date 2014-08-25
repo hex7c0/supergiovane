@@ -82,7 +82,7 @@
                     <span class="list-group-item" ng-show="npm.license">license: {{npm.license}}</span>
                     <span class="list-group-item" ng-show="npm.versions">found: 
                         <a ng-show="npm.versions" ng-href="http://supergiovane.tk/#/{{searched}}">
-                            <img ng-show="npm.versions" id="badge" ng-src="http://supergiovane.tk/{{searched}}/badge/" alt="badge" />
+                            <img ng-show="npm.versions" id="badge" ng-src="http://supergiovane.tk/{{searched}}/badge.svg" alt="badge" />
                         </a>
                     </span>
                 </div>
@@ -91,7 +91,7 @@
             <ul id="show" class="row row-offcanvas row-offcanvas-right">
                 <li ng-repeat="element in versions" class="col-6 col-sm-6 col-lg-4">
                     <h2>
-                        <a ng-href="http://supergiovane.tk/#/{{searched}}/{{element.title}}/">version {{element.title}}</a>
+                        <a ng-href="http://supergiovane.tk/#/{{searched}}/{{element.title}}">version {{element.title}}</a>
                     </h2>
                     <p ng-show="element.time">release date: {{element.time}}</p>
                     <p ng-show="element.node">node engine: {{element.node}}</p>
