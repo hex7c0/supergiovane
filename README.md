@@ -1,7 +1,7 @@
 # [supergiovane](http://supergiovane.tk/#/supergiovane)
 
 [![NPM version](https://badge.fury.io/js/supergiovane.svg)](http://badge.fury.io/js/supergiovane)
-[![Build Status](https://travis-ci.org/hex7c0/supergiovane.svg?branch=master)](https://travis-ci.org/hex7c0/supergiovane)
+[![Build Status](https://travis-ci.org/hex7c0/supergiovane.svg)](https://travis-ci.org/hex7c0/supergiovane)
 [![Dependency Status](https://david-dm.org/hex7c0/supergiovane/status.svg)](https://david-dm.org/hex7c0/supergiovane)
 
 [![supergiovane logo](https://raw.githubusercontent.com/hex7c0/supergiovane/master/public/img/sp.jpg)](http://supergiovane.tk)
