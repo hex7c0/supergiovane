@@ -32,20 +32,21 @@ function search($http, $scope) {
     var ss = $scope.search;
     if (ss && angular.isString(ss)) {
         $('.modal').modal('show');
-        $scope.versions = [];
         $('.jumbotron').fadeOut(400, function() {
 
+            $scope.versions = [];
             $scope.npm = Object.create(null);
             return;
         });
         $http({
             method: 'GET',
-            url: '/' + ss + '/',
+            url: '/' + ss.replace(/@/, '/') + '/',
             cache: true
         }).success(
                 function(data, status, headers, config) {
 
                     $('.jumbotron').show();
+                    $scope.searched = ss.match(/^([^@]*)/)[0];
                     try {
                         var a;
                         if (data.author && data.author.name) {
@@ -58,9 +59,9 @@ function search($http, $scope) {
                             };
                         }
                         var n = {
-                            link: 'https://www.npmjs.org/' + ss,
+                            link: 'https://www.npmjs.org/' + $scope.searched,
                             stat: 'http://npm-stat.com/charts.html?package='
-                                    + ss,
+                                    + $scope.searched,
                         };
                         if (data.bugs && data.bugs.url) {
                             n.issue = data.bugs.url;
@@ -76,8 +77,8 @@ function search($http, $scope) {
                     }
 
                     var c = 0;
-                    for ( var i in data.versions) {
-                        try {
+                    try {
+                        for ( var i in data.versions) { // multiple
                             var v = data.versions[i];
                             var u, t;
                             if (v.repository && v.repository.url) {
@@ -88,22 +89,65 @@ function search($http, $scope) {
                             }
                             $scope.versions.push({
                                 title: i,
+                                npmv: v._npmVersion,
                                 time: new Date(data.time[i]).toUTCString(),
                                 page: v.homepage,
                                 repo: u,
                                 url: t
                             });
                             c++;
-                        } catch (e) {
-                            console.error(e);
                         }
+                        if (c === 0) { // single
+                            var u, t;
+                            if (data.repository && data.repository.url) {
+                                u = data.repository.url;
+                            }
+                            if (data.dist && data.dist.tarball) {
+                                t = data.dist.tarball;
+                            }
+                            var dep = '', depv = '';
+                            if (data.dependencies) {
+                                for ( var i in data.dependencies) {
+                                    dep += 'https://www.npmjs.org/package/' + i + ' @'
+                                            + data.dependencies[i] + ' ';
+                                }
+                            }
+                            if (data.devDependencies) {
+                                for ( var i in data.devDependencies) {
+                                    depv += 'https://www.npmjs.org/package/' + i + ' @'
+                                            + data.devDependencies[i] + ' ';
+                                }
+                            }
+                            var node;
+                            if (data.engines && data.engines.node) {
+                                node = data.engines.node;
+                            }
+                            $scope.versions[0] = {
+                                title: data.version,
+                                npmv: data._npmVersion,
+                                node: node,
+                                dep: dep,
+                                depv: depv,
+                                page: data.homepage,
+                                repo: u,
+                                url: t
+                            };
+                        }
+                        $scope.npm.versions = 1;
+                    } catch (e) {
+                        console.error(e);
                     }
-                    $scope.npm.versions = c;
 
-                    $('.modal').modal('hide');
-                    $('html,body').animate({
-                        scrollTop: $('#show').position().top
-                    }, 1200);
+                    $scope.$watch($scope.versions, function() { // wait renderir
+
+                        $('.modal').modal('hide');
+                        if (c === 0) { // single, and show versions badge
+                            $('.col-6').css('width', '100%');
+                        }
+                        $('html,body').animate({
+                            scrollTop: $('#show').position().top
+                        }, 1200);
+                    });
                     return;
                 }).error(function(data, status, headers, config) {
 
@@ -136,14 +180,16 @@ function search($http, $scope) {
  */
 function controller($scope, $http, $location) {
 
-    $scope.npm = Object.create(null);
-    $scope.versions = [];
+    $scope.$on('$locationChangeSuccess', function(event) {
 
-    var path;
-    if (path = $location.path()) {
-        $scope.search = path.replace(/\//g, '');
-        search($http, $scope);
-    }
+        $scope.npm = Object.create(null);
+        $scope.versions = [];
+        var path;
+        if (path = $location.path()) {
+            $scope.search = path.substring(1).replace(/\/$/, '').replace(/\//, '@');
+            search($http, $scope);
+        }
+    });
 
     /*
      * key binding
@@ -173,6 +219,7 @@ function controller($scope, $http, $location) {
                     $('#search').val('');
                     $('.alert').fadeOut();
                     $scope.npm = Object.create(null);
+                    $scope.versions = [];
                     return;
                 });
                 break;
@@ -182,5 +229,5 @@ function controller($scope, $http, $location) {
 }
 
 // load
-var app = angular.module('supergiovane', []);
+var app = angular.module('supergiovane', [ 'ngSanitize' ]);
 app.controller('main', controller);

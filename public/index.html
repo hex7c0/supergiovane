@@ -7,10 +7,10 @@
         <meta name="author" content="hex7c0" />
         <meta name="description" content="website for get story about npm module" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="nofollow" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.19/angular.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-beta.19/angular-sanitize.min.js"></script>
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="css/style.min.css" />
@@ -30,7 +30,7 @@
         <div id="header" class="container">
             <header>
                 <div class="search">
-                    <a href="https://it.wikipedia.org/wiki/Luca_Mangoni" target="_blank">
+                    <a href="https://it.wikipedia.org/wiki/Luca_Mangoni">
                         <img src="img/sp.jpg" id="search-logo" class="media" alt="supergiovane" />
                     </a>
                     <h2 class="search-heading">insert <span style="color:#cc3d33;">npm</span> module</h2>
@@ -74,24 +74,38 @@
                 <h3 ng-show="npm.desc">{{npm.desc}}</h3>
                 <div class="list-group">
                     <span class="list-group-item" ng-show="npm.author">
-                        author: <a href="https://www.npmjs.org/~{{npm.author.name}}">{{npm.author.name}}</a><span ng-show="npm.author.url">, <a href="{{npm.author.url}}">website</a></span><span ng-show="npm.author.email">, <a href="mailto:{{npm.author.email}}">email</a></span><span ng-show="npm.author.stat">, <a href="{{npm.author.stat}}">stat</a></span>
+                        author: <a ng-href="https://www.npmjs.org/~{{npm.author.name}}">{{npm.author.name}}</a><span ng-show="npm.author.url">, <a ng-href="{{npm.author.url}}">website</a></span><span ng-show="npm.author.email">, <a ng-href="mailto:{{npm.author.email}}">email</a></span><span ng-show="npm.author.stat">, <a ng-href="{{npm.author.stat}}">stat</a></span>
                     </span>
                     <span class="list-group-item" ng-show="npm.npm">
-                        npm: <a href="{{npm.npm.link}}">module</a><span ng-show="npm.npm.issue">, <a ng-show="npm.npm.issue" href="{{npm.npm.issue}}">issue</a></span><span ng-show="npm.npm.stat">, <a ng-show="npm.npm.stat" href="{{npm.npm.stat}}">stat</a></span>
+                        npm: <a ng-href="{{npm.npm.link}}">module</a><span ng-show="npm.npm.issue">, <a ng-show="npm.npm.issue" ng-href="{{npm.npm.issue}}">issue</a></span><span ng-show="npm.npm.stat">, <a ng-show="npm.npm.stat" ng-href="{{npm.npm.stat}}">stat</a></span>
                     </span>
                     <span class="list-group-item" ng-show="npm.license">license: {{npm.license}}</span>
-                    <span class="list-group-item" ng-show="npm.versions">found: {{npm.versions}} <a href="http://supergiovane.tk/#/{{search}}">versions</a></span>
+                    <span class="list-group-item" ng-show="npm.versions">found: 
+                        <a ng-show="npm.versions" ng-href="http://supergiovane.tk/#/{{searched}}">
+                            <img ng-show="npm.versions" id="badge" ng-src="http://supergiovane.tk/{{searched}}/badge/" alt="badge" />
+                        </a>
+                    </span>
                 </div>
             </div>
 
             <ul id="show" class="row row-offcanvas row-offcanvas-right">
                 <li ng-repeat="element in versions" class="col-6 col-sm-6 col-lg-4">
-                    <h2 ng-show="element.title">version {{element.title}}</h2>
+                    <h2>
+                        <a ng-href="http://supergiovane.tk/#/{{searched}}/{{element.title}}/">version {{element.title}}</a>
+                    </h2>
                     <p ng-show="element.time">release date: {{element.time}}</p>
+                    <p ng-show="element.node">node engine: {{element.node}}</p>
+                    <p ng-show="element.npmv">npm version: {{element.npmv}}</p>
+                    <p ng-show="element.dep" class="justify">dependencies: 
+                        <span ng-show="element.dep" ng-bind-html="element.dep | linky:'_blank'"></span>
+                    </p>
+                    <p ng-show="element.depv" class="justify">devDependencies: 
+                        <span ng-show="element.depv" ng-bind-html="element.depv | linky:'_blank'"></span>
+                    </p>
                     <p class="btn-group">
-                        <a class="btn btn-default" ng-show="element.page" href="{{element.page}}" role="button">homepage</a>
-                        <a class="btn btn-default" ng-show="element.repo" href="{{element.repo}}" role="button">repo</a>
-                        <a class="btn btn-default" ng-show="element.url" href="{{element.url}}" role="button">download</a>
+                        <a class="btn btn-default" ng-show="element.page" ng-href="{{element.page}}" role="button">homepage</a>
+                        <a class="btn btn-default" ng-show="element.repo" ng-href="{{element.repo}}" role="button">repo</a>
+                        <a class="btn btn-default" ng-show="element.url" ng-href="{{element.url}}" role="button">download</a>
                     </p>
                 </li>
             </ul>
