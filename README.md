@@ -7,6 +7,7 @@
 [![supergiovane logo](https://raw.githubusercontent.com/hex7c0/supergiovane/master/public/img/sp.jpg)](http://supergiovane.tk)
 
 Website for get info about npm module.
+Build badge with all versions found (using https://github.com/badges/shields) [![versions](http://supergiovane.tk/#/supergiovane/badge/)](http://supergiovane.tk/#/supergiovane)
 Write with [Bootstrap](http://getbootstrap.com/) & [Angular](https://angularjs.org/). And of course [node](http://nodejs.org/)
 
 ## Installation
