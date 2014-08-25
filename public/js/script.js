@@ -28,16 +28,12 @@ function up() {
 function search($http, $scope) {
 
     $('#search').tooltip('hide');
-    $('.alert').fadeOut();
+    $scope.clean();
+    $scope.npm = Object.create(null);
+    $scope.versions = [];
     var ss = $scope.search;
     if (ss && angular.isString(ss)) {
         $('.modal').modal('show');
-        $('.jumbotron').fadeOut(400, function() {
-
-            $scope.versions = [];
-            $scope.npm = Object.create(null);
-            return;
-        });
         $http({
             method: 'GET',
             url: '/' + ss.replace(/@/, '/') + '/',
@@ -182,14 +178,31 @@ function controller($scope, $http, $location) {
 
     $scope.$on('$locationChangeSuccess', function(event) {
 
-        $scope.npm = Object.create(null);
-        $scope.versions = [];
-        var path;
-        if (path = $location.path()) {
-            $scope.search = path.substring(1).replace(/\/$/, '').replace(/\//, '@');
-            search($http, $scope);
-        }
+        $scope.search = $location.path().substring(1).replace(/\/$/, '').replace(/\//,
+                '@');
+        search($http, $scope);
     });
+    /**
+     * clean previous results
+     * 
+     * @function $scope.clean
+     */
+    $scope.clean = function() {
+
+        $('.col-6').fadeOut(400, function() {
+
+            $('.jumbotron').fadeOut(400, function() {
+
+                $('#search').val('');
+                $('.alert').fadeOut();
+                $scope.npm = Object.create(null);
+                $scope.versions = [];
+                return;
+            });
+            return;
+        });
+        return;
+    };
 
     /*
      * key binding
@@ -213,15 +226,7 @@ function controller($scope, $http, $location) {
                 search($http, $scope);
                 break;
             case 'clear':
-                $scope.versions = [];
-                $('.jumbotron').fadeOut(400, function() {
-
-                    $('#search').val('');
-                    $('.alert').fadeOut();
-                    $scope.npm = Object.create(null);
-                    $scope.versions = [];
-                    return;
-                });
+                $scope.clean();
                 break;
         }
     };
