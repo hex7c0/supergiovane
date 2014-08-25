@@ -189,11 +189,11 @@ function controller($scope, $http, $location) {
      */
     $scope.clean = function() {
 
+        $('.alert').fadeOut();
         $('.col-6').fadeOut(400, function() {
 
             $('.jumbotron').fadeOut(400, function() {
 
-                $('.alert').fadeOut();
                 $scope.npm = Object.create(null);
                 $scope.versions = [];
                 return;
