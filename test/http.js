@@ -96,15 +96,16 @@ describe('http', function() {
 
         it('static', function(done) {
 
-            request(app).get('/js/script.min.js').set('Referer', 'http://127.0.0.1')
-                    .expect(404, done);
-        });
-
-        it('package misconfigured', function(done) {
-
-            request(app).get('/supergiovane').set('Referer', 'http://127.0.0.1').expect(
+            request(app).get('/index.html').set('Referer', 'http://127.0.0.1').expect(
                     404, done);
         });
+
+        // it('package misconfigured', function(done) {
+        //
+        // request(app).get('/supergiovane').set('Referer',
+        // 'http://127.0.0.1').expect(
+        // 404, done);
+        // });
 
         it('package wrong', function(done) {
 
