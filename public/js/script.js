@@ -29,7 +29,7 @@ function search($http, $scope) {
 
     $('#search').tooltip('hide');
     $scope.clean();
-    $scope.npm = Object.create(null);
+    // $scope.npm = Object.create(null);
     $scope.versions = [];
     var ss = $scope.search;
     if (ss && angular.isString(ss)) {
@@ -176,6 +176,7 @@ function search($http, $scope) {
  */
 function controller($scope, $http, $location) {
 
+    $scope.npm = Object.create(null);
     $scope.$on('$locationChangeSuccess', function(event) {
 
         $scope.search = $location.path().substring(1).replace(/\/$/, '').replace(/\//,
@@ -194,7 +195,7 @@ function controller($scope, $http, $location) {
 
             $('.jumbotron').fadeOut(400, function() {
 
-                $scope.npm = Object.create(null);
+                // $scope.npm = Object.create(null);
                 $scope.versions = [];
                 return;
             });
@@ -237,3 +238,4 @@ function controller($scope, $http, $location) {
 // load
 var app = angular.module('supergiovane', [ 'ngSanitize' ]);
 app.controller('main', controller);
+$('#search').focus();
