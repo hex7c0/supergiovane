@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.4.1
+ * @version 1.4.2
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -31,7 +31,7 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = 'supergiovane@1.3.1';
+var VERSION = 'supergiovane@1.4.2';
 var ERROR = 'matusa';
 var DEBUG = function() {
 
@@ -162,20 +162,21 @@ function bootstrap(my) {
 
         var version = '/';
         var r = req.headers['referer'] || req.headers['referrer'];
-        var p = decodeURIComponent(req.params.pkg);
-        var e = req.params.extra ? decodeURIComponent(req.params.extra) : '';
-        var s = req.query.style ? '?style=' + decodeURIComponent(req.query.style) : '';
+        var p = decodeURIComponent(req.params.pkg).trim();
+        var e = req.params.extra ? decodeURIComponent(req.params.extra).trim() : '';
+        var s = req.query.style ? '?style=' + decodeURIComponent(req.query.style).trim()
+                : '';
         var hash = p + e + s;
 
         // checkpoint
-        if (!my.referer.test(r) && e !== 'badge.svg') {
-            return res.redirect(301, my.referer.source);
-        }
         if (my.cache && STORY[hash]) {
             res.set('Content-Type', STORY[hash].content);
             res.status(202).send(STORY[hash].body);
             STORY[hash].time = new Date().getTime();
             return;
+        }
+        if (!my.referer.test(r) && e !== 'badge.svg') {
+            return res.redirect(301, my.referer.source);
         }
         if (e) {
             if (e === 'badge.svg') {
@@ -280,12 +281,6 @@ function bootstrap(my) {
         switch (err.message.toLowerCase()) {
             case 'not found':
                 next();
-                break;
-            case 'unauthorized':
-                code = 401;
-                break;
-            case 'forbidden':
-                code = 403;
                 break;
             default:
                 code = 500;
