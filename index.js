@@ -169,14 +169,14 @@ function bootstrap(my) {
         var hash = p + e + s;
 
         // checkpoint
+        if (!my.referer.test(r) && e !== 'badge.svg') {
+            return res.redirect(301, my.referer.source);
+        }
         if (my.cache && STORY[hash]) {
             res.set('Content-Type', STORY[hash].content);
             res.status(202).send(STORY[hash].body);
             STORY[hash].time = new Date().getTime();
             return;
-        }
-        if (!my.referer.test(r) && e !== 'badge.svg') {
-            return res.redirect(301, my.referer.source);
         }
         if (e) {
             if (e === 'badge.svg') {
