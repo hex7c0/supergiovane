@@ -1,10 +1,10 @@
 v1.4.3 / 2014-08-29
 ==================
 
-  * Flush cache after 1 day
   * Speeds cache
   * Raise default cache slot to 6 from 5
   * Add flush (options)
+  * Flush cache after "flush" option
 
 v1.4.2 / 2014-08-28
 ==================
