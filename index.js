@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.4.2
+ * @version 1.4.3
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -31,7 +31,7 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = 'supergiovane@1.4.2';
+var VERSION = 'supergiovane@1.4.3';
 var ERROR = 'matusa';
 var DEBUG = function() {
 
@@ -106,22 +106,24 @@ function bootstrap(my) {
          */
         cache = function(bod, hash, cont) {
 
-            var c = 0, old = new Date().getTime(), last;
-            for ( var pr in STORY) {
-                c++;
-                if (STORY[pr].time < old) {
-                    last = pr;
-                    old = STORY[last].time;
+            if (!STORY[hash]) {
+                var c = 0, old = new Date().getTime(), last;
+                for ( var pr in STORY) {
+                    c++;
+                    if (STORY[pr].time < old) {
+                        last = pr;
+                        old = STORY[last].time;
+                    }
                 }
+                if (c >= my.cache) {
+                    delete STORY[last];
+                }
+                STORY[hash] = {
+                    content: cont,
+                    body: bod,
+                    time: new Date().getTime()
+                };
             }
-            if (c >= my.cache) {
-                delete STORY[last];
-            }
-            STORY[hash] = {
-                content: cont,
-                body: bod,
-                time: new Date().getTime()
-            };
             return;
         };
     } else {
@@ -175,7 +177,10 @@ function bootstrap(my) {
         if (my.cache && STORY[hash]) {
             res.set('Content-Type', STORY[hash].content);
             res.status(202).send(STORY[hash].body);
-            STORY[hash].time = new Date().getTime();
+            // flush cache after 1 day
+            if (new Date().getTime() - STORY[hash].time > my.flush) {
+                delete STORY[hash];
+            }
             return;
         }
         if (e) {
@@ -340,7 +345,8 @@ module.exports = function supergiovane(options) {
                 || Object.create(null),
         vhost: options.vhost == false ? false : options.vhost || false,
         signature: options.signature == false ? false : options.signature || false,
-        cache: options.cache == false ? false : Number(options.cache || 5),
+        cache: options.cache == false ? false : Number(options.cache || 6),
+        flush: Number(options.flush || 86400000),
         fork: Number(options.fork || cpu),
         max: Number(options.max || 0),
         debug: options.debug == false ? false : options.debug || 'debug.log'
