@@ -44,7 +44,8 @@ supergiovane(options);
  - `sitemap` - **Object | false** Configuration for [`express-sitemap`](https://github.com/hex7c0/express-sitemap) or disable *(default "standard")*
  - `vhost` - **Object | false** Configuration for [`top-vhost`](https://github.com/hex7c0/top-vhost) or disable *(default "disabled")*
  - `signature` - **Object | false** Configuration for [`server-signature`](https://github.com/hex7c0/server-signature) or disable *(default "disabled")*
- - `cache` - **Number | false** Flag for store last "Number" results in cache *(default "5")*
+ - `cache` - **Number | false** Flag for store last "Number" results in cache *(default "6")*
+ - `flush` - **Number** Flush cache (if enabled) after milliseconds *(default "86400000")*
  - `fork` - **Number** Number of forks (see cluster module), for single thread use "development" `env` *(default "cpus")*
  - `max` - **Number | String** Restart max number of crashed forks (use String for unlimited restart) *(default "no restart")*
  - `debug` - **String | false** Write debug information to file or disable *(default "debug.log")*
