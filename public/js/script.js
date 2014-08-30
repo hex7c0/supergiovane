@@ -221,7 +221,7 @@ function controller($scope, $http, $location) {
 
         switch (item) {
             case 'search':
-                search($http, $scope);
+                $location.path($scope.search.replace(/@/, '/'));
                 break;
             case 'clear':
                 $scope.clean();
