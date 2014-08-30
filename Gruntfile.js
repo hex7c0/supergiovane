@@ -16,8 +16,7 @@ module.exports = function(grunt) {
                 + ' * (c) <%= pkg.author.name %> <%= pkg.homepage %>\n'
                 + ' * Licensed under <%= pkg.license %>\n' + ' */\n',
 
-        clean: ['index.min.js','min/**/*.js','public/js/script.min.js',
-                'public/css/style.min.css','public/index.min.html'],
+        clean: [ 'index.min.js', 'min/**/*.js', 'public/**/*.min.*' ],
 
         uglify: {
             options: {
@@ -25,22 +24,21 @@ module.exports = function(grunt) {
                 footer: '\n'
             },
             target: {
-                files: [{
+                files: [ {
                     expand: true,
                     src: 'lib/*.js',
                     dest: 'min'
-                },{
+                }, {
                     expand: true,
                     src: 'module/*.js',
                     dest: 'min'
-                },{
+                }, {
                     'index.min.js': 'index.js'
-                }]
+                } ]
             },
             script: {
                 options: {
                     mangle: false,
-                    // wrap: 'cl',
                     banner: '<%= banner %>',
                     footer: '\n'
                 },
@@ -93,10 +91,10 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-shell');
 
-    grunt.registerTask('html',['cssmin','htmlmin']);
-    grunt.registerTask('min',['clean','html','uglify']);
-    grunt.registerTask('doc',['shell']);
-    grunt.registerTask('default',['min','doc']);
+    grunt.registerTask('html', [ 'cssmin', 'htmlmin' ]);
+    grunt.registerTask('min', [ 'clean', 'html', 'uglify' ]);
+    grunt.registerTask('doc', [ 'shell' ]);
+    grunt.registerTask('default', [ 'min', 'doc' ]);
 
     return;
 };
