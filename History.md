@@ -1,3 +1,11 @@
+v1.5.0 / 2014-08-30
+==================
+
+  * Bower package
+  * Update `express`@4.8.7
+  * Fix jumbotron
+  * Return 404 if version specified is not valid
+
 v1.4.3 / 2014-08-29
 ==================
 
