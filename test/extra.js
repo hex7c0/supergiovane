@@ -43,6 +43,23 @@ describe(
                 done();
             });
 
+            describe('wrong version', function() {
+
+                it('should return 404 for missing version', function(done) {
+
+                    request(app).get('/supergiovane/0.0.2').set('Referer',
+                            'http://127.0.0.1').expect(404, done);
+                    return;
+                });
+
+                it('should return 404 for misconfigurated version', function(done) {
+
+                    request(app).get('/supergiovane/0.ciao.0').set('Referer',
+                            'http://127.0.0.1').expect(404, done);
+                    return;
+                });
+            });
+
             describe(
                     'first attempt normal',
                     function() {
