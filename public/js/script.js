@@ -29,7 +29,6 @@ function search($http, $scope) {
 
     $('#search').tooltip('hide');
     $scope.clean();
-    // $scope.npm = Object.create(null);
     $scope.versions = [];
     var ss = $scope.search;
     if (ss && angular.isString(ss)) {
@@ -41,7 +40,6 @@ function search($http, $scope) {
         }).success(
                 function(data, status, headers, config) {
 
-                    $('.jumbotron').show();
                     $scope.searched = ss.match(/^([^@]*)/)[0];
                     try {
                         var a;
@@ -69,6 +67,7 @@ function search($http, $scope) {
                             license: data.license
                         };
                     } catch (e) {
+                        $scope.npm = Object.create(null);
                         console.error(e);
                     }
 
@@ -129,6 +128,7 @@ function search($http, $scope) {
                                 url: t
                             };
                         }
+                        $scope.versions = $scope.versions.reverse();
                         $scope.npm.versions = 1;
                     } catch (e) {
                         console.error(e);
@@ -136,13 +136,16 @@ function search($http, $scope) {
 
                     $scope.$watch($scope.versions, function() { // wait renderir
 
-                        $('.modal').modal('hide');
                         if (c === 0) { // single, and show versions badge
                             $('.col-6').css('width', '100%');
                         }
-                        $('html,body').animate({
-                            scrollTop: $('#show').position().top
-                        }, 1200);
+                        $('.jumbotron').show(400, function() {
+
+                            $('.modal').modal('hide');
+                            $('html,body').animate({
+                                scrollTop: $('#show').position().top
+                            }, 1200);
+                        });
                     });
                     return;
                 }).error(function(data, status, headers, config) {
@@ -176,7 +179,6 @@ function search($http, $scope) {
  */
 function controller($scope, $http, $location) {
 
-    $scope.npm = Object.create(null);
     $scope.$on('$locationChangeSuccess', function(event) {
 
         $scope.search = $location.path().substring(1).replace(/\/$/, '').replace(/\//,
@@ -193,12 +195,8 @@ function controller($scope, $http, $location) {
         $('.alert').fadeOut();
         $('.col-6').fadeOut(400, function() {
 
-            $('.jumbotron').fadeOut(400, function() {
-
-                // $scope.npm = Object.create(null);
-                $scope.versions = [];
-                return;
-            });
+            $scope.npm = Object.create(null);
+            $scope.versions = [];
             return;
         });
         return;
@@ -227,8 +225,12 @@ function controller($scope, $http, $location) {
                 break;
             case 'clear':
                 $scope.clean();
-                $('#search').val('');
-                $('#search').focus();
+                $('.jumbotron').fadeOut(400, function() {
+
+                    $('#search').val('');
+                    $('#search').focus();
+                    return;
+                });
                 break;
         }
     };
