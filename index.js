@@ -4,7 +4,7 @@
  * @module supergiovane
  * @package supergiovane
  * @subpackage main
- * @version 1.4.3
+ * @version 1.5.0
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -31,7 +31,7 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = 'supergiovane@1.4.3';
+var VERSION = 'supergiovane@1.5.0';
 var ERROR = 'matusa';
 var DEBUG = function() {
 
@@ -183,11 +183,13 @@ function bootstrap(my) {
             }
             return;
         }
-        if (e) {
+        if (e) { // extra information
             if (e === 'badge.svg') {
                 // pass
             } else if (semver.valid(e)) {
                 version += e;
+            } else {
+                return res.status(404).end(ERROR);
             }
         }
 
