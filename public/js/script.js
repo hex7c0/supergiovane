@@ -127,8 +127,9 @@ function search($http, $scope) {
                                 repo: u,
                                 url: t
                             };
+                        } else {
+                            $scope.versions = $scope.versions.reverse();
                         }
-                        $scope.versions = $scope.versions.reverse();
                         $scope.npm.versions = 1;
                     } catch (e) {
                         console.error(e);

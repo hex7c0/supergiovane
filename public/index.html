@@ -8,10 +8,10 @@
         <meta name="description" content="website for get story about npm module" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.0/angular.min.js"></script>
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.0/angular-sanitize.min.js"></script>
-        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.0/angular.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.0/angular-sanitize.min.js"></script>
+        <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
         <script>
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -20,9 +20,9 @@
             ga('create', 'UA-49163106-3', 'auto');
             ga('send', 'pageview');
         </script>
-        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" href="/css/style.min.css" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="css/style.min.css" />
+        <link rel="icon" href="favicon.ico" />
     </head>
 
     <body ng-app="supergiovane" ng-controller="main">
@@ -70,7 +70,7 @@
                 <strong>:(</strong> module not found or something blow up
             </div>
 
-            <div class="jumbotron">
+            <div ng-show="npm" class="jumbotron">
                 <h3 ng-show="npm.desc">{{npm.desc}}</h3>
                 <div class="list-group">
                     <span class="list-group-item" ng-show="npm.author">
@@ -111,7 +111,7 @@
             </ul>
         </div>
 
-        <script type="text/javascript" src="/js/script.min.js"></script>
+        <script type="text/javascript" src="js/script.min.js"></script>
 
         <div class="footer">
             <div class="container">
