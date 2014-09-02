@@ -1,5 +1,5 @@
 {
-  "version": "1.5.1",
+  "version": "1.5.2",
   "name": "supergiovane",
   "description": "website for get story about npm module",
   "keywords": [
@@ -32,13 +32,13 @@
     "cookie-parser": "1.3.2",
     "csurf": "1.5.0",
     "express": "4.8.7",
-    "express-sitemap": "1.3.4",
-    "logger-request": "3.0.4",
+    "express-sitemap": "1.3.5",
+    "logger-request": "3.0.6",
     "lusca": "1.0.1",
     "semver": "3.0.1",
-    "server-signature": "1.0.1",
-    "timeout-request": "1.1.3",
-    "top-vhost": "1.7.3"
+    "server-signature": "1.0.2",
+    "timeout-request": "1.1.4",
+    "top-vhost": "1.7.4"
   },
   "devDependencies": {
     "mocha": "~1.21.4",
@@ -47,7 +47,7 @@
     "grunt-contrib-cssmin": "~0.10.0",
     "grunt-contrib-htmlmin": "~0.3.0",
     "grunt-contrib-uglify": "~0.5.1",
-    "grunt-endline": "~0.1.0",
+    "grunt-endline": "~0.2.1",
     "grunt-shell": "~1.0.1",
     "supertest": "~0.13.0"
   },
