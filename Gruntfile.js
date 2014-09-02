@@ -82,18 +82,15 @@ module.exports = function(grunt) {
 
         endline: {
             target: {
+                options: {
+                    except: [ 'node_modules', 'bower_components' ]
+                },
                 files: [ {
-                    src: 'examples/**/*.js'
+                    src: './**/*.js'
                 }, {
-                    src: 'public/**/*.js'
+                    src: './**/*.css'
                 }, {
-                    src: 'module/**/*.js'
-                }, {
-                    src: 'lib/**/*.js'
-                }, {
-                    src: 'test/**/*.js'
-                }, {
-                    'index.min.js': 'index.min.js'
+                    src: './**/*.html'
                 } ]
             }
         }
