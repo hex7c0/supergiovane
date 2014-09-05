@@ -31,7 +31,7 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = 'supergiovane@1.5.0';
+var VERSION = 'supergiovane@1.5.3';
 var ERROR = 'matusa';
 var DEBUG = function() {
 
