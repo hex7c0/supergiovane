@@ -1,3 +1,11 @@
+v1.5.4 / 2014-08-08
+==================
+
+  * Remove useless controls
+  * Update `cookie-parser`@1.3.3
+  * Update `csurf`@1.6.1
+  * Update `compression`@1.1.0
+
 v1.5.3 / 2014-08-05
 ==================
 

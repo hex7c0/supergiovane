@@ -31,7 +31,7 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = 'supergiovane@1.5.3';
+var VERSION = 'supergiovane@1.5.4';
 var ERROR = 'matusa';
 var DEBUG = function() {
 
@@ -53,7 +53,8 @@ function bootstrap(my) {
     // setting
     var app = express();
     app.set('env', my.env);
-    my.env == 'production' ? app.enable('view cache') : app.disable('view cache');
+    my.env == 'production' ? app.enable('view cache') : app
+            .disable('view cache');
     app.enable('case sensitive routing');
     // app.enable('strict routing');
     app.enable('trust proxy');
@@ -164,10 +165,9 @@ function bootstrap(my) {
 
         var version = '/';
         var r = req.headers['referer'] || req.headers['referrer'];
-        var p = decodeURIComponent(req.params.pkg).trim();
-        var e = req.params.extra ? decodeURIComponent(req.params.extra).trim() : '';
-        var s = req.query.style ? '?style=' + decodeURIComponent(req.query.style).trim()
-                : '';
+        var p = req.params.pkg;
+        var e = req.params.extra || '';
+        var s = req.query.style ? '?style=' + req.query.style : '';
         var hash = p + e + s;
 
         // checkpoint
@@ -312,7 +312,9 @@ function bootstrap(my) {
     });
 
     if (my.env != 'test') {
-        console.log(process.pid + ' | listening on: ' + my.host + ':' + my.port);
+        console
+                .log(process.pid + ' | listening on: ' + my.host + ':'
+                        + my.port);
         DEBUG('start', {
             pid: process.pid,
             host: my.host,
@@ -340,13 +342,15 @@ module.exports = function supergiovane(options) {
         port: Number(options.port) || 3000,
         referer: new RegExp(String(options.referer || 'http://127.0.0.1'), 'i'),
         dir: String(options.dir || __dirname + '/public/'),
-        logger: options.logger == false ? false : options.logger || Object.create(null),
+        logger: options.logger == false ? false : options.logger
+                || Object.create(null),
         timeout: options.timeout == false ? false : options.timeout
                 || Object.create(null),
         sitemap: options.sitemap == false ? false : options.sitemap
                 || Object.create(null),
         vhost: options.vhost == false ? false : options.vhost || false,
-        signature: options.signature == false ? false : options.signature || false,
+        signature: options.signature == false ? false
+                : options.signature || false,
         cache: options.cache == false ? false : Number(options.cache || 6),
         flush: Number(options.flush || 86400000),
         fork: Number(options.fork || cpu),
