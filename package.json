@@ -1,5 +1,5 @@
 {
-  "version": "1.5.3",
+  "version": "1.5.4",
   "name": "supergiovane",
   "description": "website for get story about npm module",
   "keywords": [
@@ -28,9 +28,9 @@
   },
   "main": "index.min.js",
   "dependencies": {
-    "compression": "1.0.11",
-    "cookie-parser": "1.3.2",
-    "csurf": "1.6.0",
+    "compression": "1.1.0",
+    "cookie-parser": "1.3.3",
+    "csurf": "1.6.1",
     "express": "4.8.8",
     "express-sitemap": "1.3.5",
     "logger-request": "3.0.6",
@@ -47,8 +47,8 @@
     "grunt-contrib-cssmin": "~0.10.0",
     "grunt-contrib-htmlmin": "~0.3.0",
     "grunt-contrib-uglify": "~0.5.1",
-    "grunt-endline": "~0.2.1",
-    "grunt-shell": "~1.0.1",
+    "grunt-endline": "~0.2.2",
+    "grunt-shell": "~1.1.1",
     "supertest": "~0.13.0"
   },
   "engines": {
