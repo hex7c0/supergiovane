@@ -19,9 +19,6 @@ module.exports = function(grunt) {
         clean: [ 'index.min.js', 'min/**/*.js', 'public/**/*.min.*' ],
 
         uglify: {
-            options: {
-                banner: '<%= banner %>'
-            },
             target: {
                 files: [ {
                     expand: true,
