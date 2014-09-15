@@ -256,7 +256,8 @@ function bootstrap(my) {
                     });
 
                 } else {
-                    res.set('Content-Type', 'application/json; charset=utf-8');
+                    var content = 'application/json; charset=utf-8';
+                    res.set('Content-Type', content);
                     res.send(body);
                     cache(body, hash, content);
                 }
