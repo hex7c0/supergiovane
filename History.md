@@ -1,3 +1,12 @@
+v1.5.7 / 2014-09-15
+==================
+
+  * Update `top-vhost`@1.7.5
+  * Better error handling
+  * Return json only
+  * Remove `csurf`@1.6.1
+  * Remove `cookie-parser`@1.3.3
+
 v1.5.6 / 2014-09-11
 ==================
 
