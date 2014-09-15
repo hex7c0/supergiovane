@@ -42,25 +42,25 @@
  */
 // import
 try {
+    // node
     var cluster = require('cluster');
-    var compression = require('compression');
-    var cookie = require('cookie-parser');
-    var csurf = require('csurf');
-    var express = require('express');
-    var http = require('http');
-    var lusca = require('lusca');
-    var logger = require('logger-request');
-    var resolve = require('path').resolve;
     var cpu = require('os').cpus().length * 2;
+    var http = require('http');
+    var resolve = require('path').resolve;
+    var status = http.STATUS_CODES;
+    // module
+    var compression = require('compression');
+    var express = require('express');
+    var logger = require('logger-request');
+    var lusca = require('lusca');
     var semver = require('semver');
 } catch (MODULE_NOT_FOUND) {
     console.error(MODULE_NOT_FOUND);
     process.exit(1);
 }
 // load
-var VERSION = 'supergiovane@1.5.0';
-var ERROR = 'matusa';
-var DEBUG = function() {
+var VERSION = 'supergiovane@1.5.7';
+var debug = function() {
 
     return;
 };
@@ -80,13 +80,13 @@ function bootstrap(my) {
     // setting
     var app = express();
     app.set('env', my.env);
-    my.env == 'production' ? app.enable('view cache') : app.disable('view cache');
+    my.env == 'production' ? app.enable('view cache') : app
+            .disable('view cache');
     app.enable('case sensitive routing');
-    // app.enable('strict routing');
     app.enable('trust proxy');
     app.disable('x-powered-by');
+
     // middleware
-    app.use(cookie());
     if (my.logger) {
         app.use(logger(my.logger));
     }
@@ -98,19 +98,13 @@ function bootstrap(my) {
         var timeout = require('timeout-request');
         app.use(timeout(my.timeout));
     }
-    app.use(csurf({
-        cookie: {
-            key: 'token',
-            httpOnly: true
-        }
-    }));
     app.use(lusca({
         xframe: 'SAMEORIGIN',
         xssProtection: true
     }));
     app.use(compression({
         level: 9,
-        threshold: 256
+        threshold: 512
     }));
     if (my.signature) {
         var signature = require('server-signature');
@@ -172,7 +166,6 @@ function bootstrap(my) {
      * 
      * @param {Object} req - client request
      * @param {Object} res - response to client
-     * @param {next} next - continue routes
      */
     app.get('/', function(req, res) {
 
@@ -185,16 +178,15 @@ function bootstrap(my) {
      * @function
      * @param {Object} req - client request
      * @param {Object} res - response to client
-     * @param {next} next - continue routes
+     * @param {next} next - next callback
      */
-    app.get('/:pkg/:extra?', function(req, res) {
+    app.get('/:pkg/:extra?', function(req, res, next) {
 
         var version = '/';
         var r = req.headers['referer'] || req.headers['referrer'];
-        var p = decodeURIComponent(req.params.pkg).trim();
-        var e = req.params.extra ? decodeURIComponent(req.params.extra).trim() : '';
-        var s = req.query.style ? '?style=' + decodeURIComponent(req.query.style).trim()
-                : '';
+        var p = req.params.pkg;
+        var e = req.params.extra || '';
+        var s = req.query.style ? '?style=' + req.query.style : '';
         var hash = p + e + s;
 
         // checkpoint
@@ -216,7 +208,7 @@ function bootstrap(my) {
             } else if (semver.valid(e)) {
                 version += e;
             } else {
-                return res.status(404).end(ERROR);
+                return next(new Error(status[404]));
             }
         }
 
@@ -230,7 +222,7 @@ function bootstrap(my) {
 
             var body = new Buffer(0);
             if (inp.statusCode !== 200) {
-                return res.status(404).end(ERROR);
+                return next(new Error(status[404]));
             }
             inp.on('data', function(chunk) {
 
@@ -260,7 +252,7 @@ function bootstrap(my) {
 
                         var badge = new Buffer(0);
                         if (inp.statusCode !== 200) {
-                            return res.status(404).end(ERROR);
+                            return next(new Error(status[404]));
                         }
                         inp.on('data', function(chunk) {
 
@@ -278,7 +270,7 @@ function bootstrap(my) {
                         return;
                     }).on('error', function(e) {
 
-                        return res.status(404).end(ERROR);
+                        return next(new Error(status[404]));
                     });
 
                 } else {
@@ -292,7 +284,7 @@ function bootstrap(my) {
             return;
         }).on('error', function(e) {
 
-            return res.status(404).end(ERROR);
+            return next(new Error(status[404]));
         });
         return;
     });
@@ -303,24 +295,26 @@ function bootstrap(my) {
      * @param {Object} err - error raised
      * @param {Object} req - client request
      * @param {Object} res - response to client
-     * @param {next} next - continue routes
+     * @param {next} next - next callback
      */
     app.use(function(err, req, res, next) {
 
-        var code = 0;
-        DEBUG('error', {
+        var code = 500;
+        debug('web', {
             pid: process.pid,
-            error: err
+            error: err.message
         });
         switch (err.message.toLowerCase()) {
             case 'not found':
                 next();
-                break;
+                return;
             default:
-                code = 500;
                 break;
         }
-        res.status(code).end(ERROR);
+        res.set('Content-Type', 'application/json; charset=utf-8');
+        res.status(code).send({
+            error: status[code].toLowerCase()
+        });
         return;
     });
     /**
@@ -334,13 +328,18 @@ function bootstrap(my) {
     app.use(function(req, res, next) {
 
         var code = 404;
-        res.status(code).end(ERROR);
+        res.set('Content-Type', 'application/json; charset=utf-8');
+        res.status(code).send({
+            error: status[code].toLowerCase()
+        });
         return;
     });
 
     if (my.env != 'test') {
-        console.log(process.pid + ' | listening on: ' + my.host + ':' + my.port);
-        DEBUG('start', {
+        console
+                .log(process.pid + ' | listening on: ' + my.host + ':'
+                        + my.port);
+        debug('start', {
             pid: process.pid,
             host: my.host,
             port: my.port
@@ -364,16 +363,18 @@ module.exports = function supergiovane(options) {
     var my = {
         env: String(options.env || 'production'),
         host: String(options.host || '127.0.0.1'),
-        port: Number(options.port) || 3000,
+        port: Number(options.port || 3000),
         referer: new RegExp(String(options.referer || 'http://127.0.0.1'), 'i'),
         dir: String(options.dir || __dirname + '/public/'),
-        logger: options.logger == false ? false : options.logger || Object.create(null),
+        logger: options.logger == false ? false : options.logger
+                || Object.create(null),
         timeout: options.timeout == false ? false : options.timeout
                 || Object.create(null),
         sitemap: options.sitemap == false ? false : options.sitemap
                 || Object.create(null),
         vhost: options.vhost == false ? false : options.vhost || false,
-        signature: options.signature == false ? false : options.signature || false,
+        signature: options.signature == false ? false
+                : options.signature || false,
         cache: options.cache == false ? false : Number(options.cache || 6),
         flush: Number(options.flush || 86400000),
         fork: Number(options.fork || cpu),
@@ -381,7 +382,7 @@ module.exports = function supergiovane(options) {
         debug: options.debug == false ? false : options.debug || 'debug.log'
     };
     if (my.debug) {
-        DEBUG = logger({
+        debug = logger({
             filename: my.debug,
             standalone: true,
             winston: {
@@ -393,11 +394,11 @@ module.exports = function supergiovane(options) {
 
     // cluster
     if (my.env == 'development' || my.env == 'test') { // no cluster
-        DEBUG('options', my);
+        debug('options', my);
         return bootstrap(my);
     }
     if (cluster.isMaster) { // father
-        DEBUG('options', my);
+        debug('options', my);
         for (var i = 0; i &lt; my.fork; i++) {
             cluster.fork();
         }
@@ -412,7 +413,7 @@ module.exports = function supergiovane(options) {
         cluster.on('exit', function(worker, code, signal) {
 
             console.error(worker.process.pid + ' died by ' + signal);
-            DEBUG('restart', {
+            debug('restart', {
                 max: my.max,
                 code: code,
                 signal: signal
@@ -443,7 +444,7 @@ module.exports = function supergiovane(options) {
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> on Mon Sep 01 2014 10:39:44 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> on Mon Sep 15 2014 21:29:17 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
