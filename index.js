@@ -33,7 +33,7 @@ try {
 // load
 var VERSION = 'supergiovane@1.5.5';
 var ERROR = 'matusa';
-var DEBUG = function() {
+var debug = function() {
 
     return;
 };
@@ -146,7 +146,6 @@ function bootstrap(my) {
      * 
      * @param {Object} req - client request
      * @param {Object} res - response to client
-     * @param {next} next - continue routes
      */
     app.get('/', function(req, res) {
 
@@ -159,7 +158,6 @@ function bootstrap(my) {
      * @function
      * @param {Object} req - client request
      * @param {Object} res - response to client
-     * @param {next} next - continue routes
      */
     app.get('/:pkg/:extra?', function(req, res) {
 
@@ -281,7 +279,7 @@ function bootstrap(my) {
     app.use(function(err, req, res, next) {
 
         var code = 0;
-        DEBUG('error', {
+        debug('error', {
             pid: process.pid,
             error: err
         });
@@ -315,7 +313,7 @@ function bootstrap(my) {
         console
                 .log(process.pid + ' | listening on: ' + my.host + ':'
                         + my.port);
-        DEBUG('start', {
+        debug('start', {
             pid: process.pid,
             host: my.host,
             port: my.port
@@ -339,7 +337,7 @@ module.exports = function supergiovane(options) {
     var my = {
         env: String(options.env || 'production'),
         host: String(options.host || '127.0.0.1'),
-        port: Number(options.port) || 3000,
+        port: Number(options.port || 3000),
         referer: new RegExp(String(options.referer || 'http://127.0.0.1'), 'i'),
         dir: String(options.dir || __dirname + '/public/'),
         logger: options.logger == false ? false : options.logger
@@ -358,7 +356,7 @@ module.exports = function supergiovane(options) {
         debug: options.debug == false ? false : options.debug || 'debug.log'
     };
     if (my.debug) {
-        DEBUG = logger({
+        debug = logger({
             filename: my.debug,
             standalone: true,
             winston: {
@@ -370,11 +368,11 @@ module.exports = function supergiovane(options) {
 
     // cluster
     if (my.env == 'development' || my.env == 'test') { // no cluster
-        DEBUG('options', my);
+        debug('options', my);
         return bootstrap(my);
     }
     if (cluster.isMaster) { // father
-        DEBUG('options', my);
+        debug('options', my);
         for (var i = 0; i < my.fork; i++) {
             cluster.fork();
         }
@@ -389,7 +387,7 @@ module.exports = function supergiovane(options) {
         cluster.on('exit', function(worker, code, signal) {
 
             console.error(worker.process.pid + ' died by ' + signal);
-            DEBUG('restart', {
+            debug('restart', {
                 max: my.max,
                 code: code,
                 signal: signal
