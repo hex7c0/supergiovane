@@ -23,8 +23,6 @@ try {
     var status = http.STATUS_CODES;
     // module
     var compression = require('compression');
-    var cookie = require('cookie-parser');
-    var csurf = require('csurf');
     var express = require('express');
     var logger = require('logger-request');
     var lusca = require('lusca');
@@ -62,7 +60,6 @@ function bootstrap(my) {
     app.disable('x-powered-by');
 
     // middleware
-    app.use(cookie());
     if (my.logger) {
         app.use(logger(my.logger));
     }
@@ -74,12 +71,6 @@ function bootstrap(my) {
         var timeout = require('timeout-request');
         app.use(timeout(my.timeout));
     }
-    app.use(csurf({
-        cookie: {
-            key: 'token',
-            httpOnly: true
-        }
-    }));
     app.use(lusca({
         xframe: 'SAMEORIGIN',
         xssProtection: true
