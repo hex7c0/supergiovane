@@ -15,24 +15,26 @@
  */
 // import
 try {
+    // node
     var cluster = require('cluster');
+    var cpu = require('os').cpus().length * 2;
+    var http = require('http');
+    var resolve = require('path').resolve;
+    var status = http.STATUS_CODES;
+    // module
     var compression = require('compression');
     var cookie = require('cookie-parser');
     var csurf = require('csurf');
     var express = require('express');
-    var http = require('http');
-    var lusca = require('lusca');
     var logger = require('logger-request');
-    var resolve = require('path').resolve;
-    var cpu = require('os').cpus().length * 2;
+    var lusca = require('lusca');
     var semver = require('semver');
 } catch (MODULE_NOT_FOUND) {
     console.error(MODULE_NOT_FOUND);
     process.exit(1);
 }
 // load
-var VERSION = 'supergiovane@1.5.5';
-var ERROR = 'matusa';
+var VERSION = 'supergiovane@1.5.7';
 var debug = function() {
 
     return;
@@ -56,9 +58,9 @@ function bootstrap(my) {
     my.env == 'production' ? app.enable('view cache') : app
             .disable('view cache');
     app.enable('case sensitive routing');
-    // app.enable('strict routing');
     app.enable('trust proxy');
     app.disable('x-powered-by');
+
     // middleware
     app.use(cookie());
     if (my.logger) {
@@ -84,7 +86,7 @@ function bootstrap(my) {
     }));
     app.use(compression({
         level: 9,
-        threshold: 256
+        threshold: 512
     }));
     if (my.signature) {
         var signature = require('server-signature');
@@ -158,8 +160,9 @@ function bootstrap(my) {
      * @function
      * @param {Object} req - client request
      * @param {Object} res - response to client
+     * @param {next} next - next callback
      */
-    app.get('/:pkg/:extra?', function(req, res) {
+    app.get('/:pkg/:extra?', function(req, res, next) {
 
         var version = '/';
         var r = req.headers['referer'] || req.headers['referrer'];
@@ -187,7 +190,7 @@ function bootstrap(my) {
             } else if (semver.valid(e)) {
                 version += e;
             } else {
-                return res.status(404).end(ERROR);
+                return next(new Error(status[404]));
             }
         }
 
@@ -201,7 +204,7 @@ function bootstrap(my) {
 
             var body = new Buffer(0);
             if (inp.statusCode !== 200) {
-                return res.status(404).end(ERROR);
+                return next(new Error(status[404]));
             }
             inp.on('data', function(chunk) {
 
@@ -231,7 +234,7 @@ function bootstrap(my) {
 
                         var badge = new Buffer(0);
                         if (inp.statusCode !== 200) {
-                            return res.status(404).end(ERROR);
+                            return next(new Error(status[404]));
                         }
                         inp.on('data', function(chunk) {
 
@@ -249,12 +252,11 @@ function bootstrap(my) {
                         return;
                     }).on('error', function(e) {
 
-                        return res.status(404).end(ERROR);
+                        return next(new Error(status[404]));
                     });
 
                 } else {
-                    var content = 'application/json; charset=utf-8';
-                    res.set('Content-Type', content);
+                    res.set('Content-Type', 'application/json; charset=utf-8');
                     res.send(body);
                     cache(body, hash, content);
                 }
@@ -263,7 +265,7 @@ function bootstrap(my) {
             return;
         }).on('error', function(e) {
 
-            return res.status(404).end(ERROR);
+            return next(new Error(status[404]));
         });
         return;
     });
@@ -274,24 +276,26 @@ function bootstrap(my) {
      * @param {Object} err - error raised
      * @param {Object} req - client request
      * @param {Object} res - response to client
-     * @param {next} next - continue routes
+     * @param {next} next - next callback
      */
     app.use(function(err, req, res, next) {
 
-        var code = 0;
-        debug('error', {
+        var code = 500;
+        debug('web', {
             pid: process.pid,
-            error: err
+            error: err.message
         });
         switch (err.message.toLowerCase()) {
             case 'not found':
                 next();
-                break;
+                return;
             default:
-                code = 500;
                 break;
         }
-        res.status(code).end(ERROR);
+        res.set('Content-Type', 'application/json; charset=utf-8');
+        res.status(code).send({
+            error: status[code].toLowerCase()
+        });
         return;
     });
     /**
@@ -305,7 +309,10 @@ function bootstrap(my) {
     app.use(function(req, res, next) {
 
         var code = 404;
-        res.status(code).end(ERROR);
+        res.set('Content-Type', 'application/json; charset=utf-8');
+        res.status(code).send({
+            error: status[code].toLowerCase()
+        });
         return;
     });
 
