@@ -32,7 +32,9 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = 'supergiovane@1.5.8';
+var VERSION = JSON.parse(require('fs')
+        .readFileSync(__dirname + '/package.json'));
+VERSION = VERSION.name + '@' + VERSION.version;
 var debug = function() {
 
     return;
@@ -368,6 +370,12 @@ module.exports = function supergiovane(options) {
 
     if (cluster.isMaster) { // father
         debug('options', my);
+        if (my.task) {
+            var task = require('task-manager');
+            task(my.task, {
+                output: my.debug
+            });
+        }
 
         // no cluster
         if (my.env != 'production') {
@@ -401,12 +409,6 @@ module.exports = function supergiovane(options) {
             return;
         });
 
-        if (my.task) {
-            var task = require('task-manager');
-            task(my.task, {
-                output: my.debug
-            });
-        }
         return;
     }
 
