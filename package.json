@@ -1,5 +1,5 @@
 {
-  "version": "1.5.7",
+  "version": "1.5.8",
   "name": "supergiovane",
   "description": "website for get story about npm module",
   "keywords": [
@@ -36,6 +36,7 @@
     "semver": "3.0.1",
     "server-signature": "1.0.2",
     "timeout-request": "1.1.4",
+    "task-manager": "0.0.2",
     "top-vhost": "1.7.5"
   },
   "devDependencies": {

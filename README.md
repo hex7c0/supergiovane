@@ -34,7 +34,7 @@ supergiovane(options);
 
 #### options
 
- - `env` - **development | production** Selected environment *(default "production")*
+ - `env` - **String** Selected environment (development, production, test) *(default "production")*
  - `host` - **String** Which host accept connection from web *(default "127.0.0.1")*
  - `port` - **Integer** Which port accept connection from web *(default "3000")*
  - `referer` - **String** Which referer send data *(default "http://127.0.0.1")*
@@ -49,6 +49,7 @@ supergiovane(options);
  - `fork` - **Number** Number of forks (see cluster module), for single thread use "development" `env` *(default "cpus")*
  - `max` - **Number | String** Restart max number of crashed forks (use String for unlimited restart) *(default "no restart")*
  - `debug` - **String | false** Write debug information to file or disable *(default "debug.log")*
+ - `task` - **Number | String | false** Related to [`task-manager`](https://github.com/hex7c0/task-manager) *(default "false")*
 
 ## Examples
 

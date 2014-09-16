@@ -1,5 +1,5 @@
 /*
- * supergiovane v1.5.7
+ * supergiovane v1.5.8
  * (c) hex7c0 http://supergiovane.tk
  * Licensed under GPLv3
  */
