@@ -15,6 +15,7 @@
 // import
 try {
     var supergiovane = require('../index.min.js'); // require('supergiovane')
+    var unlink = require('fs').unlink;
     var request = require('supertest');
     var assert = require('assert');
 } catch (MODULE_NOT_FOUND) {
@@ -128,6 +129,19 @@ describe('extra', function() {
                         assert.notDeepEqual(cache1, cache2);
                         done();
                     });
+        });
+    });
+
+    describe('files', function() {
+
+        it('domain socket', function(done) {
+
+            unlink('test.sock', function(err) {
+
+                if (err)
+                    throw err;
+                done();
+            });
         });
     });
 });
