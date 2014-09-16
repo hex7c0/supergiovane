@@ -32,7 +32,7 @@ try {
     process.exit(1);
 }
 // load
-var VERSION = 'supergiovane@1.5.7';
+var VERSION = 'supergiovane@1.5.8';
 var debug = function() {
 
     return;
@@ -352,7 +352,8 @@ module.exports = function supergiovane(options) {
         flush: Number(options.flush || 86400000),
         fork: Number(options.fork || cpu),
         max: Number(options.max || 0),
-        debug: options.debug == false ? false : options.debug || 'debug.log'
+        debug: options.debug == false ? false : options.debug || 'debug.log',
+        task: Boolean(options.task) ? options.task : false,
     };
     if (my.debug) {
         debug = logger({
@@ -365,13 +366,15 @@ module.exports = function supergiovane(options) {
         });
     }
 
-    // cluster
-    if (my.env == 'development' || my.env == 'test') { // no cluster
-        debug('options', my);
-        return bootstrap(my);
-    }
     if (cluster.isMaster) { // father
         debug('options', my);
+
+        // no cluster
+        if (my.env != 'production') {
+            return bootstrap(my);
+        }
+
+        // cluster
         for (var i = 0; i < my.fork; i++) {
             cluster.fork();
         }
@@ -387,17 +390,26 @@ module.exports = function supergiovane(options) {
 
             console.error(worker.process.pid + ' died by ' + signal);
             debug('restart', {
-                max: my.max,
+                pid: worker.process.pid,
+                status: signal,
                 code: code,
-                signal: signal
+                max: my.max
             });
             if (my.max === NaN || my.max-- > 0) {
                 cluster.fork();
             }
             return;
         });
-    } else { // child
-        return bootstrap(my);
+
+        if (my.task) {
+            var task = require('task-manager');
+            task(my.task, {
+                output: my.debug
+            });
+        }
+        return;
     }
-    return;
+
+    // child
+    return bootstrap(my);
 };
