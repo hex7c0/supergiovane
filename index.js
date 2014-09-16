@@ -66,12 +66,10 @@ function bootstrap(my) {
         app.use(logger(my.logger));
     }
     if (my.vhost) {
-        var vhost = require('top-vhost');
-        app.use(vhost(my.vhost));
+        app.use(require('top-vhost')(my.vhost));
     }
     if (my.timeout) {
-        var timeout = require('timeout-request');
-        app.use(timeout(my.timeout));
+        app.use(require('timeout-request')(my.timeout));
     }
     app.use(lusca({
         xframe: 'SAMEORIGIN',
@@ -82,12 +80,10 @@ function bootstrap(my) {
         threshold: 512
     }));
     if (my.signature) {
-        var signature = require('server-signature');
-        app.use(signature(my.signature));
+        app.use(require('server-signature')(my.signature));
     }
     if (my.sitemap) {
-        var sitemap = require('express-sitemap');
-        sitemap(my.sitemap).toFile();
+        require('express-sitemap')(my.sitemap).toFile();
     }
     var cache;
     if (my.cache) {
@@ -371,8 +367,7 @@ module.exports = function supergiovane(options) {
     if (cluster.isMaster) { // father
         debug('options', my);
         if (my.task) {
-            var task = require('task-manager');
-            task(my.task, {
+            require('task-manager')(my.task, {
                 output: my.debug
             });
         }
