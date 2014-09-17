@@ -271,20 +271,22 @@ function bootstrap(my) {
     app.use(function(err, req, res, next) {
 
         var code = 500;
+        var out = '';
         debug('web', {
             pid: process.pid,
             error: err.message
         });
         switch (err.message.toLowerCase()) {
             case 'not found':
-                next();
-                return;
+                return next();
             default:
+                if (my.env !== 'production') {
+                    out = err.message.toLowerCase();
+                }
                 break;
         }
-        res.set('Content-Type', 'application/json; charset=utf-8');
-        res.status(code).send({
-            error: status[code].toLowerCase()
+        res.status(code).json({
+            error: out || status[code].toLowerCase()
         });
         return;
     });
@@ -294,13 +296,11 @@ function bootstrap(my) {
      * @function
      * @param {Object} req - client request
      * @param {Object} res - response to client
-     * @param {next} next - continue routes
      */
-    app.use(function(req, res, next) {
+    app.use(function(req, res) {
 
         var code = 404;
-        res.set('Content-Type', 'application/json; charset=utf-8');
-        res.status(code).send({
+        res.status(code).json({
             error: status[code].toLowerCase()
         });
         return;
