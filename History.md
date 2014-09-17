@@ -3,6 +3,8 @@ v1.5.8 / 2014-09-16
 
   * Add "task" (options)
   * Using `task-manager`@0.0.2
+  * Update `express`@4.9.1
+  * Update `angular`@1.3.0-rc.2
 
 v1.5.7 / 2014-09-15
 ==================
