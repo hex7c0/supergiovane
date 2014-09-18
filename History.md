@@ -1,6 +1,12 @@
 v1.5.9 / 2014-09-17
 ==================
 
+  * Update `logger-request`@3.0.7
+  * Update `express`@4.9.2
+
+v1.5.9 / 2014-09-17
+==================
+
   * Update `express`@4.9.1
   * Update `angular`@1.3.0-rc.2
 
