@@ -65,9 +65,6 @@ function bootstrap(my) {
     if (my.logger) {
         app.use(logger(my.logger));
     }
-    if (my.vhost) {
-        app.use(require('top-vhost')(my.vhost));
-    }
     if (my.timeout) {
         app.use(require('timeout-request')(my.timeout));
     }
@@ -75,10 +72,7 @@ function bootstrap(my) {
         xframe: 'SAMEORIGIN',
         xssProtection: true
     }));
-    app.use(compression({
-        level: 9,
-        threshold: 512
-    }));
+    app.use(compression());
     if (my.signature) {
         app.use(require('server-signature')(my.signature));
     }
@@ -334,7 +328,7 @@ module.exports = function supergiovane(options) {
     var my = {
         env: String(options.env || 'production'),
         host: String(options.host || '127.0.0.1'),
-        port: Number(options.port || 3000),
+        port: Number(options.port) || 3000,
         referer: new RegExp(String(options.referer || 'http://127.0.0.1'), 'i'),
         dir: String(options.dir || __dirname + '/public/'),
         logger: options.logger == false ? false : options.logger
@@ -343,13 +337,12 @@ module.exports = function supergiovane(options) {
                 || Object.create(null),
         sitemap: options.sitemap == false ? false : options.sitemap
                 || Object.create(null),
-        vhost: options.vhost == false ? false : options.vhost || false,
         signature: options.signature == false ? false
                 : options.signature || false,
-        cache: options.cache == false ? false : Number(options.cache || 6),
-        flush: Number(options.flush || 86400000),
-        fork: Number(options.fork || cpu),
-        max: Number(options.max || 0),
+        cache: options.cache == false ? false : Number(options.cache) || 6,
+        flush: Number(options.flush) || 86400000,
+        fork: Number(options.fork) || cpu,
+        max: Number(options.max) || 0,
         debug: options.debug == false ? false : options.debug || 'debug.log',
         task: Boolean(options.task) ? options.task : false,
     };
@@ -391,7 +384,7 @@ module.exports = function supergiovane(options) {
          */
         cluster.on('exit', function(worker, code, signal) {
 
-            console.error(worker.process.pid + ' died by ' + signal);
+            // console.error(worker.process.pid + ' died by ' + signal);
             debug('restart', {
                 pid: worker.process.pid,
                 status: signal,
