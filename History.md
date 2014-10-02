@@ -1,3 +1,13 @@
+v1.5.15 / 2014-10-02
+==================
+
+  * Remove `top-vhost`@1.5.2
+  * Update `logger-request`@3.0.8
+  * Update `task-manager`@1.0.0
+  * Update `semver`@4.0.3
+  * Fix parsing options 
+  * Update `angular`@1.3.0-rc.4
+
 v1.5.14 / 2014-09-25
 ==================
 
