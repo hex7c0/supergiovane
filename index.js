@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /**
  * @file supergiovane main
  * @module supergiovane
