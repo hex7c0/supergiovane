@@ -201,10 +201,7 @@ function bootstrap(my) {
 
                 // badge
                 if (e === 'badge.svg') {
-                    var c = 0;
-                    for ( var i in body.versions) {
-                        c++;
-                    }
+                    var c = Object.keys(body.versions).length;
                     var plu = c > 1 ? 's-' : '-';
                     http.get({
                         host: 'img.shields.io',
