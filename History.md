@@ -1,3 +1,12 @@
+v1.5.20 / 2014-10-20
+==================
+
+  * Update `timeout-request`@1.0.3
+  * Update `compression`@1.2.0
+  * Update `express`@4.9.8
+  * Update `lusca`@1.0.2
+  * Update `semver`@4.1.0
+
 v1.5.19 / 2014-10-14
 ==================
 
