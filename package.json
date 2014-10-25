@@ -1,5 +1,5 @@
 {
-  "version": "1.5.22",
+  "version": "1.5.23",
   "name": "supergiovane",
   "description": "website for get story about npm module",
   "keywords": [
@@ -26,9 +26,9 @@
   "main": "index.min.js",
   "dependencies": {
     "compression": "1.2.0",
-    "express": "4.9.8",
+    "express": "4.10.0",
     "express-sitemap": "1.3.6",
-    "logger-request": "3.0.10",
+    "logger-request": "3.0.11",
     "lusca": "1.0.2",
     "semver": "4.1.0",
     "server-signature": "1.0.3",
@@ -36,7 +36,7 @@
     "task-manager": "1.0.2"
   },
   "devDependencies": {
-    "mocha": "~1.21",
+    "mocha": "~2.0",
     "logger-request-cli": "~1.1",
     "grunt-contrib-clean": "~0.6",
     "grunt-contrib-cssmin": "~0.10",
