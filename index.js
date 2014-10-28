@@ -55,8 +55,11 @@ function bootstrap(my) {
     // setting
     var app = express();
     app.set('env', my.env);
-    my.env == 'production' ? app.enable('view cache') : app
-            .disable('view cache');
+    if (my.env == 'production') {
+        app.enable('view cache');
+    } else {
+        app.disable('view cache');
+    }
     app.enable('case sensitive routing');
     app.enable('trust proxy');
     app.disable('x-powered-by');
@@ -148,7 +151,7 @@ function bootstrap(my) {
     app.get('/:pkg/:extra?', function(req, res, next) {
 
         var version = '/';
-        var r = req.headers['referer'] || req.headers['referrer'];
+        var r = req.headers.referer || req.headers.referrer;
         var p = req.params.pkg;
         var e = req.params.extra || '';
         var s = req.query.style ? '?style=' + req.query.style : '';
@@ -230,7 +233,7 @@ function bootstrap(my) {
                             return;
                         });
                         return;
-                    }).on('error', function(e) {
+                    }).on('error', function() {
 
                         return next(new Error(status[404]));
                     });
@@ -244,7 +247,7 @@ function bootstrap(my) {
                 return;
             });
             return;
-        }).on('error', function(e) {
+        }).on('error', function() {
 
             return next(new Error(status[404]));
         });
@@ -316,31 +319,31 @@ function bootstrap(my) {
  * 
  * @exports supergiovane
  * @function supergiovane
- * @param {Object} options - various options. Check README.md
+ * @param {Object} opt - various options. Check README.md
  * @return {Object}
  */
-module.exports = function supergiovane(options) {
+module.exports = function supergiovane(opt) {
 
-    var options = options || Object.create(null);
+    var options = opt || Object.create(null);
     var my = {
         env: String(options.env || 'production'),
         host: String(options.host || '127.0.0.1'),
         port: Number(options.port) || 3000,
         referer: new RegExp(String(options.referer || 'http://127.0.0.1'), 'i'),
         dir: String(options.dir || __dirname + '/public/'),
-        logger: options.logger == false ? false : options.logger
+        logger: options.logger === false ? false : options.logger
                 || Object.create(null),
-        timeout: options.timeout == false ? false : options.timeout
+        timeout: options.timeout === false ? false : options.timeout
                 || Object.create(null),
-        sitemap: options.sitemap == false ? false : options.sitemap
+        sitemap: options.sitemap === false ? false : options.sitemap
                 || Object.create(null),
-        signature: options.signature == false ? false
+        signature: options.signature === false ? false
                 : options.signature || false,
-        cache: options.cache == false ? false : Number(options.cache) || 6,
+        cache: options.cache === false ? false : Number(options.cache) || 6,
         flush: Number(options.flush) || 86400000,
         fork: Number(options.fork) || cpu,
         max: Number(options.max) || 0,
-        debug: options.debug == false ? false : options.debug || 'debug.log',
+        debug: options.debug === false ? false : options.debug || 'debug.log',
         task: Boolean(options.task) ? options.task : false,
     };
     if (my.debug) {
@@ -388,7 +391,7 @@ module.exports = function supergiovane(options) {
                 code: code,
                 max: my.max
             });
-            if (my.max === NaN || my.max-- > 0) {
+            if (isNaN(my.max) || my.max-- > 0) {
                 cluster.fork();
             }
             return;
