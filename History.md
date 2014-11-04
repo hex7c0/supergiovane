@@ -10,6 +10,16 @@ v1.6.0 / 2014-11-04
     * Update `bootstrap`@3.3.0
     * Update `angular`@1.3.1
 
+v1.5.24 / 2014-10-28
+==================
+
+  * `jshint`
+  * Update `logger-request`@3.0.13
+  * Update `express-sitemap`@1.3.7
+  * Update `task-manager`@1.0.3
+  * Update `server-signature`@1.0.4
+  * Update `timeout-request`@1.1.7
+
 v1.5.23 / 2014-10-25
 ==================
 
