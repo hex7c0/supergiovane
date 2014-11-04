@@ -1,12 +1,14 @@
-v1.5.24 / 2014-10-28
+v1.6.0 / 2014-11-04
 ==================
 
-  * `jshint`
-  * Update `logger-request`@3.0.13
-  * Update `express-sitemap`@1.3.7
-  * Update `task-manager`@1.0.3
-  * Update `server-signature`@1.0.4
-  * Update `timeout-request`@1.1.7
+  * _Deps_:
+    * Update `logger-request`@3.1.1
+    * Update `server-signature`@1.0.5
+    * Update `timeout-request`@1.2.0
+    * Update `express`@4.10.1
+  * _Web_:
+    * Update `bootstrap`@3.3.0
+    * Update `angular`@1.3.1
 
 v1.5.23 / 2014-10-25
 ==================
