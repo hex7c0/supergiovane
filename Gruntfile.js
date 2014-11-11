@@ -16,7 +16,7 @@ module.exports = function(grunt) {
                 + ' * (c) <%= pkg.author.name %> <%= pkg.homepage %>\n'
                 + ' * Licensed under <%= pkg.license %>\n' + ' */\n',
 
-        clean: [ 'index.min.js', 'min/**/*.js', 'public/**/*.min.*' ],
+        clean: [ 'index.min.js', 'min/**/*', 'public/**/*.min.*' ],
 
         uglify: {
             target: {
@@ -83,6 +83,21 @@ module.exports = function(grunt) {
             },
             target: {
                 src: [ 'lib/**/*.js', 'module/**/*.js', 'index.js' ]
+            },
+            web: {
+                options: {
+                    // override
+                    unused: false,
+                    strict: false,
+                    node: false,
+                    // web
+                    predef: [ 'angular', 'console' ],
+                    browser: true,
+                    jquery: true
+                },
+                files: {
+                    src: 'public/js/script.js'
+                }
             }
         },
 
