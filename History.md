@@ -1,3 +1,12 @@
+v1.6.1 / 2014-11-11
+==================
+
+  * Web Fix
+  * Update `logger-request`@3.2.0
+  * Update `timeout-request`@1.2.1
+  * Update `express`@4.10.2
+  * Update `angular`@1.3.2
+
 v1.6.0 / 2014-11-04
 ==================
 
