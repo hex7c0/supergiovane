@@ -1,3 +1,14 @@
+v1.6.2 / 2014-11-22
+==================
+
+  * _Deps_:
+    * Update `express-sitemap`@1.3.8
+    * Update `logger-request`@3.2.2
+    * Update `server-signature`@1.0.7
+  * _Web_:
+    * Update `bootstrap`@3.3.1
+    * Update `angular`@1.3.3
+
 v1.6.1 / 2014-11-11
 ==================
 
