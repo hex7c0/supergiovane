@@ -9,7 +9,7 @@ input{border-right:0;}
 
 #header{margin-bottom:80px;}
 #show{text-align:center;}
-#search-logo{width:120px;border-radius:50%;display:block;margin:auto;}
+#search-logo{border-radius:50%;display:block;margin:auto;}
 #cls{border-left:0;}
 #badge{opacity:1;box-shadow:none;}
 
