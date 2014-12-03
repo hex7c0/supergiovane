@@ -1,3 +1,12 @@
+v1.6.4 / 2014-12-03
+==================
+
+  * _Deps_:
+    * Update `logger-request`@3.2.3
+    * Update `timeout-request`@1.3.0
+  * _Web_:
+    * Update `angular`@1.3.5
+
 v1.6.3 / 2014-11-28
 ==================
 
