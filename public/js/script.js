@@ -2,7 +2,7 @@
  * supergiovane 1.6.0 (c) 2014 hex7c0, http://supergiovane.tk
  */
 
-var app = angular.module('supergiovane', [ 'ngSanitize' ]);
+var app = angular.module('supergiovane', []);
 
 /**
  * up function
@@ -212,8 +212,7 @@ app.controller('main', [
        */
       $('.alert').click(function() {
 
-        $('.alert').fadeOut();
-        return;
+        return $('.alert').fadeOut();
       });
       $(document).keypress(function(e) {
 
@@ -238,6 +237,7 @@ app.controller('main', [
             });
             break;
         }
+        return;
       };
       return;
     } ]);
