@@ -1,3 +1,13 @@
+v1.6.5 / 2014-12-10
+==================
+
+  * Update web interface with new npm website
+  * _Deps_:
+    * Remove `lusca`
+  * _Web_:
+    * Remove `angular-sanitize`
+    * Update `angular`@1.3.6
+
 v1.6.4 / 2014-12-03
 ==================
 
