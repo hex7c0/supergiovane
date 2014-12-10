@@ -25,7 +25,6 @@ try {
   var compression = require('compression');
   var express = require('express');
   var logger = require('logger-request');
-  var lusca = require('lusca');
   var semver = require('semver');
 } catch (MODULE_NOT_FOUND) {
   console.error(MODULE_NOT_FOUND);
@@ -71,10 +70,6 @@ function bootstrap(my) {
   if (my.timeout) {
     app.use(require('timeout-request')(my.timeout));
   }
-  app.use(lusca({
-    xframe: 'SAMEORIGIN',
-    xssProtection: true
-  }));
   app.use(compression());
   if (my.signature) {
     app.use(require('server-signature')(my.signature));
