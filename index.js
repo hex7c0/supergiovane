@@ -70,13 +70,14 @@ function bootstrap(my) {
   if (my.timeout) {
     app.use(require('timeout-request')(my.timeout));
   }
-  app.use(compression());
   if (my.signature) {
     app.use(require('server-signature')(my.signature));
   }
   if (my.sitemap) {
     require('express-sitemap')(my.sitemap).toFile();
   }
+  app.use(compression());
+
   var cache;
   if (my.cache) {
     /**
@@ -119,7 +120,7 @@ function bootstrap(my) {
 
   // cfg
   http.globalAgent.maxSockets = Math.pow(my.fork, 2);
-  http.timeout = 60000;
+  http.timeout = my.timeout;
   var STORY = Object.create(null);
   var index = resolve(my.dir + 'index.min.html');
 
@@ -275,7 +276,7 @@ function bootstrap(my) {
         break;
     }
     res.status(code).json({
-      error: out || status[code].toLowerCase()
+      error: out
     });
     return;
   });
