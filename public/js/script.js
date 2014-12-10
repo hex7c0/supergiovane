@@ -55,7 +55,7 @@ function search($http, $scope) {
           };
         }
         var n = {
-          link: 'https://www.npmjs.org/' + $scope.searched,
+          link: 'https://www.npmjs.com/package/' + $scope.searched,
           stat: 'http://npm-stat.com/charts.html?package=' + $scope.searched,
         };
         if (data.bugs && data.bugs.url) {
@@ -103,13 +103,13 @@ function search($http, $scope) {
           var dep = '', depv = '';
           if (data.dependencies) {
             for (i in data.dependencies) {
-              dep += 'https://www.npmjs.org/package/' + i + ' @'
+              dep += 'https://www.npmjs.com/package/' + i + ' @'
                   + data.dependencies[i] + ' ';
             }
           }
           if (data.devDependencies) {
             for (i in data.devDependencies) {
-              depv += 'https://www.npmjs.org/package/' + i + ' @'
+              depv += 'https://www.npmjs.com/package/' + i + ' @'
                   + data.devDependencies[i] + ' ';
             }
           }
