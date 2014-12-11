@@ -302,11 +302,11 @@ function bootstrap(my) {
       host: my.host,
       port: my.port
     });
-    http = http.createServer(app);
+    var server = http.createServer(app);
     if (my.timeout && my.timeout.milliseconds) {
-      http.timeout = my.timeout.milliseconds;
+      server.timeout = my.timeout.milliseconds;
     }
-    http.listen(my.port, my.host);
+    server.listen(my.port, my.host);
   }
   return app;
 }
