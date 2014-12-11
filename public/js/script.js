@@ -2,7 +2,7 @@
  * supergiovane 1.6.0 (c) 2014 hex7c0, http://supergiovane.tk
  */
 
-var app = angular.module('supergiovane', []);
+var app = angular.module('supergiovane', [ 'ngSanitize' ]);
 
 /**
  * up function
