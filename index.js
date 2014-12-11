@@ -303,8 +303,8 @@ function bootstrap(my) {
       port: my.port
     });
     http = http.createServer(app);
-    if (my.timeout) {
-      http.timeout = my.timeout;
+    if (my.timeout && my.timeout.milliseconds) {
+      http.timeout = my.timeout.milliseconds;
     }
     http.listen(my.port, my.host);
   }
