@@ -1,3 +1,13 @@
+v1.6.6 / 2014-12-11
+==================
+
+  * Fix http timeout
+  * _Deps_:
+    * Update `compression`@1.2.2
+    * Update `express`@4.10.5
+  * _Web_:
+    * Break commit add `angular-sanitize`
+
 v1.6.5 / 2014-12-10
 ==================
 
