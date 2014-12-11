@@ -120,7 +120,6 @@ function bootstrap(my) {
 
   // cfg
   http.globalAgent.maxSockets = Math.pow(my.fork, 2);
-  http.timeout = my.timeout;
   var STORY = Object.create(null);
   var index = resolve(my.dir + 'index.min.html');
 
@@ -303,7 +302,11 @@ function bootstrap(my) {
       host: my.host,
       port: my.port
     });
-    http.createServer(app).listen(my.port, my.host);
+    http = http.createServer(app);
+    if (my.timeout) {
+      http.timeout = my.timeout;
+    }
+    http.listen(my.port, my.host);
   }
   return app;
 }
