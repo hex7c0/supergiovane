@@ -1,3 +1,13 @@
+v1.6.9 / 2014-12-24
+==================
+
+  * _Deps_:
+    * Update `logger-request`@3.2.5
+    * Update `semver`@4.2.0
+  * _Web_:
+    * Update `angular`@1.3.8
+    * Update `jquery`@2.1.3
+
 v1.6.8 / 2014-12-15
 ==================
 
