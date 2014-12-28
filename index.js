@@ -100,7 +100,7 @@ function bootstrap(my) {
           }
         }
         if (c >= my.cache) {
-          delete STORY[last];
+          STORY[last] = undefined;
         }
         STORY[hash] = {
           content: cont,
@@ -160,11 +160,11 @@ function bootstrap(my) {
       res.status(202).send(STORY[hash].body);
       // flush cache after 1 day
       if (new Date().getTime() - STORY[hash].time > my.flush) {
-        delete STORY[hash];
+        STORY[hash] = undefined;
       }
       return;
     }
-    if (e) { // extra information
+    if (e !== '') { // extra information
       if (e === 'badge.svg') {
         // pass
       } else if (semver.valid(e)) {
