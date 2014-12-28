@@ -124,17 +124,6 @@ function bootstrap(my) {
 
   // routing
   /**
-   * index
-   * 
-   * @param {Object} req - client request
-   * @param {Object} res - response to client
-   */
-  app.get('/', function(req, res) {
-
-    res.sendFile(index);
-    return;
-  });
-  /**
    * http request (no client ajax due browser security limitation)
    * 
    * @function
@@ -174,7 +163,7 @@ function bootstrap(my) {
       }
     }
 
-    http.get({
+    return http.get({
       host: 'registry.npmjs.org',
       path: '/' + p + version,
       headers: {
@@ -245,7 +234,16 @@ function bootstrap(my) {
 
       return next(new Error(status[404]));
     });
-    return;
+  });
+  /**
+   * index
+   * 
+   * @param {Object} req - client request
+   * @param {Object} res - response to client
+   */
+  app.get('/', function(req, res) {
+
+    return res.sendFile(index);
   });
   /**
    * catch all errors returned from page
