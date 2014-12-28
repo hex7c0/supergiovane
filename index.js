@@ -17,7 +17,6 @@
 try {
   // node
   var cluster = require('cluster');
-  var cpu = require('os').cpus().length * 2;
   var http = require('http');
   var resolve = require('path').resolve;
   var status = http.STATUS_CODES;
@@ -328,17 +327,15 @@ module.exports = function supergiovane(opt) {
     port: Number(options.port) || 3000,
     referer: new RegExp(String(options.referer || 'http://127.0.0.1'), 'i'),
     dir: String(options.dir || __dirname + '/public/'),
-    logger: options.logger === false ? false : options.logger
-        || Object.create(null),
-    timeout: options.timeout === false ? false : options.timeout
-        || Object.create(null),
-    sitemap: options.sitemap === false ? false : options.sitemap
-        || Object.create(null),
+    logger: options.logger === false ? false : options.logger || {},
+    timeout: options.timeout === false ? false : options.timeout || {},
+    sitemap: options.sitemap === false ? false : options.sitemap || {},
     signature: options.signature === false ? false : options.signature || false,
     cache: options.cache === false ? false : Number(options.cache) || 6,
     flush: Number(options.flush) || 86400000,
-    fork: Number(options.fork) || cpu,
-    max: Number(options.max) || 0,
+    fork: Number(opt.fork) < 5 ? require('os').cpus().length : Number(opt.fork)
+        || require('os').cpus().length,
+    max: typeof opt.max === 'string' ? opt.max : Number(opt.max) || 0,
     debug: options.debug === false ? false : options.debug || 'debug.log',
     task: Boolean(options.task) ? options.task : false,
   };
