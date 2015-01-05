@@ -90,7 +90,7 @@ function bootstrap(my) {
      */
     cache = function(bod, hash, cont) {
 
-      if (!STORY[hash]) {
+      if (STORY[hash] === undefined) {
         var c = 0, old = new Date().getTime(), last;
         for ( var pr in STORY) {
           c++;
@@ -141,10 +141,10 @@ function bootstrap(my) {
     var hash = p + e + s;
 
     // checkpoint
-    if (!my.referer.test(r) && e !== 'badge.svg') {
+    if (my.referer.test(r) === false && e !== 'badge.svg') {
       return res.redirect(301, my.referer.source);
     }
-    if (my.cache && STORY[hash]) {
+    if (my.cache !== false && STORY[hash] !== undefined) {
       res.set('Content-Type', STORY[hash].content);
       res.status(202).send(STORY[hash].body);
       // flush cache after 1 day
@@ -343,7 +343,8 @@ module.exports = function supergiovane(opt) {
       standalone: true,
       winston: {
         logger: '_spDebug',
-        level: 'debug'
+        level: 'debug',
+        json: false
       }
     });
   }
