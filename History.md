@@ -1,3 +1,13 @@
+v1.6.11 / 2014-01-05
+==================
+
+  * Cluster gracefully exit
+  * _Deps_:
+    * Update `logger-request`@3.2.7
+    * Update `task-manager`@1.1.0
+    * Update `compression`@1.3.0
+    * Update `express`@4.10.7
+
 v1.6.10 / 2014-12-2
 ==================
 
