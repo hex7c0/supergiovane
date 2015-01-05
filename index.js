@@ -21,7 +21,6 @@ try {
   var resolve = require('path').resolve;
   var status = http.STATUS_CODES;
   // module
-  var compression = require('compression');
   var express = require('express');
   var logger = require('logger-request');
   var semver = require('semver');
@@ -75,7 +74,7 @@ function bootstrap(my) {
   if (my.sitemap) {
     require('express-sitemap')(my.sitemap).toFile();
   }
-  app.use(compression());
+  app.use(require('compression')());
 
   var cache;
   if (my.cache) {
@@ -350,10 +349,9 @@ module.exports = function supergiovane(opt) {
   }
 
   if (cluster.isMaster) { // father
-    debug('options', my);
     if (my.task) {
       require('task-manager')(my.task, {
-        output: my.debug
+        output: Boolean(my.debug)
       });
     }
 
@@ -376,16 +374,18 @@ module.exports = function supergiovane(opt) {
      */
     cluster.on('exit', function(worker, code, signal) {
 
-      // console.error(worker.process.pid + ' died by ' + signal);
+      if (worker.suicide === true) { // task-manager kill or disconnect
+        cluster.fork();
+      } else if (isNaN(my.max) === true || my.max-- > 0) { // bug restart, not too much
+        cluster.fork();
+      }
       debug('restart', {
         pid: worker.process.pid,
+        suicide: worker.suicide,
         status: signal,
         code: code,
         max: my.max
       });
-      if (isNaN(my.max) || my.max-- > 0) {
-        cluster.fork();
-      }
       return;
     });
 
