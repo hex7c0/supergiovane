@@ -379,19 +379,31 @@ module.exports = function supergiovane(opt) {
       } else if (isNaN(my.max) === true || my.max-- > 0) { // bug restart, not too much
         cluster.fork();
       }
-      debug('restart', {
+      return debug('clusters', {
         pid: worker.process.pid,
+        status: code || signal,
         suicide: worker.suicide,
-        status: signal,
-        code: code,
         max: my.max
       });
-      return;
     });
-
     return;
   }
 
-  // child
+  /*
+   * child
+   */
+  process.on('uncaughtException', function(err) {
+
+    debug('clusters', {
+      pid: process.pid,
+      status: 'uncaughtException',
+      error: err.message,
+      stack: err.stack
+    });
+    return setTimeout(function() { // wait logger write
+
+      return process.exit(1);
+    }, 250);
+  });
   return bootstrap(my);
 };
