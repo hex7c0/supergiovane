@@ -178,8 +178,7 @@ function bootstrap(my) {
 
         body += chunk; // buffer
         return;
-      });
-      inp.on('end', function() {
+      }).on('end', function() {
 
         body = JSON.parse(body);
         body.readme = null; // remove too big
@@ -205,19 +204,31 @@ function bootstrap(my) {
 
               badge += chunk; // buffer
               return;
-            });
-            inp.on('end', function() {
+            }).on('end', function() {
 
               var content = 'image/svg+xml; charset=utf-8';
               res.set('Content-Type', content);
               res.send(badge);
               cache(badge, hash, content);
               return;
+            }).on('error', function(err) {
+
+              next(new Error(status[404]));
+              return debug('client', {
+                pid: process.pid,
+                status: 'response',
+                error: err.message
+              });
             });
             return;
-          }).on('error', function() {
+          }).on('error', function(err) {
 
-            return next(new Error(status[404]));
+            next(new Error(status[404]));
+            return debug('client', {
+              pid: process.pid,
+              status: 'response',
+              error: err.message
+            });
           });
 
         } else {
@@ -229,9 +240,14 @@ function bootstrap(my) {
         return;
       });
       return;
-    }).on('error', function() {
+    }).on('error', function(err) {
 
-      return next(new Error(status[404]));
+      next(new Error(status[404]));
+      return debug('client', {
+        pid: process.pid,
+        status: 'request',
+        error: err.message
+      });
     });
   });
   /**
@@ -255,18 +271,20 @@ function bootstrap(my) {
    */
   app.use(function(err, req, res, next) {
 
-    var code = 500;
     var out = '';
+    var error = err.message.toLowerCase(); // string
+    var code = 500;
     debug('web', {
       pid: process.pid,
-      error: err.message
+      status: 'catch',
+      error: error
     });
-    switch (err.message.toLowerCase()) {
+    switch (error) {
       case 'not found':
         return next();
       default:
         if (my.env !== 'production') {
-          out = err.message.toLowerCase();
+          out = error;
         }
         break;
     }
