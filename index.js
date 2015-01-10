@@ -392,17 +392,18 @@ module.exports = function supergiovane(opt) {
      */
     cluster.on('exit', function(worker, code, signal) {
 
-      if (worker.suicide === true) { // task-manager kill or disconnect
-        cluster.fork();
-      } else if (isNaN(my.max) === true || my.max-- > 0) { // bug restart, not too much
-        cluster.fork();
-      }
-      return debug('clusters', {
+      debug('clusters', {
         pid: worker.process.pid,
         status: code || signal,
         suicide: worker.suicide,
         max: my.max
       });
+      if (worker.suicide === true) { // task-manager kill or disconnect
+        cluster.fork();
+      } else if (isNaN(my.max) === true || my.max-- > 0) { // bug restart, not too much
+        cluster.fork();
+      }
+      return;
     });
     return;
   }
