@@ -1,4 +1,9 @@
-v1.6.11 / 2014-01-05
+v1.6.12 / 2015-01-10
+==================
+
+  * Add uncaughtException logic
+
+v1.6.11 / 2015-01-05
 ==================
 
   * Cluster gracefully exit
