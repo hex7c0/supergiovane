@@ -90,7 +90,7 @@ function bootstrap(my) {
     cache = function(bod, hash, cont) {
 
       if (STORY[hash] === undefined) {
-        var c = 0, old = new Date().getTime(), last;
+        var c = 0, old = Date.now(), last;
         for ( var pr in STORY) {
           c++;
           if (STORY[pr].time < old) {
@@ -104,7 +104,7 @@ function bootstrap(my) {
         STORY[hash] = {
           content: cont,
           body: bod,
-          time: new Date().getTime()
+          time: Date.now()
         };
       }
       return;
@@ -147,7 +147,7 @@ function bootstrap(my) {
       res.set('Content-Type', STORY[hash].content);
       res.status(202).send(STORY[hash].body);
       // flush cache after 1 day
-      if (new Date().getTime() - STORY[hash].time > my.flush) {
+      if (Date.now() - STORY[hash].time > my.flush) {
         STORY[hash] = undefined;
       }
       return;
