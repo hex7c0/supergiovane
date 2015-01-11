@@ -1,3 +1,9 @@
+v1.6.13 / 2015-01-11
+==================
+
+  * Fix `console.log` bug when shell is closed
+  * Update `server-signature`@1.0.8
+
 v1.6.12 / 2015-01-10
 ==================
 
