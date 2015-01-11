@@ -310,8 +310,10 @@ function bootstrap(my) {
   });
 
   if (my.env != 'test') {
-    console.log(process.pid + ' | listening on: ' + my.host + ':' + my.port);
-    debug('start', {
+    if (my.env != 'production') {
+      console.log(process.pid + ' | listening on: ' + my.host + ':' + my.port);
+    }
+    debug('web', {
       pid: process.pid,
       host: my.host,
       port: my.port
