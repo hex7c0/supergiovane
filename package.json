@@ -31,7 +31,7 @@
     "mamma": "0.1.0",
     "logger-request": "3.2.7",
     "semver": "4.2.0",
-    "server-signature": "1.0.8",
+    "server-signature": "1.0.9",
     "timeout-request": "1.3.0",
     "task-manager": "1.1.0"
   },
