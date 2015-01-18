@@ -389,9 +389,7 @@ module.exports = function supergiovane(opt) {
    */
   if (cluster.isMaster) {
     if (my.task) {
-      require('task-manager')(my.task, {
-        output: Boolean(my.debug)
-      });
+      require('task-manager')(my.task);
     }
 
     // no cluster
