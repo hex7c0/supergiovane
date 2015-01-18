@@ -117,7 +117,10 @@ function bootstrap(my) {
   }
 
   // cfg
-  http.globalAgent.maxSockets = Math.pow(my.fork, 2);
+  // http.globalAgent.maxSockets = Math.pow(my.fork, 2); // by default set to Infinity on iojs 1.0
+  var httpAgent = new http.Agent({
+    keepAlive: true
+  });
   var STORY = Object.create(null);
   var index = resolve(my.dir + 'index.min.html');
 
@@ -165,6 +168,7 @@ function bootstrap(my) {
     return http.get({
       host: 'registry.npmjs.org',
       path: '/' + p + version,
+      agent: httpAgent,
       headers: {
         'User-Agent': VERSION
       }
@@ -190,7 +194,7 @@ function bootstrap(my) {
           http.get({
             host: 'img.shields.io',
             path: '/badge/version' + plu + c + '-red.svg' + s,
-            agent: false,
+            agent: httpAgent,
             headers: {
               'User-Agent': VERSION
             }
@@ -368,7 +372,10 @@ module.exports = function supergiovane(opt) {
     });
   }
 
-  if (cluster.isMaster) { // father
+  /*
+   * father
+   */
+  if (cluster.isMaster) {
     if (my.task) {
       require('task-manager')(my.task, {
         output: Boolean(my.debug)
@@ -394,7 +401,7 @@ module.exports = function supergiovane(opt) {
      */
     cluster.on('exit', function(worker, code, signal) {
 
-      debug('clusters', {
+      debug('cluster', {
         pid: worker.process.pid,
         status: code || signal,
         suicide: worker.suicide,
@@ -415,7 +422,7 @@ module.exports = function supergiovane(opt) {
    */
   process.on('uncaughtException', function(err) {
 
-    debug('clusters', {
+    debug('cluster', {
       pid: process.pid,
       status: 'uncaughtException',
       error: err.message,
