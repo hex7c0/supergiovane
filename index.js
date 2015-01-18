@@ -99,7 +99,7 @@ function bootstrap(my) {
           }
         }
         if (c >= my.cache) {
-          STORY[last] = undefined;
+          delete STORY[last];
         }
         STORY[hash] = {
           content: cont,
@@ -151,7 +151,7 @@ function bootstrap(my) {
       res.status(202).send(STORY[hash].body);
       // flush cache after 1 day
       if (Date.now() - STORY[hash].time > my.flush) {
-        STORY[hash] = undefined;
+        delete STORY[hash];
       }
       return;
     }
