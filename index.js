@@ -74,6 +74,17 @@ function bootstrap(my) {
   if (my.sitemap) {
     require('express-sitemap')(my.sitemap).toFile();
   }
+  if (my.mamma) {
+    require('mamma').createClient(my.mamma, process.pid)
+        .on('error', function(err) {
+
+          return debug('cluster', {
+            pid: process.pid,
+            status: 'mamma',
+            error: err.message
+          });
+        });
+  }
   app.use(require('compression')());
 
   var cache;
@@ -359,6 +370,7 @@ module.exports = function supergiovane(opt) {
     max: typeof opt.max === 'string' ? opt.max : Number(opt.max) || 0,
     debug: options.debug === false ? false : options.debug || 'debug.log',
     task: Boolean(options.task) ? options.task : false,
+    mamma: Boolean(options.mamma) ? options.mamma : false
   };
   if (my.debug) {
     debug = logger({
