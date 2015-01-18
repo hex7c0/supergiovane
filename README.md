@@ -50,6 +50,7 @@ supergiovane(options);
  - `max` - **Number | String** Restart max number of crashed forks (use String for unlimited restart) *(default "no restart")*
  - `debug` - **String | false** Write debug information to file or disable *(default "debug.log")*
  - `task` - **Number | String | false** Related to [`task-manager`](https://github.com/hex7c0/task-manager) *(default "false")*
+ - `mamma` - **Number | String | false** Related to [`mamma`](https://github.com/hex7c0/mamma) `createClient` *(default "false")*
 
 ## Examples
 

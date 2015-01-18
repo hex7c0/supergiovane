@@ -1,3 +1,15 @@
+v1.6.14 / 2015-01-18
+==================
+
+  * _Deps_:
+    * Add `mamma`@0.1.1
+    * Update `express`@4.11.0
+    * Update `server-signature`@1.0.9
+    * Update `task-manager`@1.2.0
+    * Update `express-sitemap`@1.4.0
+  * _Web_:
+    * Update `angular`@1.3.9
+
 v1.6.13 / 2015-01-11
 ==================
 
