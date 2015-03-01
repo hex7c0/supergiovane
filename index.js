@@ -20,6 +20,7 @@ var status = http.STATUS_CODES;
 var express = require('express');
 var logger = require('logger-request');
 var semver = require('semver');
+var setHeader = require('setheaders').setWritableHeader;
 // load
 var VERSION = JSON.parse(require('fs')
 .readFileSync(__dirname + '/package.json'));
@@ -148,16 +149,15 @@ function bootstrap(my) {
     // checkpoint
     if (my.referer.test(r) === false && e !== 'badge.svg') {
       return res.redirect(301, my.referer.source);
-    }
-    if (my.cache !== false && STORY[hash] !== undefined) {
-      res.set('Content-Type', STORY[hash].content);
-      res.status(202).send(STORY[hash].body);
+    } else if (my.cache !== false && STORY[hash]) {
       // flush cache after 1 day
       if (Date.now() - STORY[hash].time > my.flush) {
         delete STORY[hash];
       }
-      return;
+      return setHeader(res, 'Content-Type', STORY[hash].content) === true ? res
+      .status(202).send(STORY[hash].body) : null;
     }
+
     if (e !== '') { // extra information
       if (e === 'badge.svg') {
         // pass
@@ -177,10 +177,11 @@ function bootstrap(my) {
       }
     }, function(inp) {
 
-      var body = new Buffer(0);
       if (inp.statusCode !== 200) {
         return next(new Error(status[404]));
       }
+      var body = new Buffer(0);
+
       inp.on('data', function(chunk) {
 
         body += chunk; // buffer
@@ -188,13 +189,13 @@ function bootstrap(my) {
       }).on('end', function() {
 
         body = JSON.parse(body);
-        body.readme = null; // remove too big
+        body.readme = null; // remove this, it's too big
 
         // badge
-        if (e === 'badge.svg') {
+        if (e === 'badge.svg') { // build another request
           var c = Object.keys(body.versions).length;
           var plu = c > 1 ? 's-' : '-';
-          http.get({
+          return http.get({
             host: 'img.shields.io',
             path: '/badge/version' + plu + c + '-red.svg' + s,
             agent: httpAgent,
@@ -203,20 +204,22 @@ function bootstrap(my) {
             }
           }, function(inp) {
 
-            var badge = new Buffer(0);
             if (inp.statusCode !== 200) {
               return next(new Error(status[404]));
             }
-            inp.on('data', function(chunk) {
+            var badge = new Buffer(0);
+
+            return inp.on('data', function(chunk) {
 
               badge += chunk; // buffer
               return;
             }).on('end', function() {
 
               var content = 'image/svg+xml; charset=utf-8';
-              res.set('Content-Type', content);
-              res.send(badge);
-              cache(badge, hash, content);
+              if (setHeader(res, 'Content-Type', content) === true) {
+                res.send(badge);
+                cache(badge, hash, content);
+              }
               return;
             }).on('error', function(err) {
 
@@ -227,7 +230,6 @@ function bootstrap(my) {
                 error: err.message
               });
             });
-            return;
           }).on('error', function(err) {
 
             next(new Error(status[404]));
@@ -237,16 +239,15 @@ function bootstrap(my) {
               error: err.message
             });
           });
+        } // EOF badge
 
-        } else {
-          var content = 'application/json; charset=utf-8';
-          res.set('Content-Type', content);
+        var content = 'application/json; charset=utf-8';
+        if (setHeader(res, 'Content-Type', content) === true) {
           res.send(body);
           cache(body, hash, content);
         }
         return;
       });
-      return;
     }).on('error', function(err) {
 
       next(new Error(status[404]));
@@ -256,6 +257,7 @@ function bootstrap(my) {
         error: err.message
       });
     });
+
   });
   /**
    * index
