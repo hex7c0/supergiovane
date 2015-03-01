@@ -1,3 +1,18 @@
+v1.6.15 / 2015-03-01
+==================
+
+  * _Deps_:
+    * Add `setheaders`@0.1.1
+    * Add `compression-zlib`@2.0.1
+    * Update `express`@4.12.0
+    * Update `express-sitemap`@1.5.3
+    * Update `logger-request`@3.3.1
+    * Update `server-signature`@1.1.0
+    * Update `semver`@4.3.1
+  * _Web_:
+    * Update `bootstrap`@3.3.2
+    * Update `angular`@1.4.0-beta.5
+
 v1.6.14 / 2015-01-18
 ==================
 
