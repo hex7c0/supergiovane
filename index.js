@@ -351,7 +351,9 @@ module.exports = function supergiovane(opt) {
     port: Number(options.port) || 3000,
     referer: new RegExp(String(options.referer || 'http://127.0.0.1'), 'i'),
     dir: String(options.dir || __dirname + '/public/'),
-    logger: options.logger === false ? false : options.logger || {},
+    logger: options.logger === false ? false : options.logger || {
+      filename: 'route.log'
+    },
     timeout: options.timeout === false ? false : options.timeout || {},
     sitemap: options.sitemap === false ? false : options.sitemap || {},
     signature: options.signature === false ? false : options.signature || false,
