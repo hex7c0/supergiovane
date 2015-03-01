@@ -2,7 +2,6 @@
 /**
  * @file supergiovane main
  * @module supergiovane
- * @package supergiovane
  * @subpackage main
  * @version 1.6.0
  * @author hex7c0 <hex7c0@gmail.com>
@@ -14,23 +13,16 @@
  * initialize module
  */
 // import
-try {
-  // node
-  var cluster = require('cluster');
-  var http = require('http');
-  var resolve = require('path').resolve;
-  var status = http.STATUS_CODES;
-  // module
-  var express = require('express');
-  var logger = require('logger-request');
-  var semver = require('semver');
-} catch (MODULE_NOT_FOUND) {
-  console.error(MODULE_NOT_FOUND);
-  process.exit(1);
-}
+var cluster = require('cluster');
+var http = require('http');
+var resolve = require('path').resolve;
+var status = http.STATUS_CODES;
+var express = require('express');
+var logger = require('logger-request');
+var semver = require('semver');
 // load
 var VERSION = JSON.parse(require('fs')
-    .readFileSync(__dirname + '/package.json'));
+.readFileSync(__dirname + '/package.json'));
 VERSION = VERSION.name + '@' + VERSION.version;
 var debug = function() {
 
@@ -75,15 +67,15 @@ function bootstrap(my) {
     require('express-sitemap')(my.sitemap).toFile();
   }
   if (my.mamma) {
-    require('mamma').createClient(my.mamma, process.pid)
-        .on('error', function(err) {
+    require('mamma').createClient(my.mamma, process.pid + 'supergiovane').on(
+      'error', function(err) {
 
-          return debug('cluster', {
-            pid: process.pid,
-            status: 'mamma',
-            error: err.message
-          });
+        return debug('cluster', {
+          pid: process.pid,
+          status: 'mamma',
+          error: err.message
         });
+      });
   }
   app.use(require('compression')());
 
@@ -366,7 +358,7 @@ module.exports = function supergiovane(opt) {
     cache: options.cache === false ? false : Number(options.cache) || 6,
     flush: Number(options.flush) || 86400000,
     fork: Number(opt.fork) < 5 ? require('os').cpus().length : Number(opt.fork)
-        || require('os').cpus().length,
+      || require('os').cpus().length,
     max: typeof opt.max === 'string' ? opt.max : Number(opt.max) || 0,
     debug: options.debug === false ? false : options.debug || 'debug.log',
     task: Boolean(options.task) ? options.task : false,
