@@ -13,8 +13,8 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     banner: '/*\n' + ' * <%= pkg.name %> v<%= pkg.version %>\n'
-        + ' * (c) <%= pkg.author.name %> <%= pkg.homepage %>\n'
-        + ' * Licensed under <%= pkg.license %>\n' + ' */\n',
+      + ' * (c) <%= pkg.author.name %> <%= pkg.homepage %>\n'
+      + ' * Licensed under <%= pkg.license %>\n' + ' */\n',
 
     clean: [ 'index.min.js', 'min/**/*', 'public/**/*.min.*' ],
 
@@ -26,11 +26,11 @@ module.exports = function(grunt) {
         },
         files: [ {
           expand: true,
-          src: 'lib/*.js',
+          src: 'lib/**/*.js',
           dest: 'min'
         }, {
           expand: true,
-          src: 'module/*.js',
+          src: 'module/**/*.js',
           dest: 'min'
         }, {
           'index.min.js': 'index.js'
@@ -118,7 +118,8 @@ module.exports = function(grunt) {
     endline: {
       target: {
         options: {
-          except: [ 'node_modules', 'bower_components' ]
+          except: [ 'node_modules', 'bower_components' ],
+          replaced: true
         },
         files: [ {
           src: './**/*.js'
