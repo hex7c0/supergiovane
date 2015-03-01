@@ -2,7 +2,6 @@
 /**
  * @file options test
  * @module supergiovane
- * @package supergiovane
  * @subpackage test
  * @version 0.0.1
  * @author hex7c0 <hex7c0@gmail.com>
@@ -12,17 +11,10 @@
 /*
  * initialize module
  */
-// import
-try {
-  var supergiovane = require('..'); // use
-  // require('supergiovane')
-  var request = require('supertest');
-  var assert = require('assert');
-  var fs = require('fs');
-} catch (MODULE_NOT_FOUND) {
-  console.error(MODULE_NOT_FOUND);
-  process.exit(1);
-}
+var supergiovane = require('..');
+var request = require('supertest');
+var assert = require('assert');
+var fs = require('fs');
 
 /*
  * test module
@@ -32,6 +24,7 @@ describe('options', function() {
   var app;
   var r = __dirname + '/r.txt';
   var s = __dirname + '/s.xml';
+
   before(function(done) {
 
     app = supergiovane({
@@ -49,72 +42,59 @@ describe('options', function() {
     done();
   });
 
-  describe('correct - should return 200 status code', function() {
+  describe('200 status code', function() {
 
-    it('custom index', function(done) {
+    it('should get index', function(done) {
 
       request(app).get('/').expect(200, done);
     });
+    it('should get package', function(done) {
 
-    it('package', function(done) {
+      request(app).get('/supergiovane/').expect('Server',
+        /Nodejs\/[0-9]{1,2}.[0-9]{1,2}.[0-9]{1,2} \(/).set('Referer', 'boh')
+      .expect(200).end(function(err, res) {
 
-      request(app).get('/supergiovane/')
-          .expect('Server', /Nodejs\/[0-9]{1,2}.[0-9]{1,2}.[0-9]{1,2} \(/)
-          .set('Referer', 'boh').expect(200).end(function(err, res) {
-
-            if (err)
-              throw err;
-            assert.deepEqual(res.statusCode, 200);
-            var j = JSON.parse(res.text);
-            assert.deepEqual(j.name, 'supergiovane');
-            assert.deepEqual(j.versions['0.0.1'].main, 'index.min.js');
-            assert.deepEqual(j.license, 'GPLv3');
-            done();
-          });
+        assert.equal(err, null);
+        assert.deepEqual(res.statusCode, 200);
+        var j = JSON.parse(res.text);
+        assert.deepEqual(j.name, 'supergiovane');
+        assert.deepEqual(j.versions['0.0.1'].main, 'index.min.js');
+        assert.deepEqual(j.license, 'GPLv3');
+        done();
+      });
     });
   });
 
-  describe('error - should return 301 status code', function() {
+  describe('301 status code', function() {
 
-    it('package different refer', function(done) {
+    it('shouldn\'t get package, because different refer', function(done) {
 
       request(app).get('/supergiovane/').set('Referer', 'mah')
-          .expect(301, done);
+      .expect(301, done);
     });
   });
 
-  describe('exist files', function() {
+  describe('files', function() {
 
-    it('logger', function(done) {
+    it('shouldn\'t exist logger', function(done) {
 
-      if (!fs.existsSync('route.log')) {
-        done();
-      }
-      return;
+      assert.equal(fs.existsSync('route.log'), false);
+      done();
     });
+    it('shouldn\'t exist robots', function(done) {
 
-    it('robots', function(done) {
-
-      if (!fs.existsSync(r)) {
-        done();
-      }
-      return;
+      assert.equal(fs.existsSync(r), false);
+      done();
     });
+    it('shouldn\'t exist sitemap', function(done) {
 
-    it('sitemap', function(done) {
-
-      if (!fs.existsSync(s)) {
-        done();
-      }
-      return;
+      assert.equal(fs.existsSync(s), false);
+      done();
     });
+    it('shouldn\'t exist debug', function(done) {
 
-    it('debug', function(done) {
-
-      if (!fs.existsSync('debug.log')) {
-        done();
-      }
-      return;
+      assert.equal(fs.existsSync('debug.log'), false);
+      done();
     });
   });
 });
