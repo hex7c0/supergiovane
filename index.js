@@ -77,7 +77,7 @@ function bootstrap(my) {
         });
       });
   }
-  app.use(require('compression')());
+  app.use(require('compression-zlib')());
 
   var cache;
   if (my.cache) {
