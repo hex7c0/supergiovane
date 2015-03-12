@@ -82,7 +82,7 @@
                 </div>
             </div>
 
-            <ul id="show" ng-if="versions" class="row row-offcanvas row-offcanvas-right">
+            <ul id="show" ng-cloak ng-if="versions" class="row row-offcanvas row-offcanvas-right">
                 <li ng-repeat="element in versions" class="col-6 col-sm-6 col-lg-4">
                     <h2>
                         <a ng-href="http://supergiovane.tk/#/{{searched}}/{{element.title}}">version {{element.title}}</a>
