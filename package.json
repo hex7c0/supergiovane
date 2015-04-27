@@ -33,7 +33,7 @@
     "semver": "4.3.3",
     "server-signature": "1.2.0",
     "setheaders": "0.1.1",
-    "timeout-request": "1.3.0",
+    "timeout-request": "1.4.0",
     "task-manager": "1.2.0"
   },
   "devDependencies": {
