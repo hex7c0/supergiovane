@@ -3,7 +3,7 @@
  * @file supergiovane main
  * @module supergiovane
  * @subpackage main
- * @version 1.6.0
+ * @version 1.7.0
  * @author hex7c0 <hex7c0@gmail.com>
  * @copyright hex7c0 2014
  * @license GPLv3
@@ -12,7 +12,6 @@
 /*
  * initialize module
  */
-// import
 var cluster = require('cluster');
 var http = require('http');
 var resolve = require('path').resolve;
@@ -68,7 +67,7 @@ function bootstrap(my) {
     require('express-sitemap')(my.sitemap).toFile();
   }
   if (my.mamma) {
-    require('mamma').createClient(my.mamma, process.pid + 'supergiovane').on(
+    require('mamma').createClient(my.mamma, process.pid + ':supergiovane').on(
       'error', function(err) {
 
         return debug('cluster', {
