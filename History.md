@@ -1,3 +1,21 @@
+v1.7.0 / 2015-05-02
+==================
+
+  * _Deps_:
+    * Update `compression-zlib`@2.0.2
+    * Update `express`@4.12.3
+    * Update `express-sitemap`@1.5.5
+    * Update `mamma`@0.2.0
+    * Update `logger-request`@3.3.2
+    * Update `semver`@4.3.3
+    * Update `server-signature`@1.2.0
+    * Update `timeout-request`@1.4.0
+    * Update `task-manager`@1.3.0
+  * _Web_:
+    * Update `bootstrap`@3.3.4
+    * Update `angular`@1.4.0-rc.1
+    * Update `jquery`@2.1.4
+
 v1.6.15 / 2015-03-01
 ==================
 
