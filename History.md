@@ -1,3 +1,16 @@
+v1.7.1 / 2015-07-05
+==================
+
+  * _Deps_:
+    * Update `compression-zlib`@2.1.0
+    * Update `express`@4.13.0
+    * Update `express-sitemap`@1.5.6
+    * Update `logger-request`@3.3.5
+    * Update `semver`@4.3.6
+  * _Web_:
+    * Update `bootstrap`@3.3.5
+    * Update `angular`@1.4.1
+
 v1.7.0 / 2015-05-02
 ==================
 
