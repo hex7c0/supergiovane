@@ -59,7 +59,7 @@ describe('options', function() {
         var j = JSON.parse(res.text);
         assert.deepEqual(j.name, 'supergiovane');
         assert.deepEqual(j.versions['0.0.1'].main, 'index.min.js');
-        assert.deepEqual(j.license, 'GPLv3');
+        assert.deepEqual(j.license, 'GPL-3.0');
         done();
       });
     });

@@ -56,7 +56,7 @@ describe('http', function() {
         cache = JSON.parse(res.text);
         assert.deepEqual(cache.name, 'supergiovane');
         assert.deepEqual(cache.versions['0.0.1'].main, 'index.min.js');
-        assert.deepEqual(cache.license, 'GPLv3');
+        assert.deepEqual(cache.license, 'GPL-3.0');
         done();
       });
     });
