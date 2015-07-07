@@ -8,6 +8,7 @@ v1.7.2 / 2015-07-06
 v1.7.1 / 2015-07-05
 ==================
 
+  * Fix SPDX license
   * _Deps_:
     * Update `compression-zlib`@2.1.0
     * Update `express`@4.13.0
