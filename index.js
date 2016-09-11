@@ -13,6 +13,7 @@
  * initialize module
  */
 var cluster = require('cluster');
+var https = require('https');
 var http = require('http');
 var resolve = require('path').resolve;
 var status = http.STATUS_CODES;
@@ -22,7 +23,7 @@ var semver = require('semver');
 var setHeader = require('setheaders').setWritableHeader;
 // load
 var VERSION = JSON.parse(require('fs')
-.readFileSync(__dirname + '/package.json'));
+    .readFileSync(__dirname + '/package.json'));
 VERSION = VERSION.name + '@' + VERSION.version;
 var debug = function() {
 
@@ -121,7 +122,7 @@ function bootstrap(my) {
 
   // cfg
   // http.globalAgent.maxSockets = Math.pow(my.fork, 2); // by default set to Infinity on iojs 1.0
-  var httpAgent = new http.Agent({
+  var httpsAgent = new https.Agent({
     keepAlive: true
   });
   var STORY = Object.create(null);
@@ -154,7 +155,7 @@ function bootstrap(my) {
         delete STORY[hash];
       }
       return setHeader(res, 'Content-Type', STORY[hash].content) === true ? res
-      .status(202).send(STORY[hash].body) : null;
+          .status(202).send(STORY[hash].body) : null;
     }
 
     if (e !== '') { // extra information
@@ -167,10 +168,10 @@ function bootstrap(my) {
       }
     }
 
-    return http.get({
+    return https.get({
       host: 'registry.npmjs.org',
       path: '/' + p + version,
-      agent: httpAgent,
+      agent: httpsAgent,
       headers: {
         'User-Agent': VERSION
       }
@@ -194,10 +195,10 @@ function bootstrap(my) {
         if (e === 'badge.svg') { // build another request
           var c = Object.keys(body.versions).length;
           var plu = c > 1 ? 's-' : '-';
-          return http.get({
+          return https.get({
             host: 'img.shields.io',
             path: '/badge/version' + plu + c + '-red.svg' + s,
-            agent: httpAgent,
+            agent: httpsAgent,
             headers: {
               'User-Agent': VERSION
             }
@@ -208,10 +209,9 @@ function bootstrap(my) {
             }
             var badge = new Buffer(0);
 
-            return inp.on('data', function(chunk) {
+            inp.on('data', function(chunk) {
 
               badge += chunk; // buffer
-              return;
             }).on('end', function() {
 
               var content = 'image/svg+xml; charset=utf-8';
@@ -219,11 +219,10 @@ function bootstrap(my) {
                 res.send(badge);
                 cache(badge, hash, content);
               }
-              return;
             }).on('error', function(err) {
 
               next(new Error(status[404]));
-              return debug('client', {
+              debug('client', {
                 pid: process.pid,
                 status: 'response',
                 error: err.message
@@ -232,7 +231,7 @@ function bootstrap(my) {
           }).on('error', function(err) {
 
             next(new Error(status[404]));
-            return debug('client', {
+            debug('client', {
               pid: process.pid,
               status: 'response',
               error: err.message
@@ -245,8 +244,8 @@ function bootstrap(my) {
           res.send(body);
           cache(body, hash, content);
         }
-        return;
       });
+
     }).on('error', function(err) {
 
       next(new Error(status[404]));
