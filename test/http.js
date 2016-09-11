@@ -48,7 +48,7 @@ describe('http', function() {
     });
     it('should get package', function(done) {
 
-      request(app).get('/supergiovane/').set('Referer', 'http://127.0.0.1')
+      request(app).get('/api/supergiovane/').set('Referer', 'http://127.0.0.1')
           .expect(200).end(function(err, res) {
 
             assert.ifError(err);
@@ -62,7 +62,7 @@ describe('http', function() {
     });
     it('should get cached', function(done) {
 
-      request(app).get('/supergiovane/').set('Referer', 'http://127.0.0.1')
+      request(app).get('/api/supergiovane/').set('Referer', 'http://127.0.0.1')
           .expect(202).end(function(err, res) {
 
             assert.ifError(err);
@@ -70,14 +70,18 @@ describe('http', function() {
             done();
           });
     });
-    it('shouldn\'t get package without refer', function(done) {
+    it('should get package without refer', function(done) {
 
-      request(app).get('/supergiovane/').expect(301, done);
+      request(app).get('/api/supergiovane/').expect(202, done);
     });
-    it('shouldn\'t get package different refer', function(done) {
+    it('should get package different refer', function(done) {
 
-      request(app).get('/supergiovane/').set('Referer', 'mah')
-          .expect(301, done);
+      request(app).get('/api/supergiovane/').set('Referer', 'mah').expect(202,
+        done);
+    });
+    it('shouldn\'t get package with a wrong name', function(done) {
+
+      request(app).get('/api/leading-space:and:weirdchars/').expect(404, done);
     });
   });
 
@@ -90,7 +94,7 @@ describe('http', function() {
     });
     it('shouldn\'t get wrong package', function(done) {
 
-      request(app).get('/supergiovane_qwertyuiop/').set('Referer',
+      request(app).get('/api/supergiovane_qwertyuiop/').set('Referer',
         'http://127.0.0.1').expect(404, done);
     });
   });
@@ -109,9 +113,9 @@ describe('http', function() {
 
       fs.unlink(s, done);
     });
-    it('should remove debug', function(done) {
+    // it('should remove debug', function(done) {
 
-      fs.unlink('debug2.log', done);
-    });
+    // fs.unlink('debug2.log', done);
+    // });
   });
 });

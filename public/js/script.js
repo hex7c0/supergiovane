@@ -1,4 +1,8 @@
-var app = angular.module('supergiovane', []);
+var app = angular.module('supergiovane', []).config(
+  [ '$httpProvider', function($httpProvider) {
+
+    $httpProvider.defaults.timeout = 30000;
+  } ]);
 
 /**
  * up function
@@ -18,6 +22,23 @@ function up() {
     return;
   });
   return false;
+}
+
+/**
+ * api error
+ * 
+ * @function error
+ */
+function error() {
+
+  $('.jumbotron').fadeOut(400);
+  $('.alert').fadeIn(400, function() {
+
+    $('.modal').modal('hide');
+    $('html,body').animate({
+      scrollTop: $('.alert').position().top
+    }, 1200);
+  });
 }
 
 /**
@@ -42,11 +63,14 @@ function search($http, $scope) {
     $('.modal').modal('show');
     $http({
       method: 'GET',
-      url: '/' + ss.replace(/@/, '/') + '/',
+      url: '/api/' + ss.replace(/@/, '/') + '/',
       cache: true
     }).then(function success(res) {
 
       var data = res.data;
+      if (data === '') { // empty response
+        return error();
+      }
       $scope.searched = ss.match(searchedRegex)[0];
 
       try {
@@ -103,17 +127,19 @@ function search($http, $scope) {
               tarball = version.dist.tarball;
             }
 
+            var time = new Date(data.time[version.version]);
             scopeVersions[i] = {
               id: version._id,
               title: version.version,
               npmv: version._npmVersion,
-              time: new Date(data.time[version.version]).toUTCString(),
+              time: time.toUTCString(),
+              timestamp: time.getTime(),
               page: version.homepage,
               repo: url,
               url: tarball
             };
           }
-          $scope.versions = scopeVersions.reverse();
+          $scope.versions = scopeVersions; // .reverse();
 
         } else { // single
           var url, tarball, node;
@@ -173,26 +199,14 @@ function search($http, $scope) {
         if (ii === 0) { // single, and show versions badge
           $('.col-6').css('width', '100%');
         }
-        $('.jumbotron').show(400, function() {
-
-          $('.modal').modal('hide');
-          $('html,body').animate({
-            scrollTop: $('#show').position().top
-          }, 1200);
-        });
-      });
-
-    }, function error() {
-
-      $('.jumbotron').fadeOut(400);
-      $('.alert').fadeIn(400, function() {
-
+        $('.jumbotron').show(400);
         $('.modal').modal('hide');
         $('html,body').animate({
-          scrollTop: $('.alert').position().top
+          scrollTop: $('#show').position().top
         }, 1200);
       });
-    });
+
+    }, error);
 
   } else {
     $('#search').tooltip('show');
@@ -215,7 +229,7 @@ app.controller('main', [
 
     'use strict';
 
-    $scope.perPage = 50;
+    $scope.perPage = 60;
     $scope.$on('$locationChangeSuccess', function() {
 
       $scope.search = $location.path().substring(1).replace(/\/$/, '').replace(

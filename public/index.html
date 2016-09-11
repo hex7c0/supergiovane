@@ -62,8 +62,8 @@
                 <strong>:(</strong> module not found or something blow up
             </div>
 
-            <div ng-if="npm" class="jumbotron">
-                <h3 ng-if="npm.desc">{{ ::npm.desc }}</h3>
+            <div ng-show="npm.desc" class="jumbotron"> <!-- ng-show for perPage model -->
+                <h3>{{ ::npm.desc }}</h3>
                 <div class="list-group">
                     <span class="list-group-item" ng-if="npm.author">
                         author: <a ng-href="https://www.npmjs.com/~{{ ::npm.author.name }}" target="_blank">{{ ::npm.author.name }}</a><span ng-if="npm.author.url">, <a ng-href="{{ ::npm.author.url }}" target="_blank">website</a></span><span ng-if="npm.author.email">, <a ng-href="mailto:{{ ::npm.author.email }}" target="_blank">email</a></span><span ng-if="npm.author.stat">, <a ng-href="{{ ::npm.author.stat }}" target="_blank">stat</a></span>
@@ -72,13 +72,13 @@
                         npm: <a ng-href="{{ ::npm.npm.link }}" target="_blank">module</a><span ng-if="npm.npm.issue">, <a ng-href="{{ ::npm.npm.issue }}" target="_blank">issue</a></span><span ng-if="npm.npm.stat">, <a ng-href="{{ ::npm.npm.stat }}" target="_blank">stat</a></span>
                     </span>
                     <span class="list-group-item" ng-if="npm.license">license: {{ ::npm.license }}</span>
-                    <span class="list-group-item" ng-if="npm.versions">found: <a ng-href="/#/{{ ::searched }}"><img id="badge" ng-src="/{{ ::searched }}/badge.svg" alt="badge" /></a></span>
-                    <span  class="list-group-item" >show latest <input ng-model="perPage" class="input-sm" type="number" min="1" max="1000" placeholder="Number">
+                    <span class="list-group-item" ng-if="npm.versions">found: <a ng-href="/#/{{ ::searched }}"><img id="badge" ng-src="/api/{{ ::searched }}/badge.svg" alt="badge" /></a></span>
+                    <span class="list-group-item">show latest <input ng-model="perPage" class="input-sm" type="number" min="1" max="1000" placeholder="Number">
                 </div>
             </div>
 
             <ul id="show" ng-cloak ng-if="versions" class="row row-offcanvas row-offcanvas-right">
-                <li ng-repeat="element in versions | limitTo:perPage track by element.id" ng-class="class">
+                <li ng-repeat="element in versions | orderBy:'element.timestamp':true | limitTo:perPage track by element.id" ng-class="class">
                     <h2>
                         <a ng-href="/#/{{ ::searched }}/{{ ::element.title }}">version {{ ::element.title }}</a>
                     </h2>

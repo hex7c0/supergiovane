@@ -19,12 +19,15 @@ var resolve = require('path').resolve;
 var status = http.STATUS_CODES;
 var express = require('express');
 var logger = require('logger-request');
-var semver = require('semver');
+var semver = require('semver').valid;
 var setHeader = require('setheaders').setWritableHeader;
+var validate = require('validate-npm-package-name');
+var zlib = require('zlib').unzipSync;
 // load
 var VERSION = JSON.parse(require('fs')
     .readFileSync(__dirname + '/package.json'));
 VERSION = VERSION.name + '@' + VERSION.version;
+var isApi = /^\/api(\/)?/i;
 var debug = function() {
 
   return;
@@ -71,7 +74,7 @@ function bootstrap(my) {
     require('mamma').createClient(my.mamma, process.pid + ':supergiovane').on(
       'error', function(err) {
 
-        return debug('cluster', {
+        debug('cluster', {
           pid: process.pid,
           status: 'mamma',
           error: err.message
@@ -111,7 +114,6 @@ function bootstrap(my) {
           time: Date.now()
         };
       }
-      return;
     };
   } else {
     cache = function() {
@@ -129,8 +131,6 @@ function bootstrap(my) {
   var index = resolve(my.dir + 'index.min.html');
 
   // routing
-  app.use('/static', express.static(my.dir));
-
   /**
    * http request (no client ajax due browser security limitation)
    * 
@@ -139,19 +139,17 @@ function bootstrap(my) {
    * @param {Object} res - response to client
    * @param {next} next - next callback
    */
-  app.get('/:pkg/:extra?', function(req, res, next) {
+  app.get('/api/:pkg/:extra?', function(req, res, next) {
 
+    var isBadge = false;
     var version = '/';
-    var r = req.headers.referer || req.headers.referrer;
-    var p = req.params.pkg;
-    var e = req.params.extra || '';
-    var s = req.query.style ? '?style=' + req.query.style : '';
-    var hash = p + e + s;
+    var pkg = req.params.pkg;
+    var extra = req.params.extra || '';
+    var style = req.query.style ? '?style=' + req.query.style : '';
+    var hash = pkg + extra + style;
 
     // checkpoint
-    if (my.referer.test(r) === false && e !== 'badge.svg') {
-      return res.redirect(301, my.referer.source);
-    } else if (my.cache !== false && STORY[hash]) {
+    if (my.cache !== false && STORY[hash]) {
       // flush cache after 1 day
       if (Date.now() - STORY[hash].time > my.flush) {
         delete STORY[hash];
@@ -160,60 +158,76 @@ function bootstrap(my) {
           .status(202).send(STORY[hash].body) : null;
     }
 
-    if (e !== '') { // extra information
-      if (e === 'badge.svg') {
-        // pass
-      } else if (semver.valid(e)) {
-        version += e;
-      } else {
+    var val = validate(pkg); // pkg name
+    if (!val.validForNewPackages && !val.validForOldPackages) {
+      return next(new Error(status[404]));
+    }
+    if (extra !== '') { // extra information
+      if (extra === 'badge.svg') { // display badge
+        isBadge = true;
+      } else if (semver(extra)) { // single package
+        version += extra;
+      } else { // semver fail
         return next(new Error(status[404]));
       }
     }
 
-    return https.get({
+    https.get({
       host: 'registry.npmjs.org',
-      path: '/' + p + version,
+      path: '/' + pkg + version,
       agent: httpsAgent,
       headers: {
-        'User-Agent': VERSION
+        'User-Agent': VERSION,
+        'Accept-Encoding': 'gzip'
       }
-    }, function(inp) {
+    }, function(response) {
 
-      if (inp.statusCode !== 200) {
+      if (response.statusCode !== 200) {
         return next(new Error(status[404]));
       }
       var body = new Buffer(0);
 
-      inp.on('data', function(chunk) {
+      response.on('data', function(chunk) {
 
-        body += chunk; // buffer
-        return;
+        body = Buffer.concat([ body, chunk ]);// buffer
       }).on('end', function() {
 
-        body = JSON.parse(body);
-        body.readme = null; // remove this, it's too big
+        try {
+          if (response.headers['content-encoding'] === 'gzip') {
+            body = zlib(body);
+          }
+          body = JSON.parse(body);
+        } catch (err) {
+          return next(new Error(status[502]));
+        }
+
+        // reduce body
+        body.readme = null;
+        body.keywords = [];
+        body.contributors = [];
+        body.users = {};
 
         // badge
-        if (e === 'badge.svg') { // build another request
+        if (isBadge === true) { // build another request
           var c = Object.keys(body.versions).length;
           var plu = c > 1 ? 's-' : '-';
           return https.get({
             host: 'img.shields.io',
-            path: '/badge/version' + plu + c + '-red.svg' + s,
+            path: '/badge/version' + plu + c + '-red.svg' + style,
             agent: httpsAgent,
             headers: {
               'User-Agent': VERSION
             }
-          }, function(inp) {
+          }, function(response) {
 
-            if (inp.statusCode !== 200) {
+            if (response.statusCode !== 200) {
               return next(new Error(status[404]));
             }
             var badge = new Buffer(0);
 
-            inp.on('data', function(chunk) {
+            response.on('data', function(chunk) {
 
-              badge += chunk; // buffer
+              badge = Buffer.concat([ badge, chunk ]);// buffer
             }).on('end', function() {
 
               var content = 'image/svg+xml; charset=utf-8';
@@ -251,7 +265,7 @@ function bootstrap(my) {
     }).on('error', function(err) {
 
       next(new Error(status[404]));
-      return debug('client', {
+      debug('client', {
         pid: process.pid,
         status: 'request',
         error: err.message
@@ -267,8 +281,10 @@ function bootstrap(my) {
    */
   app.get('/', function(req, res) {
 
-    return res.sendFile(index);
+    res.sendFile(index);
   });
+
+  app.use('/static', express.static(my.dir));
 
   /**
    * catch all errors returned from page
@@ -281,28 +297,34 @@ function bootstrap(my) {
    */
   app.use(function(err, req, res, next) {
 
-    var out = '';
-    var error = err.message.toLowerCase(); // string
     var code = 500;
-    debug('web', {
-      pid: process.pid,
-      status: 'catch',
-      error: error
-    });
+    var error = err.message.toLowerCase(); // string
+
     switch (error) {
       case 'not found':
         return next();
       default:
-        if (my.env !== 'production') {
-          out = error;
+        debug('web', {
+          pid: process.pid,
+          status: 'catch',
+          error: error
+        });
+        if (my.env === 'production') {
+          error = status[code].toLowerCase();
         }
         break;
     }
-    res.status(code).json({
-      error: out
-    });
-    return;
+
+    var out = res.status(code);
+    if (isApi.test(req.url) === true) {
+      out.json({
+        error: error
+      });
+    } else {
+      out.end(error);
+    }
   });
+
   /**
    * catch error 404 or if nobody cannot parse the request
    * 
@@ -313,10 +335,15 @@ function bootstrap(my) {
   app.use(function(req, res) {
 
     var code = 404;
-    res.status(code).json({
-      error: status[code].toLowerCase()
-    });
-    return;
+    var error = status[code].toLowerCase();
+    var out = res.status(code);
+    if (isApi.test(req.url) === true) {
+      out.json({
+        error: error
+      });
+    } else {
+      out.end(error);
+    }
   });
 
   if (my.env != 'test') {
@@ -355,7 +382,8 @@ module.exports = function supergiovane(opt) {
     referer: new RegExp(String(options.referer || 'http://127.0.0.1'), 'i'),
     dir: String(options.dir || __dirname + '/public/'),
     logger: options.logger === false ? false : options.logger || {
-      filename: 'route.log'
+      filename: 'route.log',
+      daily: true
     },
     timeout: options.timeout === false ? false : options.timeout || {},
     sitemap: options.sitemap === false ? false : options.sitemap || {},
@@ -372,6 +400,7 @@ module.exports = function supergiovane(opt) {
   if (my.debug) {
     debug = logger({
       filename: my.debug,
+      daily: true,
       standalone: true,
       winston: {
         logger: '_spDebug',
@@ -419,9 +448,7 @@ module.exports = function supergiovane(opt) {
       } else if (isNaN(my.max) === true || my.max-- > 0) { // bug restart, not too much
         cluster.fork();
       }
-      return;
     });
-    return;
   }
 
   /*
@@ -435,10 +462,11 @@ module.exports = function supergiovane(opt) {
       error: err.message,
       stack: err.stack
     });
-    return setTimeout(function() { // wait logger write
+    setTimeout(function() { // wait logger write
 
-      return process.exit(1);
+      process.exit(1);
     }, 250);
   });
+
   return bootstrap(my);
 };

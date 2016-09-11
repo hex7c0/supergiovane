@@ -1,5 +1,5 @@
 {
-  "version": "1.7.1",
+  "version": "1.7.2",
   "name": "supergiovane",
   "description": "website for get story about npm module",
   "keywords": [
@@ -9,7 +9,7 @@
     "download"
   ],
   "private": true,
-  "homepage": "http://supergiovane.tk",
+  "homepage": "https://supergiovane.herokuapp.com",
   "author": {
     "name": "hex7c0",
     "email": "hex7c0@gmail.com",
@@ -24,10 +24,9 @@
     "email": "hex7c0@gmail.com"
   },
   "dependencies": {
-    "angular": "1.4.1",
-    "angular-sanitize": "1.4.1",
-    "bootstrap": "3.3.5",
-    "jquery": "2.1.4"
+    "angular": "1.5.8",
+    "bootstrap": "3.3.7",
+    "jquery": "2.2.4"
   },
   "devDependencies": {
   },
