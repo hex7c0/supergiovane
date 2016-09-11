@@ -1,14 +1,14 @@
-# [supergiovane](http://supergiovane.tk/#/supergiovane)
+# [supergiovane](https://supergiovane.herokuapp.com/#/supergiovane)
 
 [![NPM version](https://img.shields.io/npm/v/supergiovane.svg)](https://www.npmjs.com/package/supergiovane)
 [![Linux Status](https://img.shields.io/travis/hex7c0/supergiovane.svg?label=linux)](https://travis-ci.org/hex7c0/supergiovane)
 [![Dependency Status](https://img.shields.io/david/hex7c0/supergiovane.svg)](https://david-dm.org/hex7c0/supergiovane)
 [![Coveralls](https://img.shields.io/coveralls/hex7c0/supergiovane.svg)](https://coveralls.io/r/hex7c0/supergiovane)
 
-[![supergiovane logo](https://raw.githubusercontent.com/hex7c0/supergiovane/master/public/img/sp.jpg)](http://supergiovane.tk)
+[![supergiovane logo](https://raw.githubusercontent.com/hex7c0/supergiovane/master/public/img/sp.jpg)](https://supergiovane.herokuapp.com)
 
 Website for get info about npm module.
-Build badge with all versions found (using https://github.com/badges/shields) [![versions](http://supergiovane.tk/supergiovane/badge.svg)](http://supergiovane.tk/#/supergiovane)
+Build badge with all versions found (using https://github.com/badges/shields) [![versions](https://supergiovane.herokuapp.com/supergiovane/badge.svg)](https://supergiovane.herokuapp.com/#/supergiovane)
 Write with [Bootstrap](http://getbootstrap.com/) & [Angular](https://angularjs.org/). And of course [node](http://nodejs.org/)
 
 ## Installation
