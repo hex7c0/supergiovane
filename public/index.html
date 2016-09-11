@@ -73,11 +73,12 @@
                     </span>
                     <span class="list-group-item" ng-if="npm.license">license: {{ ::npm.license }}</span>
                     <span class="list-group-item" ng-if="npm.versions">found: <a ng-href="/#/{{ ::searched }}"><img id="badge" ng-src="/{{ ::searched }}/badge.svg" alt="badge" /></a></span>
+                    <span  class="list-group-item" >show latest <input ng-model="perPage" class="input-sm" type="number" min="1" max="1000" placeholder="Number">
                 </div>
             </div>
 
             <ul id="show" ng-cloak ng-if="versions" class="row row-offcanvas row-offcanvas-right">
-                <li ng-repeat="element in versions track by element.id" ng-class="class">
+                <li ng-repeat="element in versions | limitTo:perPage track by element.id" ng-class="class">
                     <h2>
                         <a ng-href="/#/{{ ::searched }}/{{ ::element.title }}">version {{ ::element.title }}</a>
                     </h2>

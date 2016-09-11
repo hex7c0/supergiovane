@@ -215,6 +215,7 @@ app.controller('main', [
 
     'use strict';
 
+    $scope.perPage = 50;
     $scope.$on('$locationChangeSuccess', function() {
 
       $scope.search = $location.path().substring(1).replace(/\/$/, '').replace(
