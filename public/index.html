@@ -78,7 +78,7 @@
             </div>
 
             <ul id="show" ng-cloak ng-if="versions" class="row row-offcanvas row-offcanvas-right">
-                <li ng-repeat="element in versions | limitTo:perPage track by element.id" ng-class="class">
+                <li ng-repeat="element in versions | orderBy:'element.timestamp':true | limitTo:perPage track by element.id" ng-class="class">
                     <h2>
                         <a ng-href="/#/{{ ::searched }}/{{ ::element.title }}">version {{ ::element.title }}</a>
                     </h2>

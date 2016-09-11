@@ -127,17 +127,19 @@ function search($http, $scope) {
               tarball = version.dist.tarball;
             }
 
+            var time = new Date(data.time[version.version]);
             scopeVersions[i] = {
               id: version._id,
               title: version.version,
               npmv: version._npmVersion,
-              time: new Date(data.time[version.version]).toUTCString(),
+              time: time.toUTCString(),
+              timestamp: time.getTime(),
               page: version.homepage,
               repo: url,
               url: tarball
             };
           }
-          $scope.versions = scopeVersions.reverse();
+          $scope.versions = scopeVersions; // .reverse();
 
         } else { // single
           var url, tarball, node;
