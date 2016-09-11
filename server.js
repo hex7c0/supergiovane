@@ -16,6 +16,7 @@ var supergiovane = require('.');
  * use
  */
 supergiovane({
+  port: process.env.PORT || 8080,
   logger: false,
   timeout: false,
   sitemap: false,
