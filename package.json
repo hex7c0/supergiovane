@@ -25,7 +25,7 @@
   },
   "main": "index.min.js",
   "dependencies": {
-    "compression-zlib": "2.1.0",
+    "compression-zlib": "2.4.0",
     "express": "4.14.0",
     "express-sitemap": "1.5.6",
     "mamma": "0.2.0",
