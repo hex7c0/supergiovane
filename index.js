@@ -255,8 +255,8 @@ function bootstrap(my) {
         error: err.message
       });
     });
-
   });
+
   /**
    * index
    * 
@@ -267,6 +267,9 @@ function bootstrap(my) {
 
     return res.sendFile(index);
   });
+
+  app.use('/static', express.static(my.dir));
+
   /**
    * catch all errors returned from page
    * 
