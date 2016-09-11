@@ -62,7 +62,7 @@
                 <strong>:(</strong> module not found or something blow up
             </div>
 
-            <div ng-if="npm.desc" class="jumbotron">
+            <div ng-show="npm.desc" class="jumbotron"> <!-- ng-show for perPage model -->
                 <h3>{{ ::npm.desc }}</h3>
                 <div class="list-group">
                     <span class="list-group-item" ng-if="npm.author">
@@ -73,7 +73,7 @@
                     </span>
                     <span class="list-group-item" ng-if="npm.license">license: {{ ::npm.license }}</span>
                     <span class="list-group-item" ng-if="npm.versions">found: <a ng-href="/#/{{ ::searched }}"><img id="badge" ng-src="/api/{{ ::searched }}/badge.svg" alt="badge" /></a></span>
-                    <span class="list-group-item" ng-if="npm">show latest <input ng-model="perPage" class="input-sm" type="number" min="1" max="1000" placeholder="Number">
+                    <span class="list-group-item">show latest <input ng-model="perPage" class="input-sm" type="number" min="1" max="1000" placeholder="Number">
                 </div>
             </div>
 

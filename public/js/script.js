@@ -20,6 +20,11 @@ function up() {
   return false;
 }
 
+/**
+ * api error
+ * 
+ * @function error
+ */
 function error() {
 
   $('.jumbotron').fadeOut(400);
