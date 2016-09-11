@@ -355,7 +355,8 @@ module.exports = function supergiovane(opt) {
     referer: new RegExp(String(options.referer || 'http://127.0.0.1'), 'i'),
     dir: String(options.dir || __dirname + '/public/'),
     logger: options.logger === false ? false : options.logger || {
-      filename: 'route.log'
+      filename: 'route.log',
+      daily: true
     },
     timeout: options.timeout === false ? false : options.timeout || {},
     sitemap: options.sitemap === false ? false : options.sitemap || {},
@@ -372,6 +373,7 @@ module.exports = function supergiovane(opt) {
   if (my.debug) {
     debug = logger({
       filename: my.debug,
+      daily: true,
       standalone: true,
       winston: {
         logger: '_spDebug',
