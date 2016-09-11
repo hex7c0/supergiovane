@@ -21,6 +21,7 @@ var express = require('express');
 var logger = require('logger-request');
 var semver = require('semver');
 var setHeader = require('setheaders').setWritableHeader;
+var zlib = require('zlib');
 // load
 var VERSION = JSON.parse(require('fs')
     .readFileSync(__dirname + '/package.json'));
@@ -171,22 +172,35 @@ function bootstrap(my) {
       path: '/' + pkg + version,
       agent: httpsAgent,
       headers: {
-        'User-Agent': VERSION
+        'User-Agent': VERSION,
+        'Accept-Encoding': 'gzip'
       }
-    }, function(inp) {
+    }, function(response) {
 
-      if (inp.statusCode !== 200) {
+      if (response.statusCode !== 200) {
         return next(new Error(status[404]));
       }
       var body = new Buffer(0);
 
-      inp.on('data', function(chunk) {
+      response.on('data', function(chunk) {
 
-        body += chunk; // buffer
+        body = Buffer.concat([ body, chunk ]);// buffer
       }).on('end', function() {
 
-        body = JSON.parse(body);
-        body.readme = null; // remove this, it's too big
+        try {
+          if (response.headers['content-encoding'] === 'gzip') {
+            body = zlib.unzipSync(body);
+          }
+          body = JSON.parse(body);
+        } catch (err) {
+          return next(new Error(status[502]));
+        }
+
+        // reduce body
+        body.readme = null;
+        body.keywords = [];
+        body.contributors = [];
+        body.users = {};
 
         // badge
         if (isBadge === true) { // build another request
@@ -199,16 +213,16 @@ function bootstrap(my) {
             headers: {
               'User-Agent': VERSION
             }
-          }, function(inp) {
+          }, function(response) {
 
-            if (inp.statusCode !== 200) {
+            if (response.statusCode !== 200) {
               return next(new Error(status[404]));
             }
             var badge = new Buffer(0);
 
-            inp.on('data', function(chunk) {
+            response.on('data', function(chunk) {
 
-              badge += chunk; // buffer
+              badge = Buffer.concat([ badge, chunk ]);// buffer
             }).on('end', function() {
 
               var content = 'image/svg+xml; charset=utf-8';
