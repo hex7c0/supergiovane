@@ -30,7 +30,7 @@
     "express-sitemap": "1.5.6",
     "mamma": "0.2.0",
     "logger-request": "3.3.5",
-    "semver": "4.3.6",
+    "semver": "5.3.0",
     "server-signature": "1.2.0",
     "setheaders": "0.1.1",
     "timeout-request": "1.4.0",
