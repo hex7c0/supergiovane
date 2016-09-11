@@ -18,6 +18,9 @@ var supergiovane = require('.');
 supergiovane({
   port: process.env.PORT || 3000,
   host: process.env.HOST || '0.0.0.0',
+  timeout: {
+    milliseconds: 30000
+  },
   logger: false,
   timeout: false,
   sitemap: false,
