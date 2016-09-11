@@ -91,10 +91,10 @@ describe('options', function() {
       assert.equal(fs.existsSync(s), false);
       done();
     });
-    it('shouldn\'t exist debug', function(done) {
-
-      assert.equal(fs.existsSync('debug.log'), false);
-      done();
-    });
+    // it('shouldn\'t exist debug', function(done) {
+    //
+    // assert.equal(fs.existsSync('debug.log'), false);
+    // done();
+    // });
   });
 });

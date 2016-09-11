@@ -79,6 +79,10 @@ describe('http', function() {
       request(app).get('/api/supergiovane/').set('Referer', 'mah').expect(202,
         done);
     });
+    it('shouldn\'t get package with a wrong name', function(done) {
+
+      request(app).get('/api/leading-space:and:weirdchars/').expect(404, done);
+    });
   });
 
   describe('404 status code', function() {

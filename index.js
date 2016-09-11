@@ -19,9 +19,10 @@ var resolve = require('path').resolve;
 var status = http.STATUS_CODES;
 var express = require('express');
 var logger = require('logger-request');
-var semver = require('semver');
+var semver = require('semver').valid;
 var setHeader = require('setheaders').setWritableHeader;
-var zlib = require('zlib');
+var validate = require('validate-npm-package-name');
+var zlib = require('zlib').unzipSync;
 // load
 var VERSION = JSON.parse(require('fs')
     .readFileSync(__dirname + '/package.json'));
@@ -144,8 +145,8 @@ function bootstrap(my) {
     var version = '/';
     var pkg = req.params.pkg;
     var extra = req.params.extra || '';
-    var s = req.query.style ? '?style=' + req.query.style : '';
-    var hash = pkg + extra + s;
+    var style = req.query.style ? '?style=' + req.query.style : '';
+    var hash = pkg + extra + style;
 
     // checkpoint
     if (my.cache !== false && STORY[hash]) {
@@ -157,12 +158,16 @@ function bootstrap(my) {
           .status(202).send(STORY[hash].body) : null;
     }
 
+    var val = validate(pkg); // pkg name
+    if (!val.validForNewPackages && !val.validForOldPackages) {
+      return next(new Error(status[404]));
+    }
     if (extra !== '') { // extra information
       if (extra === 'badge.svg') { // display badge
         isBadge = true;
-      } else if (semver.valid(extra)) { // single package
+      } else if (semver(extra)) { // single package
         version += extra;
-      } else {
+      } else { // semver fail
         return next(new Error(status[404]));
       }
     }
@@ -189,7 +194,7 @@ function bootstrap(my) {
 
         try {
           if (response.headers['content-encoding'] === 'gzip') {
-            body = zlib.unzipSync(body);
+            body = zlib(body);
           }
           body = JSON.parse(body);
         } catch (err) {
@@ -208,7 +213,7 @@ function bootstrap(my) {
           var plu = c > 1 ? 's-' : '-';
           return https.get({
             host: 'img.shields.io',
-            path: '/badge/version' + plu + c + '-red.svg' + s,
+            path: '/badge/version' + plu + c + '-red.svg' + style,
             agent: httpsAgent,
             headers: {
               'User-Agent': VERSION
