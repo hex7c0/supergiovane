@@ -19,6 +19,9 @@ var supergiovane = require('..'); // use require('supergiovane') instead
 supergiovane({
   env: 'development',
   port: 3000,
+  timeout: {
+    milliseconds: 30000
+  },
   sitemap: {
     route: {
       'ALL': {

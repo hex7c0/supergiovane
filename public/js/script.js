@@ -1,4 +1,8 @@
-var app = angular.module('supergiovane', []);
+var app = angular.module('supergiovane', []).config(
+  [ '$httpProvider', function($httpProvider) {
+
+    $httpProvider.defaults.timeout = 30000;
+  } ]);
 
 /**
  * up function
