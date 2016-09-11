@@ -39,8 +39,8 @@
   "devDependencies": {
     "logger-request-cli": "~1.2",
     "grunt-contrib-clean": "~1.0",
-    "grunt-contrib-cssmin": "0.10.0",
-    "grunt-contrib-htmlmin": "1.0.0",
+    "grunt-contrib-cssmin": "~1.0",
+    "grunt-contrib-htmlmin": "~2.0",
     "grunt-contrib-uglify": "~2.0",
     "grunt-contrib-jshint": "~1.0",
     "grunt-endline": "~0.5",
