@@ -49,27 +49,26 @@ describe('http', function() {
     it('should get package', function(done) {
 
       request(app).get('/supergiovane/').set('Referer', 'http://127.0.0.1')
-      .expect(200).end(function(err, res) {
+          .expect(200).end(function(err, res) {
 
-        assert.equal(err, null);
-        assert.deepEqual(res.statusCode, 200);
-        cache = JSON.parse(res.text);
-        assert.deepEqual(cache.name, 'supergiovane');
-        assert.deepEqual(cache.versions['0.0.1'].main, 'index.min.js');
-        assert.deepEqual(cache.license, 'GPL-3.0');
-        done();
-      });
+            assert.ifError(err);
+            assert.deepEqual(res.statusCode, 200);
+            cache = JSON.parse(res.text);
+            assert.deepEqual(cache.name, 'supergiovane');
+            assert.deepEqual(cache.versions['0.0.1'].main, 'index.min.js');
+            assert.deepEqual(cache.license, 'GPL-3.0');
+            done();
+          });
     });
     it('should get cached', function(done) {
 
       request(app).get('/supergiovane/').set('Referer', 'http://127.0.0.1')
-      .expect(202).end(function(err, res) {
+          .expect(202).end(function(err, res) {
 
-        if (err) throw err;
-        var j = JSON.parse(res.text);
-        assert.deepEqual(cache, j);
-        done();
-      });
+            assert.ifError(err);
+            assert.deepEqual(cache, JSON.parse(res.text));
+            done();
+          });
     });
     it('shouldn\'t get package without refer', function(done) {
 
@@ -78,7 +77,7 @@ describe('http', function() {
     it('shouldn\'t get package different refer', function(done) {
 
       request(app).get('/supergiovane/').set('Referer', 'mah')
-      .expect(301, done);
+          .expect(301, done);
     });
   });
 
@@ -87,7 +86,7 @@ describe('http', function() {
     it('shouldn\'t get static', function(done) {
 
       request(app).get('/index.html').set('Referer', 'http://127.0.0.1')
-      .expect(404, done);
+          .expect(404, done);
     });
     it('shouldn\'t get wrong package', function(done) {
 

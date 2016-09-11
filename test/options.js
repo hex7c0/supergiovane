@@ -52,16 +52,16 @@ describe('options', function() {
 
       request(app).get('/supergiovane/').expect('Server',
         /Nodejs\/[0-9]{1,2}.[0-9]{1,2}.[0-9]{1,2} \(/).set('Referer', 'boh')
-      .expect(200).end(function(err, res) {
+          .expect(200).end(function(err, res) {
 
-        assert.equal(err, null);
-        assert.deepEqual(res.statusCode, 200);
-        var j = JSON.parse(res.text);
-        assert.deepEqual(j.name, 'supergiovane');
-        assert.deepEqual(j.versions['0.0.1'].main, 'index.min.js');
-        assert.deepEqual(j.license, 'GPL-3.0');
-        done();
-      });
+            assert.ifError(err);
+            assert.deepEqual(res.statusCode, 200);
+            var j = JSON.parse(res.text);
+            assert.deepEqual(j.name, 'supergiovane');
+            assert.deepEqual(j.versions['0.0.1'].main, 'index.min.js');
+            assert.deepEqual(j.license, 'GPL-3.0');
+            done();
+          });
     });
   });
 
@@ -70,7 +70,7 @@ describe('options', function() {
     it('shouldn\'t get package, because different refer', function(done) {
 
       request(app).get('/supergiovane/').set('Referer', 'mah')
-      .expect(301, done);
+          .expect(301, done);
     });
   });
 

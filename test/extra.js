@@ -42,7 +42,7 @@ describe('extra', function() {
     it('should return 404 for missing version', function(done) {
 
       request(app).get('/supergiovane/0.0.2')
-      .set('Referer', 'http://127.0.0.1').expect(404, done);
+          .set('Referer', 'http://127.0.0.1').expect(404, done);
     });
     it('should return 404 for misconfigurated version', function(done) {
 
@@ -56,31 +56,30 @@ describe('extra', function() {
     it('should return badge', function(done) {
 
       request(app).get('/supergiovane/badge.svg').expect(200).expect(
-        'Content-Type', 'image/svg+xml; charset=utf-8').end(function(err, res) {
+        'Content-Type', 'image/svg+xml; charset=utf-8').end(
+        function(err, res) {
 
-        assert.equal(err, null);
-        if (/^<svg xmlns="http:\/\/www.w3.org\/2000\/svg"/.test(res.text)) {
-          cache1 = res.text;
+          assert.ifError(err);
+          assert.ok(/^<svg xmlns="http:\/\/www.w3.org\/2000\/svg"/
+              .test(res.body));
+          cache1 = res.body;
           done();
-        } else {
-          throw new Error('not svg');
-        }
-      });
+        });
     });
     it('should return specific version', function(done) {
 
       request(app).get('/supergiovane/1.0.0')
-      .set('Referer', 'http://127.0.0.1').expect(200).expect('Content-Type',
-        'application/json; charset=utf-8').end(
-        function(err, res) {
+          .set('Referer', 'http://127.0.0.1').expect(200).expect(
+            'Content-Type', 'application/json; charset=utf-8').end(
+            function(err, res) {
 
-          assert.equal(err, null);
-          cache2 = JSON.parse(res.text);
-          assert.deepEqual(cache2.version, '1.0.0', 'version');
-          assert.deepEqual(cache2.dist.shasum,
-            '9bdc48303b50f2c7b2b28102f45f25dc3c2307ce', 'sha');
-          done();
-        });
+              assert.ifError(err);
+              cache2 = JSON.parse(res.text);
+              assert.deepEqual(cache2.version, '1.0.0', 'version');
+              assert.deepEqual(cache2.dist.shasum,
+                '9bdc48303b50f2c7b2b28102f45f25dc3c2307ce', 'sha');
+              done();
+            });
     });
   });
 
@@ -89,26 +88,29 @@ describe('extra', function() {
     it('should return badge', function(done) {
 
       request(app).get('/supergiovane/badge.svg').expect(202).expect(
-        'Content-Type', 'image/svg+xml; charset=utf-8').end(function(err, res) {
+        'Content-Type', 'image/svg+xml; charset=utf-8').end(
+        function(err, res) {
 
-        assert.equal(err, null);
-        assert.equal(err, null);
-        assert.deepEqual(cache1, cache1);
-        assert.notDeepEqual(cache2, cache1);
-        done();
-      });
+          assert.ifError(err);
+          assert.ok(/^<svg xmlns="http:\/\/www.w3.org\/2000\/svg"/
+              .test(res.body));
+          assert.deepEqual(cache1, res.body);
+          assert.notDeepEqual(cache2, res.body);
+          done();
+        });
     });
     it('should return specific version', function(done) {
 
       request(app).get('/supergiovane/1.0.0')
-      .set('Referer', 'http://127.0.0.1').expect(202).expect('Content-Type',
-        'application/json; charset=utf-8').end(function(err, res) {
+          .set('Referer', 'http://127.0.0.1').expect(202).expect(
+            'Content-Type', 'application/json; charset=utf-8').end(
+            function(err, res) {
 
-        assert.equal(err, null);
-        assert.deepEqual(cache2, cache2);
-        assert.notDeepEqual(cache1, cache2);
-        done();
-      });
+              assert.ifError(err);
+              assert.deepEqual(cache2, JSON.parse(res.text));
+              assert.notDeepEqual(cache1, cache2);
+              done();
+            });
     });
   });
 
