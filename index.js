@@ -129,6 +129,8 @@ function bootstrap(my) {
   var index = resolve(my.dir + 'index.min.html');
 
   // routing
+  app.use('/static', express.static(my.dir));
+
   /**
    * http request (no client ajax due browser security limitation)
    * 
@@ -267,8 +269,6 @@ function bootstrap(my) {
 
     return res.sendFile(index);
   });
-
-  app.use('/static', express.static(my.dir));
 
   /**
    * catch all errors returned from page

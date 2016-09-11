@@ -28,6 +28,7 @@ describe('extra', function() {
   before(function(done) {
 
     app = supergiovane({
+      dir: 'public',
       env: 'test',
       debug: false,
       sitemap: false,
@@ -48,6 +49,14 @@ describe('extra', function() {
 
       request(app).get('/supergiovane/0.ciao.0').set('Referer',
         'http://127.0.0.1').expect(404, done);
+    });
+  });
+
+  describe('static files', function() {
+
+    it('should return 200 for rigth favicon path', function(done) {
+
+      request(app).get('/static/favicon.ico').expect(200, done);
     });
   });
 
