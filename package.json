@@ -1,7 +1,7 @@
 {
   "version": "1.7.2",
   "name": "supergiovane",
-  "description": "website for get story about npm module",
+  "description": "website for searching through history of npm modules",
   "keywords": [
     "npm",
     "data",
