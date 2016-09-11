@@ -1,4 +1,4 @@
-var app = angular.module('supergiovane', [ 'ngSanitize' ]);
+var app = angular.module('supergiovane', []);
 
 /**
  * up function
@@ -32,144 +32,171 @@ function search($http, $scope) {
   'use strict';
 
   $('#search').tooltip('hide');
-  $scope.clean();
+  $scope.clean(false);
   $scope.versions = [];
+
   var ss = $scope.search;
+  var searchedRegex = /^([^@]*)/;
+
   if (ss && angular.isString(ss)) {
     $('.modal').modal('show');
     $http({
       method: 'GET',
       url: '/' + ss.replace(/@/, '/') + '/',
       cache: true
-    }).success(
-      function(data) {
+    }).then(function success(res) {
 
-        $scope.searched = ss.match(/^([^@]*)/)[0];
-        try {
-          var a;
-          if (data.author && data.author.name) {
-            a = {
-              name: data.author.name,
-              url: data.author.url,
-              email: data.author.email,
-              stat: 'http://npm-stat.com/charts.html?author='
-                + data.author.name,
+      var data = res.data;
+      $scope.searched = ss.match(searchedRegex)[0];
+
+      try {
+        var author = Object.create(null);
+        if (data.author && data.author.name) {
+          author = {
+            name: data.author.name,
+            url: data.author.url,
+            email: data.author.email,
+            stat: 'http://npm-stat.com/charts.html?author=' + data.author.name,
+          };
+        }
+        var npm = {
+          link: 'https://www.npmjs.com/package/' + $scope.searched,
+          stat: 'http://npm-stat.com/charts.html?package=' + $scope.searched,
+        };
+        if (data.bugs && data.bugs.url) {
+          npm.issue = data.bugs.url;
+        }
+        $scope.npm = {
+          desc: data.description,
+          author: author,
+          npm: npm,
+          license: data.license
+        };
+      } catch (e) {
+        $scope.npm = Object.create(null);
+        console.error(e);
+      }
+
+      if (data.versions) {
+        var versions = Object.keys(data.versions);
+        var ii = ~~versions.length;
+        $scope.npm.versions = ii;
+        $scope.class = 'col-6 col-sm-6 col-lg-4';
+      } else {
+        var ii = 0;
+        $scope.npm.versions = 1;
+        $scope.class = 'col-8 col-sm-8 col-lg-12';
+      }
+
+      try {
+
+        if (ii > 0) { // multiple
+          var scopeVersions = [];
+          for (var i = 0; i < ii; ++i) {
+            var version = data.versions[versions[i]];
+            var url, tarball;
+
+            if (version.repository && version.repository.url) {
+              url = version.repository.url;
+            }
+            if (version.dist && version.dist.tarball) {
+              tarball = version.dist.tarball;
+            }
+
+            scopeVersions[i] = {
+              id: version._id,
+              title: version.version,
+              npmv: version._npmVersion,
+              time: new Date(data.time[version.version]).toUTCString(),
+              page: version.homepage,
+              repo: url,
+              url: tarball
             };
           }
-          var n = {
-            link: 'https://www.npmjs.com/package/' + $scope.searched,
-            stat: 'http://npm-stat.com/charts.html?package=' + $scope.searched,
+          $scope.versions = scopeVersions.reverse();
+
+        } else { // single
+          var url, tarball, node;
+          var depsN = [];
+          var depsV = [];
+
+          if (data.repository && data.repository.url) {
+            url = data.repository.url;
+          }
+          if (data.dist && data.dist.tarball) {
+            tarball = data.dist.tarball;
+          }
+          if (data.engines && data.engines.node) {
+            node = data.engines.node;
+          }
+          if (data.dependencies) {
+            var deps = Object.keys(data.dependencies);
+            for (var i = 0, ii = deps.length; i < ii; ++i) {
+              var dep = deps[i];
+              depsN[i] = {
+                title: dep,
+                url: 'https://www.npmjs.com/package/' + dep,
+                version: data.dependencies[dep]
+              };
+            }
+          }
+          if (data.devDependencies) {
+            var deps = Object.keys(data.devDependencies);
+            for (var i = 0, ii = deps.length; i < ii; ++i) {
+              var dep = deps[i];
+              depsV[i] = {
+                title: dep,
+                url: 'https://www.npmjs.com/package/' + dep,
+                version: data.devDependencies[dep]
+              };
+            }
+          }
+
+          $scope.versions[0] = {
+            id: data._id,
+            title: data.version,
+            npmv: data._npmVersion,
+            page: data.homepage,
+            repo: url,
+            url: tarball,
+            node: node,
+            depsN: depsN,
+            depsV: depsV
           };
-          if (data.bugs && data.bugs.url) {
-            n.issue = data.bugs.url;
-          }
-          $scope.npm = {
-            desc: data.description,
-            author: a,
-            npm: n,
-            license: data.license
-          };
-        } catch (e) {
-          $scope.npm = Object.create(null);
-          console.error(e);
         }
+      } catch (e) {
+        console.error(e);
+      }
 
-        var c = 0;
-        try {
-          var u, t, i;
-          for (i in data.versions) { // multiple
-            var v = data.versions[i];
-            if (v.repository && v.repository.url) {
-              u = v.repository.url;
-            }
-            if (v.dist && v.dist.tarball) {
-              t = v.dist.tarball;
-            }
-            $scope.versions.push({
-              title: i,
-              npmv: v._npmVersion,
-              time: new Date(data.time[i]).toUTCString(),
-              page: v.homepage,
-              repo: u,
-              url: t
-            });
-            c++;
-          }
-          if (c === 0) { // single
-            if (data.repository && data.repository.url) {
-              u = data.repository.url;
-            }
-            if (data.dist && data.dist.tarball) {
-              t = data.dist.tarball;
-            }
-            var dep = '', depv = '';
-            if (data.dependencies) {
-              for (i in data.dependencies) {
-                dep += 'https://www.npmjs.com/package/' + i + ' @'
-                  + data.dependencies[i] + ' ';
-              }
-            }
-            if (data.devDependencies) {
-              for (i in data.devDependencies) {
-                depv += 'https://www.npmjs.com/package/' + i + ' @'
-                  + data.devDependencies[i] + ' ';
-              }
-            }
-            var node;
-            if (data.engines && data.engines.node) {
-              node = data.engines.node;
-            }
-            $scope.versions[0] = {
-              title: data.version,
-              npmv: data._npmVersion,
-              node: node,
-              dep: dep,
-              depv: depv,
-              page: data.homepage,
-              repo: u,
-              url: t
-            };
-          } else {
-            $scope.versions = $scope.versions.reverse();
-          }
-          $scope.npm.versions = 1;
-        } catch (e) {
-          console.error(e);
+      $scope.$watch($scope.versions, function() { // wait renderer
+
+        if (ii === 0) { // single, and show versions badge
+          $('.col-6').css('width', '100%');
         }
-
-        $scope.$watch($scope.versions, function() { // wait renderer
-
-          if (c === 0) { // single, and show versions badge
-            $('.col-6').css('width', '100%');
-          }
-          $('.jumbotron').show(400, function() {
-
-            $('.modal').modal('hide');
-            $('html,body').animate({
-              scrollTop: $('#show').position().top
-            }, 1200);
-          });
-        });
-        return;
-      }).error(function() {
-
-      $('.jumbotron').fadeOut(400, function() {
-
-        $('.alert').fadeIn(400, function() {
+        $('.jumbotron').show(400, function() {
 
           $('.modal').modal('hide');
           $('html,body').animate({
-            scrollTop: $('.alert').position().top
+            scrollTop: $('#show').position().top
           }, 1200);
-          return;
         });
-        return;
+      });
+
+    }, function error() {
+
+      $('.jumbotron').fadeOut(400);
+      $('.alert').fadeIn(400, function() {
+
+        $('.modal').modal('hide');
+        $('html,body').animate({
+          scrollTop: $('.alert').position().top
+        }, 1200);
       });
     });
+
   } else {
     $('#search').tooltip('show');
   }
-  return;
 }
 
 /**
@@ -194,18 +221,23 @@ app.controller('main', [
         /\//, '@');
       search($http, $scope);
     });
+
     /**
      * clean previous results
      * 
      * @function $scope.clean
+     * @param boolean [force] force scope search clean
      */
-    $scope.clean = function() {
+    $scope.clean = function(force) {
 
       $('.alert').fadeOut();
       $('.col-6').fadeOut(400, function() {
 
         $scope.npm = Object.create(null);
         $scope.versions = [];
+        if (force) {
+          $scope.search = '';
+        }
         return;
       });
       return;
@@ -232,18 +264,13 @@ app.controller('main', [
           $location.path($scope.search.replace(/@/, '/'));
           break;
         case 'clear':
-          $scope.clean();
-          $('.jumbotron').fadeOut(400, function() {
-
-            $('#search').val('');
-            $('#search').focus();
-            return;
-          });
+          $scope.clean(true);
+          $('.jumbotron').fadeOut(400);
+          $('#search').val('');
+          $('#search').focus();
           break;
       }
-      return;
     };
-    return;
   } ]);
 
 // load
