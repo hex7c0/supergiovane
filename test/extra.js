@@ -42,12 +42,12 @@ describe('extra', function() {
 
     it('should return 404 for missing version', function(done) {
 
-      request(app).get('/supergiovane/0.0.2')
-          .set('Referer', 'http://127.0.0.1').expect(404, done);
+      request(app).get('/api/supergiovane/0.0.2').set('Referer',
+        'http://127.0.0.1').expect(404, done);
     });
     it('should return 404 for misconfigurated version', function(done) {
 
-      request(app).get('/supergiovane/0.ciao.0').set('Referer',
+      request(app).get('/api/supergiovane/0.ciao.0').set('Referer',
         'http://127.0.0.1').expect(404, done);
     });
   });
@@ -64,7 +64,7 @@ describe('extra', function() {
 
     it('should return badge', function(done) {
 
-      request(app).get('/supergiovane/badge.svg').expect(200).expect(
+      request(app).get('/api/supergiovane/badge.svg').expect(200).expect(
         'Content-Type', 'image/svg+xml; charset=utf-8').end(
         function(err, res) {
 
@@ -77,18 +77,18 @@ describe('extra', function() {
     });
     it('should return specific version', function(done) {
 
-      request(app).get('/supergiovane/1.0.0')
-          .set('Referer', 'http://127.0.0.1').expect(200).expect(
-            'Content-Type', 'application/json; charset=utf-8').end(
-            function(err, res) {
+      request(app).get('/api/supergiovane/1.0.0').set('Referer',
+        'http://127.0.0.1').expect(200).expect('Content-Type',
+        'application/json; charset=utf-8').end(
+        function(err, res) {
 
-              assert.ifError(err);
-              cache2 = JSON.parse(res.text);
-              assert.deepEqual(cache2.version, '1.0.0', 'version');
-              assert.deepEqual(cache2.dist.shasum,
-                '9bdc48303b50f2c7b2b28102f45f25dc3c2307ce', 'sha');
-              done();
-            });
+          assert.ifError(err);
+          cache2 = JSON.parse(res.text);
+          assert.deepEqual(cache2.version, '1.0.0', 'version');
+          assert.deepEqual(cache2.dist.shasum,
+            '9bdc48303b50f2c7b2b28102f45f25dc3c2307ce', 'sha');
+          done();
+        });
     });
   });
 
@@ -96,7 +96,7 @@ describe('extra', function() {
 
     it('should return badge', function(done) {
 
-      request(app).get('/supergiovane/badge.svg').expect(202).expect(
+      request(app).get('/api/supergiovane/badge.svg').expect(202).expect(
         'Content-Type', 'image/svg+xml; charset=utf-8').end(
         function(err, res) {
 
@@ -110,16 +110,15 @@ describe('extra', function() {
     });
     it('should return specific version', function(done) {
 
-      request(app).get('/supergiovane/1.0.0')
-          .set('Referer', 'http://127.0.0.1').expect(202).expect(
-            'Content-Type', 'application/json; charset=utf-8').end(
-            function(err, res) {
+      request(app).get('/api/supergiovane/1.0.0').set('Referer',
+        'http://127.0.0.1').expect(202).expect('Content-Type',
+        'application/json; charset=utf-8').end(function(err, res) {
 
-              assert.ifError(err);
-              assert.deepEqual(cache2, JSON.parse(res.text));
-              assert.notDeepEqual(cache1, cache2);
-              done();
-            });
+        assert.ifError(err);
+        assert.deepEqual(cache2, JSON.parse(res.text));
+        assert.notDeepEqual(cache1, cache2);
+        done();
+      });
     });
   });
 
