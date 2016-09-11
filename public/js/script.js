@@ -77,18 +77,18 @@ function search($http, $scope) {
         console.error(e);
       }
 
-      if (data.versions) {
-        var versions = Object.keys(data.versions);
-        var ii = ~~versions.length;
-        $scope.npm.versions = ii;
-        $scope.class = 'col-6 col-sm-6 col-lg-4';
-      } else {
-        var ii = 0;
-        $scope.npm.versions = 1;
-        $scope.class = 'col-8 col-sm-8 col-lg-12';
-      }
-
+      var ii = 0;
+      var versions;
       try {
+        if (data.versions) {
+          versions = Object.keys(data.versions);
+          ii = ~~versions.length;
+          $scope.npm.versions = ii;
+          $scope.class = 'col-6 col-sm-6 col-lg-4';
+        } else {
+          $scope.npm.versions = 1;
+          $scope.class = 'col-8 col-sm-8 col-lg-12';
+        }
 
         if (ii > 0) { // multiple
           var scopeVersions = [];
