@@ -28,7 +28,7 @@
     "compression-zlib": "2.4.0",
     "express": "4.14.0",
     "express-sitemap": "1.6.5",
-    "mamma": "0.2.0",
+    "mamma": "0.3.0",
     "logger-request": "3.7.1",
     "semver": "5.3.0",
     "server-signature": "1.2.0",
