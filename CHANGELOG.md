@@ -1,3 +1,27 @@
+v2.0.0 / 2016-09-12
+==================
+
+  * Code refactoring
+  * Operative @ https://supergiovane.herokuapp.com/
+  * Enable zlib s2s compression
+  * Tested against `node`@6
+  * _Deps_:
+    * Update `compression-zlib`@2.4.0
+    * Update `express`@4.14.0
+    * Update `express-sitemap`@1.6.5
+    * Update `mamma`@0.3.0
+    * Update `logger-request`@3.7.1
+    * Update `semver`@5.3.0
+    * Update `server-signature`@1.4.0
+    * Update `setheaders`@0.1.7
+    * Update `timeout-request`@1.5.0
+    * Update `task-manager`@1.5.0
+    * Install `validate-npm-package-name`@2.2.2
+  * _Web_:
+    * Update `angular`@1.5.8
+    * Update `bootstrap`@3.3.7
+    * Update `jquery`@2.2.4
+
 v1.7.2 / 2015-07-06
 ==================
 
