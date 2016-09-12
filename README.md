@@ -7,9 +7,10 @@
 
 [![supergiovane logo](https://raw.githubusercontent.com/hex7c0/supergiovane/master/public/img/sp.jpg)](https://supergiovane.herokuapp.com)
 
-Website for get info about npm module.
+website for searching through history of npm modules
+
 Build badge with all versions found (using https://github.com/badges/shields) [![versions](https://supergiovane.herokuapp.com/supergiovane/badge.svg)](https://supergiovane.herokuapp.com/#/supergiovane)
-Write with [Bootstrap](http://getbootstrap.com/) & [Angular](https://angularjs.org/). And of course [node](http://nodejs.org/)
+Write with [Bootstrap](https://getbootstrap.com/) & [Angular](https://angularjs.org/). And of course [node](https://nodejs.org/)
 
 ## Installation
 
@@ -57,4 +58,4 @@ supergiovane(options);
 
 Take a look at my [examples](https://github.com/hex7c0/supergiovane/tree/master/examples)
 
-### [License GPLv3](http://opensource.org/licenses/GPL-3.0)
+### [License GPLv3](LICENSE)

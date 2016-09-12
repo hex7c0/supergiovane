@@ -16,6 +16,16 @@ var request = require('supertest');
 var assert = require('assert');
 var fs = require('fs');
 
+var pad = function(val, len) {
+
+  var val = String(val);
+  var len = len || 2;
+  while (val.length < len) {
+    val = '0' + val;
+  }
+  return val;
+};
+
 /*
  * test module
  */
@@ -101,10 +111,8 @@ describe('http', function() {
 
   describe('files', function() {
 
-    it('should remove logger', function(done) {
+    var date = new Date();
 
-      fs.unlink('route.log', done);
-    });
     it('should remove robots', function(done) {
 
       fs.unlink(r, done);
@@ -113,9 +121,17 @@ describe('http', function() {
 
       fs.unlink(s, done);
     });
-    // it('should remove debug', function(done) {
+    it('should remove logger', function(done) {
 
-    // fs.unlink('debug2.log', done);
+      var dailyF = date.getUTCFullYear() + '-' + pad(date.getUTCMonth() + 1)
+        + '-' + pad(date.getUTCDate()) + '.route.log';
+      fs.unlink(dailyF, done);
+    });
+    // it('should remove debug', function(done) {
+    //
+    // var dailyF = date.getUTCFullYear() + '-' + pad(date.getUTCMonth() + 1)
+    // + '-' + pad(date.getUTCDate()) + '.debug2.log';
+    // fs.unlink(dailyF, done);
     // });
   });
 });
