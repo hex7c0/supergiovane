@@ -27,7 +27,7 @@
   "dependencies": {
     "compression-zlib": "2.4.0",
     "express": "4.14.0",
-    "express-sitemap": "1.5.6",
+    "express-sitemap": "1.6.5",
     "mamma": "0.2.0",
     "logger-request": "3.3.5",
     "semver": "5.3.0",
