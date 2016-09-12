@@ -16,6 +16,16 @@ var request = require('supertest');
 var assert = require('assert');
 var fs = require('fs');
 
+var pad = function(val, len) {
+
+  var val = String(val);
+  var len = len || 2;
+  while (val.length < len) {
+    val = '0' + val;
+  }
+  return val;
+};
+
 /*
  * test module
  */
@@ -76,11 +86,8 @@ describe('options', function() {
 
   describe('files', function() {
 
-    it('shouldn\'t exist logger', function(done) {
+    var date = new Date();
 
-      assert.equal(fs.existsSync('route.log'), false);
-      done();
-    });
     it('shouldn\'t exist robots', function(done) {
 
       assert.equal(fs.existsSync(r), false);
@@ -91,9 +98,18 @@ describe('options', function() {
       assert.equal(fs.existsSync(s), false);
       done();
     });
+    it('shouldn\'t exist logger', function(done) {
+
+      var dailyF = date.getUTCFullYear() + '-' + pad(date.getUTCMonth() + 1)
+        + '-' + pad(date.getUTCDate()) + '.route.log';
+      assert.equal(fs.existsSync(dailyF), false);
+      done();
+    });
     // it('shouldn\'t exist debug', function(done) {
     //
-    // assert.equal(fs.existsSync('debug.log'), false);
+    // var dailyF = date.getUTCFullYear() + '-' + pad(date.getUTCMonth() + 1)
+    // + '-' + pad(date.getUTCDate()) + '.debug2.log';
+    // assert.equal(fs.existsSync(dailyF), false);
     // done();
     // });
   });
