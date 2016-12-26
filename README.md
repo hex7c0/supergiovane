@@ -1,7 +1,7 @@
 # [supergiovane](https://supergiovane.herokuapp.com/#/supergiovane)
 
 [![NPM version](https://img.shields.io/npm/v/supergiovane.svg)](https://www.npmjs.com/package/supergiovane)
-[![Linux Status](https://img.shields.io/travis/hex7c0/supergiovane.svg?label=linux)](https://travis-ci.org/hex7c0/supergiovane)
+[![Linux Status](https://img.shields.io/travis/hex7c0/supergiovane.svg?label=linux-osx)](https://travis-ci.org/hex7c0/supergiovane)
 [![Dependency Status](https://img.shields.io/david/hex7c0/supergiovane.svg)](https://david-dm.org/hex7c0/supergiovane)
 [![Coveralls](https://img.shields.io/coveralls/hex7c0/supergiovane.svg)](https://coveralls.io/r/hex7c0/supergiovane)
 
