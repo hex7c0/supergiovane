@@ -38,15 +38,15 @@
     "validate-npm-package-name": "2.2.2"
   },
   "devDependencies": {
-    "logger-request-cli": "~1.3",
+    "logger-request-cli": "~1.4",
     "grunt-contrib-clean": "~1.0",
     "grunt-contrib-cssmin": "~1.0",
     "grunt-contrib-htmlmin": "~2.0",
     "grunt-contrib-uglify": "~2.0",
-    "grunt-contrib-jshint": "~1.0",
+    "grunt-contrib-jshint": "~1.1",
     "grunt-endline": "~0.6",
     "istanbul": "~0.4",
-    "mocha": "~3.0",
+    "mocha": "~3.2",
     "supertest": "~2.0"
   },
   "engines": {
