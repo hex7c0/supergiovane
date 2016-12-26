@@ -1,3 +1,16 @@
+v2.1.0 / 2016-12-26
+==================
+
+  * Tested against `node`@7
+  * Remove support for `node`@<4
+  * _Deps_:
+    * Update `compression-zlib`@2.5.0
+    * Update `express-sitemap`@1.7.0
+    * Update `logger-request`@3.7.3
+    * Update `setheaders`@0.2.0
+  * _Web_:
+    * Update `angular`@1.5.9
+
 v2.0.0 / 2016-09-12
 ==================
 
