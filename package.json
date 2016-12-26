@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "2.1.0",
   "name": "supergiovane",
   "description": "website for searching through history of npm modules",
   "keywords": [
@@ -25,32 +25,32 @@
   },
   "main": "index.min.js",
   "dependencies": {
-    "compression-zlib": "2.4.0",
+    "compression-zlib": "2.5.0",
     "express": "4.14.0",
-    "express-sitemap": "1.6.5",
+    "express-sitemap": "1.7.0",
     "mamma": "0.3.0",
-    "logger-request": "3.7.1",
+    "logger-request": "3.7.3",
     "semver": "5.3.0",
     "server-signature": "1.4.0",
-    "setheaders": "0.1.7",
+    "setheaders": "0.2.0",
     "timeout-request": "1.5.0",
     "task-manager": "1.5.0",
     "validate-npm-package-name": "2.2.2"
   },
   "devDependencies": {
-    "logger-request-cli": "~1.3",
+    "logger-request-cli": "~1.4",
     "grunt-contrib-clean": "~1.0",
     "grunt-contrib-cssmin": "~1.0",
     "grunt-contrib-htmlmin": "~2.0",
     "grunt-contrib-uglify": "~2.0",
-    "grunt-contrib-jshint": "~1.0",
-    "grunt-endline": "~0.5",
+    "grunt-contrib-jshint": "~1.1",
+    "grunt-endline": "~0.6",
     "istanbul": "~0.4",
-    "mocha": "~3.0",
+    "mocha": "~3.2",
     "supertest": "~2.0"
   },
   "engines": {
-    "node": ">=0.12"
+    "node": ">=4"
   },
   "scripts": {
     "prepublish": "npm prune",
